@@ -14,7 +14,7 @@ pub struct Color {
   a : Double  // Alpha component [0.0, 1.0]
 } derive(Eq, Show)
 
-/// A 2D vector
+/// A 2D vector (reserved for future use)
 pub struct Vec2 {
   x : Double
   y : Double
@@ -52,7 +52,7 @@ pub enum PathSegment {
 /// A path is a sequence of segments
 pub typealias Array[PathSegment] as Path
 
-/// Primitive shapes
+/// Primitive shapes (reserved for future rendering backends)
 pub enum Primitive {
   Circle(Point, Double)  // center, radius
   Rectangle(Point, Point)  // top-left, bottom-right
@@ -60,7 +60,7 @@ pub enum Primitive {
   Text(String, Point, Double)  // text, position, size
 } derive(Eq, Show)
 
-/// Image operations
+/// Image operations for declarative composition (reserved for future optimization)
 pub enum ImageOp {
   Const(Color)
   Primitive(Primitive, Color)

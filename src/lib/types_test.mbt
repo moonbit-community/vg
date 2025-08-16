@@ -81,7 +81,7 @@ test "PathSegment variants" {
   
   match path[2] {
     CurveTo(cp1, cp2, end) => {
-      if cp1.x != 1.0 || end.x != 3.0 { fail("CurveTo points incorrect") }
+      if cp1.x != 1.0 || cp2.x != 2.0 || end.x != 3.0 { fail("CurveTo points incorrect") }
     }
     _ => fail("Expected CurveTo segment")
   }
