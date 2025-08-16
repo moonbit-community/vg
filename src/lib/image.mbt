@@ -85,7 +85,18 @@ pub fn compose_imgs(img1 : Image, img2 : Image) -> Image {
   fn(p : Point) -> Color {
     let c1 = img1(p)
     let c2 = img2(p)
-    blend(c1, c2)
+    // If both colors are non-transparent, blend them
+    if c1.a > 0.0 && c2.a > 0.0 {
+      // Use additive blending for overlapping opaque areas
+      {
+        r: (c1.r + c2.r) / 2.0,
+        g: (c1.g + c2.g) / 2.0,
+        b: (c1.b + c2.b) / 2.0,
+        a: (c1.a + c2.a) / 2.0
+      }
+    } else {
+      blend(c1, c2)
+    }
   }
 }
 

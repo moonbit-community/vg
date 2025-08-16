@@ -64,10 +64,15 @@ pub fn to_hex(c : Color) -> String {
   let r = (c.r * 255.0).to_int()
   let g = (c.g * 255.0).to_int()
   let b = (c.b * 255.0).to_int()
-  let r_hex = if r < 16 { "0" + r.to_string() } else { r.to_string() }
-  let g_hex = if g < 16 { "0" + g.to_string() } else { g.to_string() }
-  let b_hex = if b < 16 { "0" + b.to_string() } else { b.to_string() }
-  "#" + r_hex + g_hex + b_hex
+  
+  fn int_to_hex(n : Int) -> String {
+    let hex_chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+    let high = n / 16
+    let low = n % 16
+    String::from_array([hex_chars[high], hex_chars[low]])
+  }
+  
+  "#" + int_to_hex(r) + int_to_hex(g) + int_to_hex(b)
 }
 
 /// Clamp color components to valid range [0.0, 1.0]

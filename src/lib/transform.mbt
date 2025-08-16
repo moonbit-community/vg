@@ -29,12 +29,12 @@ pub fn make_rotate(angle : Double) -> Transform {
 
 /// Skew X transformation
 pub fn skew_x(angle : Double) -> Transform {
-  { m11: 1.0, m12: 0.0, m21: @math.tan(angle), m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: @math.tan(angle), m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0 }
 }
 
 /// Skew Y transformation
 pub fn skew_y(angle : Double) -> Transform {
-  { m11: 1.0, m12: @math.tan(angle), m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: 0.0, m21: @math.tan(angle), m22: 1.0, m31: 0.0, m32: 0.0 }
 }
 
 /// Compose two transformations (multiply matrices)
@@ -52,8 +52,8 @@ pub fn compose_transforms(t1 : Transform, t2 : Transform) -> Transform {
 /// Apply transformation to a point
 pub fn apply(t : Transform, p : Point) -> Point {
   {
-    x: t.m11 * p.x + t.m21 * p.y + t.m31,
-    y: t.m12 * p.x + t.m22 * p.y + t.m32
+    x: t.m11 * p.x + t.m12 * p.y + t.m31,
+    y: t.m21 * p.x + t.m22 * p.y + t.m32
   }
 }
 
