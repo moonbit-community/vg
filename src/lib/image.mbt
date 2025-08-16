@@ -48,7 +48,7 @@ pub fn line(color : Color, start : Point, end : Point, thickness : Double) -> Im
     } else {
       let t = dot(point_vec, line_vec) / line_len_sq
       let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
-      let closest = add(start, scale(line_vec, t_clamped))
+      let closest = add(start, scale_point(line_vec, t_clamped))
       let dist = distance(p, closest)
       if dist <= thickness / 2.0 { color } else { transparent() }
     }

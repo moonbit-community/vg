@@ -7,28 +7,40 @@ pub fn empty_path() -> Path {
 
 /// Move to a point
 pub fn move_to(path : Path, p : Point) -> Path {
-  let mut new_path = path
+  let new_path = Array::new()
+  for segment in path {
+    new_path.push(segment)
+  }
   new_path.push(MoveTo(p))
   new_path
 }
 
 /// Line to a point
 pub fn line_to(path : Path, p : Point) -> Path {
-  let mut new_path = path
+  let new_path = Array::new()
+  for segment in path {
+    new_path.push(segment)
+  }
   new_path.push(LineTo(p))
   new_path
 }
 
 /// Cubic bezier curve to a point
 pub fn curve_to(path : Path, cp1 : Point, cp2 : Point, end : Point) -> Path {
-  let mut new_path = path
+  let new_path = Array::new()
+  for segment in path {
+    new_path.push(segment)
+  }
   new_path.push(CurveTo(cp1, cp2, end))
   new_path
 }
 
 /// Close the path
 pub fn close_path(path : Path) -> Path {
-  let mut new_path = path
+  let new_path = Array::new()
+  for segment in path {
+    new_path.push(segment)
+  }
   new_path.push(Close)
   new_path
 }
@@ -121,22 +133,25 @@ pub fn ellipse_path(center : Point, rx : Double, ry : Double) -> Path {
 
 /// Transform a path
 pub fn transform_path(t : Transform, path : Path) -> Path {
-  path.map(fn(segment) {
-    match segment {
+  let new_path = Array::new()
+  for segment in path {
+    let transformed_segment = match segment {
       MoveTo(p) => MoveTo(apply(t, p))
       LineTo(p) => LineTo(apply(t, p))
       CurveTo(cp1, cp2, end) => CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
       Close => Close
     }
-  })
+    new_path.push(transformed_segment)
+  }
+  new_path
 }
 
 /// Get the bounding box of a path (approximate)
 pub fn path_bounds(path : Path) -> Box? {
-  let mut min_x = Double.max_value()
-  let mut min_y = Double.max_value()
-  let mut max_x = Double.min_value()
-  let mut max_y = Double.min_value()
+  let mut min_x = 1000000.0
+  let mut min_y = 1000000.0
+  let mut max_x = -1000000.0
+  let mut max_y = -1000000.0
   let mut has_points = false
   
   fn update_bounds(p : Point) {

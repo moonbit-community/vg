@@ -14,7 +14,10 @@ pub fn new_svg(width : Double, height : Double) -> SvgDocument {
 
 /// Add an element to the SVG document
 pub fn add_element(doc : SvgDocument, element : String) -> SvgDocument {
-  let mut new_elements = doc.elements
+  let new_elements = Array::new()
+  for elem in doc.elements {
+    new_elements.push(elem)
+  }
   new_elements.push(element)
   { width: doc.width, height: doc.height, elements: new_elements }
 }

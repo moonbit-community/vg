@@ -39,7 +39,7 @@ pub struct Box {
 } derive(Eq, Show)
 
 /// An image is a function from points to colors
-pub typealias Image = (Point) -> Color
+pub typealias (Point) -> Color as Image
 
 /// Path segment types
 pub enum PathSegment {
@@ -50,7 +50,7 @@ pub enum PathSegment {
 } derive(Eq, Show)
 
 /// A path is a sequence of segments
-pub typealias Path = Array[PathSegment]
+pub typealias Array[PathSegment] as Path
 
 /// Primitive shapes
 pub enum Primitive {
@@ -67,4 +67,4 @@ pub enum ImageOp {
   Transform(Transform, Image)
   Compose(Image, Image)
   Cut(Image, Image)  // Cut first image with second as mask
-} derive(Show)
+}
