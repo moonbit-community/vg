@@ -15,9 +15,9 @@ test "origin point" {
 }
 
 test "point addition" {
-  let p1 = point(1.0, 2.0)
-  let p2 = point(3.0, 4.0)
-  let sum = add_points(p1, p2)
+  let p1 = @lib.point(1.0, 2.0)
+  let p2 = @lib.point(3.0, 4.0)
+  let sum = add(p1, p2)
   
   if sum.x != 4.0 || sum.y != 6.0 {
     fail("Point addition incorrect")
@@ -25,9 +25,9 @@ test "point addition" {
 }
 
 test "point subtraction" {
-  let p1 = point(5.0, 7.0)
-  let p2 = point(2.0, 3.0)
-  let diff = sub_points(p1, p2)
+  let p1 = @lib.point(5.0, 7.0)
+  let p2 = @lib.point(2.0, 3.0)
+  let diff = sub(p1, p2)
   
   if diff.x != 3.0 || diff.y != 4.0 {
     fail("Point subtraction incorrect")
@@ -35,8 +35,8 @@ test "point subtraction" {
 }
 
 test "point scaling" {
-  let p = point(2.0, 3.0)
-  let scaled = scale_point(p, 2.5)
+  let p = @lib.point(2.0, 3.0)
+  let scaled = @lib.scale_point(p, 2.5)
   
   if scaled.x != 5.0 || scaled.y != 7.5 {
     fail("Point scaling incorrect")
@@ -44,9 +44,9 @@ test "point scaling" {
 }
 
 test "distance calculation" {
-  let p1 = point(0.0, 0.0)
-  let p2 = point(3.0, 4.0)
-  let dist = distance(p1, p2)
+  let p1 = @lib.point(0.0, 0.0)
+  let p2 = @lib.point(3.0, 4.0)
+  let dist = @lib.distance(p1, p2)
   
   // Distance should be 5.0 (3-4-5 triangle)
   if (dist - 5.0).abs() > 0.0001 {
@@ -55,9 +55,9 @@ test "distance calculation" {
 }
 
 test "dot product" {
-  let p1 = point(2.0, 3.0)
-  let p2 = point(4.0, 5.0)
-  let dot_result = dot(p1, p2)
+  let p1 = @lib.point(2.0, 3.0)
+  let p2 = @lib.point(4.0, 5.0)
+  let dot_result = @lib.dot(p1, p2)
   
   // 2*4 + 3*5 = 8 + 15 = 23
   if dot_result != 23.0 {
@@ -66,8 +66,8 @@ test "dot product" {
 }
 
 test "vector length" {
-  let p = point(3.0, 4.0)
-  let len = length(p)
+  let p = @lib.point(3.0, 4.0)
+  let len = @lib.length(p)
   
   // Length should be 5.0
   if (len - 5.0).abs() > 0.0001 {
@@ -76,9 +76,9 @@ test "vector length" {
 }
 
 test "vector normalization" {
-  let p = point(3.0, 4.0)
-  let normalized = normalize(p)
-  let norm_length = length(normalized)
+  let p = @lib.point(3.0, 4.0)
+  let normalized = @lib.normalize(p)
+  let norm_length = @lib.length(normalized)
   
   // Normalized vector should have length 1.0
   if (norm_length - 1.0).abs() > 0.0001 {
@@ -92,8 +92,8 @@ test "vector normalization" {
 }
 
 test "zero vector normalization" {
-  let zero = origin()
-  let normalized = normalize(zero)
+  let zero = @lib.origin()
+  let normalized = @lib.normalize(zero)
   
   if normalized.x != 0.0 || normalized.y != 0.0 {
     fail("Normalized zero vector should remain zero")
@@ -101,28 +101,28 @@ test "zero vector normalization" {
 }
 
 test "linear interpolation" {
-  let p1 = point(0.0, 0.0)
-  let p2 = point(10.0, 20.0)
+  let p1 = @lib.point(0.0, 0.0)
+  let p2 = @lib.point(10.0, 20.0)
   
-  let mid = lerp(p1, p2, 0.5)
+  let mid = @lib.lerp(p1, p2, 0.5)
   if mid.x != 5.0 || mid.y != 10.0 {
     fail("Midpoint interpolation incorrect")
   }
   
-  let start = lerp(p1, p2, 0.0)
+  let start = @lib.lerp(p1, p2, 0.0)
   if start.x != 0.0 || start.y != 0.0 {
     fail("Interpolation at t=0 should return first point")
   }
   
-  let end = lerp(p1, p2, 1.0)
+  let end = @lib.lerp(p1, p2, 1.0)
   if end.x != 10.0 || end.y != 20.0 {
     fail("Interpolation at t=1 should return second point")
   }
 }
 
 test "point rotation" {
-  let p = point(1.0, 0.0)
-  let rotated = rotate_point(p, 3.14159265359 / 2.0)  // 90 degrees
+  let p = @lib.point(1.0, 0.0)
+  let rotated = @lib.rotate_point(p, 3.14159265359 / 2.0)  // 90 degrees
   
   // Should be approximately (0, 1)
   if rotated.x.abs() > 0.0001 || (rotated.y - 1.0).abs() > 0.0001 {

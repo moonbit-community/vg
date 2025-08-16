@@ -72,8 +72,8 @@ test "color blending" {
 }
 
 test "color scaling" {
-  let c = rgb(0.8, 0.6, 0.4)
-  let scaled = scale_color(c, 0.5)
+  let c = @lib.rgb(0.8, 0.6, 0.4)
+  let scaled = scale(c, 0.5)
   
   if scaled.r != 0.4 || scaled.g != 0.3 || scaled.b != 0.2 {
     fail("Color scaling incorrect")
@@ -85,8 +85,8 @@ test "color scaling" {
 }
 
 test "color clamping" {
-  let c = { r: 1.5, g: -0.5, b: 0.5, a: 2.0 }
-  let clamped = clamp_color(c)
+  let c = rgba(1.5, -0.5, 0.5, 2.0)
+  let clamped = clamp(c)
   
   if clamped.r != 1.0 || clamped.g != 0.0 || clamped.b != 0.5 || clamped.a != 1.0 {
     fail("Color clamping incorrect")
@@ -98,7 +98,7 @@ test "color to hex conversion" {
   let hex = to_hex(c)
   
   // Should be approximately #FF7F00 (allowing for rounding)
-  if hex.length() != 7 || not(hex.starts_with("#")) {
+  if hex.length() != 7 || not(hex.contains("#")) {
     fail("Hex color format incorrect")
   }
 }

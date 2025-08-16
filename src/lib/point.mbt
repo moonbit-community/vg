@@ -62,8 +62,8 @@ pub fn lerp(p1 : Point, p2 : Point, t : Double) -> Point {
 
 /// Rotate a point around the origin by angle (in radians)
 pub fn rotate_point(p : Point, angle : Double) -> Point {
-  let cos_a = angle.cos()
-  let sin_a = angle.sin()
+  let cos_a = @math.cos(angle)
+  let sin_a = @math.sin(angle)
   {
     x: p.x * cos_a - p.y * sin_a,
     y: p.x * sin_a + p.y * cos_a

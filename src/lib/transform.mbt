@@ -22,19 +22,19 @@ pub fn scale_uniform(s : Double) -> Transform {
 
 /// Rotation transformation (angle in radians)
 pub fn make_rotate(angle : Double) -> Transform {
-  let cos_a = angle.cos()
-  let sin_a = angle.sin()
+  let cos_a = @math.cos(angle)
+  let sin_a = @math.sin(angle)
   { m11: cos_a, m12: -sin_a, m21: sin_a, m22: cos_a, m31: 0.0, m32: 0.0 }
 }
 
 /// Skew X transformation
 pub fn skew_x(angle : Double) -> Transform {
-  { m11: 1.0, m12: 0.0, m21: angle.tan(), m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: 0.0, m21: @math.tan(angle), m22: 1.0, m31: 0.0, m32: 0.0 }
 }
 
 /// Skew Y transformation
 pub fn skew_y(angle : Double) -> Transform {
-  { m11: 1.0, m12: angle.tan(), m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: @math.tan(angle), m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0 }
 }
 
 /// Compose two transformations (multiply matrices)

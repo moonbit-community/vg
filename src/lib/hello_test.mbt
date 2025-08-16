@@ -1,12 +1,12 @@
 // Integration tests for the Vg library
 
 test "example image creation" {
-  let img = example()
+  let img = @lib.example()
   
   // Test that the example image returns appropriate colors at different points
-  let center = point(0.0, 0.0)
-  let right = point(50.0, 0.0)
-  let far_right = point(100.0, 0.0)
+  let center = @lib.point(0.0, 0.0)
+  let right = @lib.point(50.0, 0.0)
+  let far_right = @lib.point(100.0, 0.0)
   
   let c_center = img(center)
   let c_right = img(right)
@@ -30,18 +30,18 @@ test "example image creation" {
 
 test "complete workflow - create and render image" {
   // Create a complex image
-  let background = rectangle(gray(0.9), 200.0, 200.0)
-  let red_circle = circle(red(), 40.0)
-  let blue_circle = translate_image(60.0, 0.0, circle(blue(), 30.0))
-  let green_rect = translate_image(-50.0, 50.0, rectangle(green(), 30.0, 20.0))
+  let background = @lib.rectangle(@lib.gray(0.9), 200.0, 200.0)
+  let red_circle = @lib.circle(@lib.red(), 40.0)
+  let blue_circle = @lib.translate_img(60.0, 0.0, @lib.circle(@lib.blue(), 30.0))
+  let green_rect = @lib.translate_img(-50.0, 50.0, @lib.rectangle(@lib.green(), 30.0, 20.0))
   
   let complex_image = background
-    |> compose_images(red_circle)
-    |> compose_images(blue_circle)
-    |> compose_images(green_rect)
+    |> @lib.compose_imgs(red_circle)
+    |> @lib.compose_imgs(blue_circle)
+    |> @lib.compose_imgs(green_rect)
   
   // Render to SVG
-  let svg = render_image_to_svg(complex_image, 200.0, 200.0, 50)
+  let svg = @lib.render_image_to_svg(complex_image, 200.0, 200.0, 50)
   
   if not(svg.contains("svg")) {
     fail("Should produce valid SVG output")
@@ -54,18 +54,18 @@ test "complete workflow - create and render image" {
 
 test "path to SVG integration" {
   // Create a complex path
-  let path = empty_path()
-    |> move_to(point(50.0, 50.0))
-    |> line_to(point(100.0, 50.0))
-    |> curve_to(point(125.0, 50.0), point(125.0, 75.0), point(100.0, 75.0))
-    |> line_to(point(50.0, 75.0))
-    |> close_path()
+  let path = @lib.empty_path()
+    |> @lib.move_to(@lib.point(50.0, 50.0))
+    |> @lib.line_to(@lib.point(100.0, 50.0))
+    |> @lib.curve_to(@lib.point(125.0, 50.0), @lib.point(125.0, 75.0), @lib.point(100.0, 75.0))
+    |> @lib.line_to(@lib.point(50.0, 75.0))
+    |> @lib.close_path()
   
   // Render to SVG
-  let doc = new_svg(150.0, 100.0)
-    |> render_path(path, magenta())
+  let doc = @lib.new_svg(150.0, 100.0)
+    |> @lib.render_path(path, @lib.magenta())
   
-  let svg_string = to_svg_string(doc)
+  let svg_string = @lib.to_svg_string(doc)
   
   if not(svg_string.contains("path")) {
     fail("Should contain path element")
@@ -77,39 +77,38 @@ test "path to SVG integration" {
 }
 
 test "gradient rendering" {
-  let gradient_img = linear_gradient(red(), blue(), point(-50.0, 0.0), point(50.0, 0.0))
+  let gradient_img = @lib.linear_gradient(@lib.red(), @lib.blue(), @lib.point(-50.0, 0.0), @lib.point(50.0, 0.0))
   
   // Test gradient at different points
-  let left = gradient_img(point(-50.0, 0.0))
-  let center = gradient_img(point(0.0, 0.0))
-  let right = gradient_img(point(50.0, 0.0))
+  let left = gradient_img(@lib.point(-50.0, 0.0))
+  let center = gradient_img(@lib.point(0.0, 0.0))
+  let right = gradient_img(@lib.point(50.0, 0.0))
   
-  if left != red() {
+  if left != @lib.red() {
     fail("Gradient left should be red")
   }
   
-  if right != blue() {
+  if right != @lib.blue() {
     fail("Gradient right should be blue")
   }
   
   // Center should be a mix
-  if center == red() || center == blue() {
+  if center == @lib.red() || center == @lib.blue() {
     fail("Gradient center should be interpolated")
   }
 }
 
 test "transformation chain" {
-  let original = circle(yellow(), 10.0)
+  let original = @lib.circle(@lib.yellow(), 10.0)
   
   // Apply multiple transformations
-  let transformed = original
-    |> scale_image(2.0, 1.5)
-    |> rotate_image(3.14159 / 4.0)  // 45 degrees
-    |> translate_image(20.0, 10.0)
+  let scaled = @lib.scale_image(2.0, 1.5, original)
+  let rotated = @lib.rotate_image(3.14159 / 4.0, scaled)  // 45 degrees
+  let transformed = @lib.translate_img(20.0, 10.0, rotated)
   
   // Test that transformations work
-  let origin_color = transformed(point(0.0, 0.0))
-  let translated_center = transformed(point(20.0, 10.0))
+  let origin_color = transformed(@lib.point(0.0, 0.0))
+  let translated_center = transformed(@lib.point(20.0, 10.0))
   
   if origin_color.a > 0.1 {
     fail("Origin should be mostly transparent after transformation")
@@ -122,12 +121,12 @@ test "transformation chain" {
 }
 
 test "color operations" {
-  let c1 = rgba(1.0, 0.5, 0.0, 0.8)
-  let c2 = rgba(0.0, 0.5, 1.0, 0.6)
+  let c1 = @lib.rgba(1.0, 0.5, 0.0, 0.8)
+  let c2 = @lib.rgba(0.0, 0.5, 1.0, 0.6)
   
-  let blended = blend(c1, c2)
-  let scaled = scale_color(c1, 0.5)
-  let clamped = clamp_color({ r: 1.5, g: -0.2, b: 0.5, a: 2.0 })
+  let blended = @lib.blend(c1, c2)
+  let scaled = scale(c1, 0.5)
+  let clamped = clamp(rgba(1.5, -0.2, 0.5, 2.0))
   
   // Blended should have higher alpha than individual colors
   if blended.a <= c1.a && blended.a <= c2.a {
