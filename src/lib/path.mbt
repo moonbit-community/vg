@@ -1,0 +1,167 @@
+// Path construction and manipulation utilities
+
+/// Create an empty path
+pub fn empty_path() -> Path {
+  []
+}
+
+/// Move to a point
+pub fn move_to(path : Path, p : Point) -> Path {
+  let mut new_path = path
+  new_path.push(MoveTo(p))
+  new_path
+}
+
+/// Line to a point
+pub fn line_to(path : Path, p : Point) -> Path {
+  let mut new_path = path
+  new_path.push(LineTo(p))
+  new_path
+}
+
+/// Cubic bezier curve to a point
+pub fn curve_to(path : Path, cp1 : Point, cp2 : Point, end : Point) -> Path {
+  let mut new_path = path
+  new_path.push(CurveTo(cp1, cp2, end))
+  new_path
+}
+
+/// Close the path
+pub fn close_path(path : Path) -> Path {
+  let mut new_path = path
+  new_path.push(Close)
+  new_path
+}
+
+/// Create a rectangle path
+pub fn rect_path(x : Double, y : Double, width : Double, height : Double) -> Path {
+  let top_left = point(x, y)
+  let top_right = point(x + width, y)
+  let bottom_right = point(x + width, y + height)
+  let bottom_left = point(x, y + height)
+  
+  []
+  |> move_to(top_left)
+  |> line_to(top_right)
+  |> line_to(bottom_right)
+  |> line_to(bottom_left)
+  |> close_path()
+}
+
+/// Create a circle path (approximated with bezier curves)
+pub fn circle_path(center : Point, radius : Double) -> Path {
+  let kappa = 0.5522847498  // Magic number for circle approximation
+  let offset = radius * kappa
+  
+  let top = point(center.x, center.y - radius)
+  let right = point(center.x + radius, center.y)
+  let bottom = point(center.x, center.y + radius)
+  let left = point(center.x - radius, center.y)
+  
+  []
+  |> move_to(top)
+  |> curve_to(
+      point(center.x + offset, center.y - radius),
+      point(center.x + radius, center.y - offset),
+      right
+    )
+  |> curve_to(
+      point(center.x + radius, center.y + offset),
+      point(center.x + offset, center.y + radius),
+      bottom
+    )
+  |> curve_to(
+      point(center.x - offset, center.y + radius),
+      point(center.x - radius, center.y + offset),
+      left
+    )
+  |> curve_to(
+      point(center.x - radius, center.y - offset),
+      point(center.x - offset, center.y - radius),
+      top
+    )
+  |> close_path()
+}
+
+/// Create an ellipse path
+pub fn ellipse_path(center : Point, rx : Double, ry : Double) -> Path {
+  let kappa = 0.5522847498
+  let offset_x = rx * kappa
+  let offset_y = ry * kappa
+  
+  let top = point(center.x, center.y - ry)
+  let right = point(center.x + rx, center.y)
+  let bottom = point(center.x, center.y + ry)
+  let left = point(center.x - rx, center.y)
+  
+  []
+  |> move_to(top)
+  |> curve_to(
+      point(center.x + offset_x, center.y - ry),
+      point(center.x + rx, center.y - offset_y),
+      right
+    )
+  |> curve_to(
+      point(center.x + rx, center.y + offset_y),
+      point(center.x + offset_x, center.y + ry),
+      bottom
+    )
+  |> curve_to(
+      point(center.x - offset_x, center.y + ry),
+      point(center.x - rx, center.y + offset_y),
+      left
+    )
+  |> curve_to(
+      point(center.x - rx, center.y - offset_y),
+      point(center.x - offset_x, center.y - ry),
+      top
+    )
+  |> close_path()
+}
+
+/// Transform a path
+pub fn transform_path(t : Transform, path : Path) -> Path {
+  path.map(fn(segment) {
+    match segment {
+      MoveTo(p) => MoveTo(apply(t, p))
+      LineTo(p) => LineTo(apply(t, p))
+      CurveTo(cp1, cp2, end) => CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
+      Close => Close
+    }
+  })
+}
+
+/// Get the bounding box of a path (approximate)
+pub fn path_bounds(path : Path) -> Box? {
+  let mut min_x = Double.max_value()
+  let mut min_y = Double.max_value()
+  let mut max_x = Double.min_value()
+  let mut max_y = Double.min_value()
+  let mut has_points = false
+  
+  fn update_bounds(p : Point) {
+    has_points = true
+    if p.x < min_x { min_x = p.x }
+    if p.x > max_x { max_x = p.x }
+    if p.y < min_y { min_y = p.y }
+    if p.y > max_y { max_y = p.y }
+  }
+  
+  for segment in path {
+    match segment {
+      MoveTo(p) | LineTo(p) => update_bounds(p)
+      CurveTo(cp1, cp2, end) => {
+        update_bounds(cp1)
+        update_bounds(cp2)
+        update_bounds(end)
+      }
+      Close => ()
+    }
+  }
+  
+  if has_points {
+    Some({ min_x, min_y, max_x, max_y })
+  } else {
+    None
+  }
+}

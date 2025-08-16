@@ -1,0 +1,6 @@
+{
+  "is-main": true,
+  "import": [
+    "moonbit/vg/lib"
+  ]
+}
