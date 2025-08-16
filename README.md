@@ -7,12 +7,15 @@ This is a MoonBit port of the original [Vg library](https://github.com/dbuenzli/
 ## Features
 
 - ✅ **Core Types**: Point, Color, Transform, Path, Image
-- ✅ **Color Utilities**: Predefined colors, blending, RGBA support
+- ✅ **Color Utilities**: Predefined colors, blending, RGBA, HSV support
 - ✅ **Point Operations**: Distance, dot product, normalization, rotation
 - ✅ **Transformations**: Translation, scaling, rotation, skewing, composition
-- ✅ **Image Combinators**: Shapes, gradients, composition, cutting
+- ✅ **Basic Shapes**: Circle, rectangle, line, ellipse, polygon
+- ✅ **Image Combinators**: Shapes, gradients, composition, cutting, opacity
 - ✅ **Path Construction**: Move, line, curve, close operations
-- ✅ **SVG Rendering**: Complete SVG backend with path support
+- ✅ **Advanced Paths**: Circle, ellipse, rectangle path generation
+- ✅ **Gradients**: Linear and radial gradients with color interpolation
+- ✅ **SVG Rendering**: Complete SVG backend with all shape support
 - ✅ **Comprehensive Tests**: Extensive test suite for all components
 - ✅ **WebAssembly Target**: Compiles to WebAssembly via MoonBit
 
@@ -35,18 +38,21 @@ moon run src/main
 ```moonbit
 // Create basic shapes
 let red_circle = circle(red(), 50.0)
-let blue_rect = rectangle(blue(), 100.0, 60.0)
+let blue_ellipse = ellipse(blue(), 60.0, 40.0)
+let triangle = polygon(green(), [point(0.0, -30.0), point(-30.0, 30.0), point(30.0, 30.0)])
 
-// Apply transformations
-let translated_rect = translate_img(50.0, 0.0, blue_rect)
+// Apply transformations and effects
+let semi_transparent = with_opacity(red_circle, 0.7)
+let translated_ellipse = translate_img(50.0, 0.0, blue_ellipse)
 
 // Compose images
-let composed = compose_imgs(red_circle, translated_rect)
+let composed = compose_imgs(semi_transparent, translated_ellipse)
 
-// Create SVG output
+// Create SVG output with advanced shapes
 let svg_doc = new_svg(200.0, 200.0)
   |> render_circle(point(100.0, 100.0), 50.0, red())
-  |> render_rectangle(50.0, 50.0, 100.0, 60.0, blue())
+  |> render_ellipse(point(150.0, 100.0), 30.0, 20.0, blue())
+  |> render_polygon([point(50.0, 50.0), point(80.0, 50.0), point(65.0, 80.0)], green())
 
 let svg_string = to_svg_string(svg_doc)
 ```
@@ -72,6 +78,16 @@ let circle_img = circle(red(), 25.0)
 
 // Create a blue rectangle
 let rect_img = rectangle(blue(), 50.0, 30.0)
+
+// Create an ellipse
+let ellipse_img = ellipse(green(), 40.0, 20.0)
+
+// Create a polygon (triangle)
+let triangle = polygon(yellow(), [
+  point(0.0, -20.0), 
+  point(-20.0, 20.0), 
+  point(20.0, 20.0)
+])
 ```
 
 ### Transformations
@@ -86,8 +102,17 @@ let scaled = scale_image(2.0, 1.5, rect_img)
 let rotated = rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
 ```
 
-### Gradients
+### Colors and Effects
 ```moonbit
+// HSV color creation
+let bright_orange = hsv(30.0, 1.0, 1.0)  // Hue, Saturation, Value
+
+// Color interpolation
+let purple_to_cyan = lerp_color(purple(), cyan(), 0.5)
+
+// Apply opacity
+let semi_transparent = with_opacity(circle(red(), 30.0), 0.6)
+
 // Linear gradient
 let gradient = linear_gradient(
   red(), blue(), 

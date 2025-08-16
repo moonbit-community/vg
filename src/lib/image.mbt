@@ -137,3 +137,51 @@ pub fn radial_gradient(color1 : Color, color2 : Color, center : Point, radius : 
     }
   }
 }
+
+/// Create an ellipse image
+pub fn ellipse(color : Color, rx : Double, ry : Double) -> Image {
+  fn(p : Point) -> Color {
+    let normalized_x = p.x / rx
+    let normalized_y = p.y / ry
+    let dist_sq = normalized_x * normalized_x + normalized_y * normalized_y
+    if dist_sq <= 1.0 {
+      color
+    } else {
+      transparent()
+    }
+  }
+}
+
+/// Create a polygon image from a list of points
+pub fn polygon(color : Color, points : Array[Point]) -> Image {
+  fn(p : Point) -> Color {
+    // Point-in-polygon test using ray casting algorithm
+    if points.length() < 3 {
+      transparent()
+    } else {
+      let mut inside = false
+      let mut j = points.length() - 1
+      
+      for i = 0; i < points.length(); i = i + 1 {
+        let pi = points[i]
+        let pj = points[j]
+        
+        if ((pi.y > p.y) != (pj.y > p.y)) && 
+           (p.x < (pj.x - pi.x) * (p.y - pi.y) / (pj.y - pi.y) + pi.x) {
+          inside = not(inside)
+        }
+        j = i
+      }
+      
+      if inside { color } else { transparent() }
+    }
+  }
+}
+
+/// Apply opacity to an image
+pub fn with_opacity(img : Image, opacity : Double) -> Image {
+  fn(p : Point) -> Color {
+    let c = img(p)
+    { r: c.r, g: c.g, b: c.b, a: c.a * opacity }
+  }
+}

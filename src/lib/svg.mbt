@@ -137,3 +137,30 @@ pub fn render_image_to_svg(img : Image, width : Double, height : Double, samples
   
   to_svg_string(doc)
 }
+
+/// Render an ellipse to SVG
+pub fn render_ellipse(doc : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
+  let element = "<ellipse cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
+                "\" rx=\"" + rx.to_string() + "\" ry=\"" + ry.to_string() + 
+                "\" fill=\"" + color_to_svg(color) + "\"/>"
+  add_element(doc, element)
+}
+
+/// Render a polygon to SVG
+pub fn render_polygon(doc : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
+  if points.length() < 3 {
+    doc  // Can't render polygon with less than 3 points
+  } else {
+    let mut points_str = ""
+    for i = 0; i < points.length(); i = i + 1 {
+      let p = points[i]
+      points_str = points_str + p.x.to_string() + "," + p.y.to_string()
+      if i < points.length() - 1 {
+        points_str = points_str + " "
+      }
+    }
+    
+    let element = "<polygon points=\"" + points_str + "\" fill=\"" + color_to_svg(color) + "\"/>"
+    add_element(doc, element)
+  }
+}

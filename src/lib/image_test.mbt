@@ -198,3 +198,62 @@ test "radial gradient" {
     fail("Radial gradient middle should be interpolated")
   }
 }
+
+test "ellipse image" {
+  let ellipse_img = ellipse(green(), 4.0, 2.0)
+  
+  let inside = point(2.0, 1.0)  // Inside ellipse
+  let outside = point(5.0, 0.0)  // Outside ellipse
+  let edge = point(4.0, 0.0)     // On edge
+  
+  let c_inside = ellipse_img(inside)
+  let c_outside = ellipse_img(outside)
+  let c_edge = ellipse_img(edge)
+  
+  if c_inside != green() {
+    fail("Point inside ellipse should be green")
+  }
+  
+  if c_outside != transparent() {
+    fail("Point outside ellipse should be transparent")
+  }
+  
+  if c_edge != green() {
+    fail("Point on ellipse edge should be green")
+  }
+}
+
+test "polygon image" {
+  let triangle_points = [point(0.0, -2.0), point(-2.0, 2.0), point(2.0, 2.0)]
+  let triangle_img = polygon(blue(), triangle_points)
+  
+  let inside = point(0.0, 0.0)   // Inside triangle
+  let outside = point(0.0, -3.0) // Outside triangle
+  
+  let c_inside = triangle_img(inside)
+  let c_outside = triangle_img(outside)
+  
+  if c_inside != blue() {
+    fail("Point inside triangle should be blue")
+  }
+  
+  if c_outside != transparent() {
+    fail("Point outside triangle should be transparent")
+  }
+}
+
+test "opacity application" {
+  let red_img = circle(red(), 5.0)
+  let semi_transparent = with_opacity(red_img, 0.5)
+  
+  let center = point(0.0, 0.0)
+  let color = semi_transparent(center)
+  
+  if color.r != 1.0 || color.g != 0.0 || color.b != 0.0 {
+    fail("Color components should remain unchanged")
+  }
+  
+  if color.a != 0.5 {
+    fail("Alpha should be reduced to 0.5")
+  }
+}

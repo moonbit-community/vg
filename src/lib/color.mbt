@@ -82,3 +82,38 @@ pub fn clamp(c : Color) -> Color {
     a: clamp_component(c.a)
   }
 }
+
+/// Create color from HSV (Hue, Saturation, Value)
+pub fn hsv(h : Double, s : Double, v : Double) -> Color {
+  let h_norm = h - (h / 360.0).floor() * 360.0  // Normalize hue to [0, 360)
+  let c = v * s
+  let x = c * (1.0 - ((h_norm / 60.0) % 2.0 - 1.0).abs())
+  let m = v - c
+  
+  let (r_prime, g_prime, b_prime) = if h_norm < 60.0 {
+    (c, x, 0.0)
+  } else if h_norm < 120.0 {
+    (x, c, 0.0)
+  } else if h_norm < 180.0 {
+    (0.0, c, x)
+  } else if h_norm < 240.0 {
+    (0.0, x, c)
+  } else if h_norm < 300.0 {
+    (x, 0.0, c)
+  } else {
+    (c, 0.0, x)
+  }
+  
+  rgb(r_prime + m, g_prime + m, b_prime + m)
+}
+
+/// Interpolate between two colors
+pub fn lerp_color(c1 : Color, c2 : Color, t : Double) -> Color {
+  let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
+  {
+    r: c1.r + (c2.r - c1.r) * t_clamped,
+    g: c1.g + (c2.g - c1.g) * t_clamped,
+    b: c1.b + (c2.b - c1.b) * t_clamped,
+    a: c1.a + (c2.a - c1.a) * t_clamped
+  }
+}
