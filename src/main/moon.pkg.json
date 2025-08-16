@@ -1,6 +1,6 @@
 {
   "is-main": true,
   "import": [
-    "moonbit/vg/lib"
+    "bobzhang/vg/lib"
   ]
 }
