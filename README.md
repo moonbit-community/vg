@@ -23,7 +23,7 @@ This is a MoonBit port of the original [Vg library](https://github.com/dbuenzli/
 
 ```bash
 # Clone the repository
-git clone https://github.com/dbuenzli/vg
+git clone https://github.com/moonbit-community/vg.git
 cd vg
 
 # Build the library
