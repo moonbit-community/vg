@@ -148,7 +148,7 @@ test "complete vg library showcase" (it : @test.T) {
   // Create a comprehensive demo showcasing all VG features
   let doc = @vg.new_svg(600.0, 500.0)
     |> @vg.render_rectangle(0.0, 0.0, 600.0, 500.0, @vg.gray(0.97))  // Light background
-    |> @vg.render_text("MoonBit VG Library - Complete Showcase", @vg.point(300.0, 30.0), 22.0, @vg.black())
+    |> @vg.render_text("MoonBit VG Library - Complete Showcase", @vg.point(300.0, 40.0), 20.0, @vg.black())
     
     // Section 1: Basic Shapes
     |> @vg.render_text("Basic Shapes", @vg.point(100.0, 70.0), 16.0, @vg.black())

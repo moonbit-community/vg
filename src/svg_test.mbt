@@ -167,7 +167,8 @@ test "comprehensive svg rendering" (it : @test.T) {
     |> @vg.render_text("VG Graphics Demo", @vg.point(150.0, 150.0), 16.0, @vg.purple()) // Title text
   
   inspect(complex_doc, content=(
-    #|{width: 300, height: 200, elements: ["<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>", "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>", "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>", "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>", "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\" fill=\"none\"/>", "<text x=\"150\" y=\"150\" font-size=\"16\" font-family=\"Arial, sans-serif\" fill=\"#7F007F\">VG Graphics Demo</text>"]}
+    #|{width: 300, height: 200, elements: ["<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>", "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>", "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>", "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>", "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/>", "<text x=\"150\" y=\"150\" font-size=\"16\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"#7F007F\">VG Graphics Demo</text>"]}
+
 
   ))
   
@@ -345,4 +346,56 @@ test "svg rendering validation" (it : @test.T) {
   
   it.write(svg_string)
   it.snapshot(filename="svg_validation_test.svg")
+}
+
+test "minimal svg rendering test" (it : @test.T) {
+  // Create the simplest possible SVG to test basic rendering
+  let doc = @vg.new_svg(300.0, 200.0)
+    |> @vg.render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.white())  // White background
+    |> @vg.render_circle(@vg.point(150.0, 100.0), 50.0, @vg.red())  // Red circle in center
+    |> @vg.render_rectangle(50.0, 50.0, 200.0, 100.0, @vg.rgba(0.0, 0.0, 1.0, 0.5))  // Semi-transparent blue rect
+    |> @vg.render_text("Hello SVG", @vg.point(150.0, 100.0), 16.0, @vg.black())  // Centered text
+  
+  let svg_string = @vg.to_svg_string(doc)
+  it.write(svg_string)
+  it.snapshot(filename="minimal_svg_test.svg")
+}
+
+test "simple rendering test" (it : @test.T) {
+  // Ultra-simple SVG that should definitely render
+  let doc = @vg.new_svg(100.0, 100.0)
+    |> @vg.render_circle(@vg.point(50.0, 50.0), 30.0, @vg.red())
+  
+  let svg_string = @vg.to_svg_string(doc)
+  it.write(svg_string)
+  it.snapshot(filename="simple_test.svg")
+}
+
+test "html wrapped svg test" (it : @test.T) {
+  // Create an HTML file with embedded SVG for testing in browsers
+  let doc = @vg.new_svg(400.0, 300.0)
+    |> @vg.render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.white())
+    |> @vg.render_circle(@vg.point(200.0, 150.0), 50.0, @vg.red())
+    |> @vg.render_rectangle(100.0, 100.0, 200.0, 100.0, @vg.rgba(0.0, 1.0, 0.0, 0.5))
+    |> @vg.render_text("VG Library Test", @vg.point(200.0, 50.0), 18.0, @vg.black())
+    |> @vg.render_line(@vg.point(50.0, 250.0), @vg.point(350.0, 250.0), @vg.blue(), 3.0)
+  
+  let svg_string = @vg.to_svg_string(doc)
+  
+  let html_content = "<!DOCTYPE html>\n<html>\n<head>\n" +
+                    "  <title>VG Library Test</title>\n" +
+                    "  <style>\n" +
+                    "    body { font-family: Arial, sans-serif; margin: 20px; }\n" +
+                    "    .svg-container { border: 1px solid #ccc; margin: 10px 0; }\n" +
+                    "  </style>\n" +
+                    "</head>\n<body>\n" +
+                    "  <h1>MoonBit VG Library - SVG Rendering Test</h1>\n" +
+                    "  <div class=\"svg-container\">\n" +
+                    svg_string + "\n" +
+                    "  </div>\n" +
+                    "  <p>If you can see the red circle, green rectangle, blue line, and text above, the SVG is rendering correctly!</p>\n" +
+                    "</body>\n</html>"
+  
+  it.write(html_content)
+  it.snapshot(filename="svg_browser_test.html")
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
   <rect x="0" y="0" width="400" height="300" fill="#F2F2F2"/>
-  <text x="200" y="30" font-size="18" font-family="Arial, sans-serif" fill="#000000">Path Construction Showcase</text>
+  <text x="200" y="30" font-size="18" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">Path Construction Showcase</text>
   <path d="M 50,80 C 100,60 150,100 200,80 C 250,60 300,100 350,80 L 350,120 C 300,140 250,100 200,120 C 150,140 100,100 50,120 Z " fill="#0000FF" stroke="none"/>
   <path d="M 100,180 C 85,165 65,165 50,180 C 35,195 35,215 50,230 L 100,280 L 150,230 C 165,215 165,195 150,180 C 135,165 115,165 100,180 Z " fill="#FF0000" stroke="none"/>
   <path d="M 300,170 L 310,200 L 340,200 L 318,218 L 328,248 L 300,230 L 272,248 L 282,218 L 260,200 L 290,200 Z " fill="#FFD600" stroke="none"/>
-  <text x="200" y="150" font-size="12" font-family="Arial, sans-serif" fill="#0000FF">Curved Path</text>
-  <text x="100" y="160" font-size="12" font-family="Arial, sans-serif" fill="#FF0000">Heart</text>
-  <text x="300" y="160" font-size="12" font-family="Arial, sans-serif" fill="#FFD600">Star</text>
+  <text x="200" y="150" font-size="12" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#0000FF">Curved Path</text>
+  <text x="100" y="160" font-size="12" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#FF0000">Heart</text>
+  <text x="300" y="160" font-size="12" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#FFD600">Star</text>
 </svg>

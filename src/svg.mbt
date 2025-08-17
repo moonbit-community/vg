@@ -81,14 +81,15 @@ pub fn render_line(doc : SvgDocument, start : Point, end : Point, color : Color,
   let element = "<line x1=\"" + start.x.to_string() + "\" y1=\"" + start.y.to_string() + 
                 "\" x2=\"" + end.x.to_string() + "\" y2=\"" + end.y.to_string() + 
                 "\" stroke=\"" + color_to_svg(color) + "\" stroke-width=\"" + thickness.to_string() + 
-                "\" fill=\"none\"/>"
+                "\" stroke-linecap=\"round\" fill=\"none\"/>"
   add_element(doc, element)
 }
 
-/// Render text to SVG
+/// Render text to SVG  
 pub fn render_text(doc : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
   let element = "<text x=\"" + pos.x.to_string() + "\" y=\"" + pos.y.to_string() + 
                 "\" font-size=\"" + size.to_string() + "\" font-family=\"Arial, sans-serif\" " +
+                "text-anchor=\"middle\" dominant-baseline=\"central\" " +
                 "fill=\"" + color_to_svg(color) + "\">" + 
                 text + "</text>"
   add_element(doc, element)

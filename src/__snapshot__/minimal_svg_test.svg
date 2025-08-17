@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+  <rect x="0" y="0" width="300" height="200" fill="#FFFFFF"/>
+  <circle cx="150" cy="100" r="50" fill="#FF0000"/>
+  <rect x="50" y="50" width="200" height="100" fill="rgba(0,0,255,0.5)"/>
+  <text x="150" y="100" font-size="16" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">Hello SVG</text>
+</svg>
