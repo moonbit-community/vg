@@ -2,7 +2,7 @@
 
 test "empty path creation" {
   let path = @lib.empty_path()
-  if path.length() != 0 {
+  if path.0.length() != 0 {
     fail("Empty path should have zero segments")
   }
 }
@@ -14,16 +14,16 @@ test "path building with move_to and line_to" {
     |> @lib.line_to(@lib.point(10.0, 10.0))
     |> @lib.close_path()
   
-  if path.length() != 4 {
+  if path.0.length() != 4 {
     fail("Path should have 4 segments")
   }
   
-  match path[0] {
+  match path.0[0] {
     MoveTo(p) => if p.x != 0.0 || p.y != 0.0 { fail("First segment should be MoveTo(0,0)") }
     _ => fail("First segment should be MoveTo")
   }
   
-  match path[3] {
+  match path.0[3] {
     Close => ()
     _ => fail("Last segment should be Close")
   }
@@ -34,11 +34,11 @@ test "curve_to segment" {
     |> @lib.move_to(@lib.point(0.0, 0.0))
     |> @lib.curve_to(@lib.point(5.0, 0.0), @lib.point(10.0, 5.0), @lib.point(10.0, 10.0))
   
-  if path.length() != 2 {
+  if path.0.length() != 2 {
     fail("Path should have 2 segments")
   }
   
-  match path[1] {
+  match path.0[1] {
     CurveTo(cp1, cp2, end) => {
       if cp1.x != 5.0 || cp2.x != 10.0 || end.y != 10.0 {
         fail("CurveTo segment points incorrect")
@@ -51,16 +51,16 @@ test "curve_to segment" {
 test "rectangle path" {
   let path = @lib.rect_path(0.0, 0.0, 10.0, 5.0)
   
-  if path.length() != 5 {  // MoveTo + 4 LineTo + Close
+  if path.0.length() != 5 {  // MoveTo + 4 LineTo + Close
     fail("Rectangle path should have 5 segments")
   }
   
-  match path[0] {
+  match path.0[0] {
     MoveTo(p) => if p.x != 0.0 || p.y != 0.0 { fail("Rectangle should start at origin") }
     _ => fail("Rectangle should start with MoveTo")
   }
   
-  match path[4] {
+  match path.0[4] {
     Close => ()
     _ => fail("Rectangle should end with Close")
   }
@@ -70,11 +70,11 @@ test "circle path approximation" {
   let path = @lib.circle_path(@lib.point(5.0, 5.0), 3.0)
   
   // Circle approximation uses 4 cubic bezier curves + MoveTo + Close
-  if path.length() != 6 {
+  if path.0.length() != 6 {
     fail("Circle path should have 6 segments (MoveTo + 4 CurveTo + Close)")
   }
   
-  match path[0] {
+  match path.0[0] {
     MoveTo(p) => {
       // Should start at top of circle
       if (p.x - 5.0).abs() > 0.0001 || (p.y - 2.0).abs() > 0.0001 {
@@ -86,7 +86,7 @@ test "circle path approximation" {
   
   // Check that we have 4 curve segments
   let mut curve_count = 0
-  for segment in path {
+  for segment in path.0 {
     match segment {
       CurveTo(_, _, _) => curve_count = curve_count + 1
       _ => ()
@@ -101,11 +101,11 @@ test "circle path approximation" {
 test "ellipse path" {
   let path = @lib.ellipse_path(@lib.point(0.0, 0.0), 5.0, 3.0)
   
-  if path.length() != 6 {
+  if path.0.length() != 6 {
     fail("Ellipse path should have 6 segments")
   }
   
-  match path[0] {
+  match path.0[0] {
     MoveTo(p) => {
       // Should start at top of ellipse
       if p.x != 0.0 || (p.y - (-3.0)).abs() > 0.0001 {
@@ -121,11 +121,11 @@ test "path transformation" {
   let transform = @lib.make_translate(5.0, 3.0)
   let transformed_path = @lib.transform_path(transform, original_path)
   
-  if transformed_path.length() != original_path.length() {
+  if transformed_path.0.length() != original_path.0.length() {
     fail("Transformed path should have same number of segments")
   }
   
-  match transformed_path[0] {
+  match transformed_path.0[0] {
     MoveTo(p) => {
       if p.x != 5.0 || p.y != 3.0 {
         fail("Transformed path should start at translated position")
@@ -163,7 +163,7 @@ test "empty path bounds" {
 test "path with only close segment" {
   let path = empty_path() |> close_path()
   
-  if path.length() != 1 {
+  if path.0.length() != 1 {
     fail("Path with only close should have 1 segment")
   }
   

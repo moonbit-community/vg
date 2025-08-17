@@ -2,47 +2,47 @@
 
 /// Create an empty path
 pub fn empty_path() -> Path {
-  []
+  Path([])
 }
 
 /// Move to a point
 pub fn move_to(path : Path, p : Point) -> Path {
   let new_path = Array::new()
-  for segment in path {
+  for segment in path.0 {
     new_path.push(segment)
   }
   new_path.push(MoveTo(p))
-  new_path
+  Path(new_path)
 }
 
 /// Line to a point
 pub fn line_to(path : Path, p : Point) -> Path {
   let new_path = Array::new()
-  for segment in path {
+  for segment in path.0 {
     new_path.push(segment)
   }
   new_path.push(LineTo(p))
-  new_path
+  Path(new_path)
 }
 
 /// Cubic bezier curve to a point
 pub fn curve_to(path : Path, cp1 : Point, cp2 : Point, end : Point) -> Path {
   let new_path = Array::new()
-  for segment in path {
+  for segment in path.0 {
     new_path.push(segment)
   }
   new_path.push(CurveTo(cp1, cp2, end))
-  new_path
+  Path(new_path)
 }
 
 /// Close the path
 pub fn close_path(path : Path) -> Path {
   let new_path = Array::new()
-  for segment in path {
+  for segment in path.0 {
     new_path.push(segment)
   }
   new_path.push(Close)
-  new_path
+  Path(new_path)
 }
 
 /// Create a rectangle path
@@ -52,7 +52,7 @@ pub fn rect_path(x : Double, y : Double, width : Double, height : Double) -> Pat
   let bottom_right = point(x + width, y + height)
   let bottom_left = point(x, y + height)
   
-  []
+  empty_path()
   |> move_to(top_left)
   |> line_to(top_right)
   |> line_to(bottom_right)
@@ -70,7 +70,7 @@ pub fn circle_path(center : Point, radius : Double) -> Path {
   let bottom = point(center.x, center.y + radius)
   let left = point(center.x - radius, center.y)
   
-  []
+  empty_path()
   |> move_to(top)
   |> curve_to(
       point(center.x + offset, center.y - radius),
@@ -106,7 +106,7 @@ pub fn ellipse_path(center : Point, rx : Double, ry : Double) -> Path {
   let bottom = point(center.x, center.y + ry)
   let left = point(center.x - rx, center.y)
   
-  []
+  empty_path()
   |> move_to(top)
   |> curve_to(
       point(center.x + offset_x, center.y - ry),
@@ -134,7 +134,7 @@ pub fn ellipse_path(center : Point, rx : Double, ry : Double) -> Path {
 /// Transform a path
 pub fn transform_path(t : Transform, path : Path) -> Path {
   let new_path = Array::new()
-  for segment in path {
+  for segment in path.0 {
     let transformed_segment = match segment {
       MoveTo(p) => MoveTo(apply(t, p))
       LineTo(p) => LineTo(apply(t, p))
@@ -143,7 +143,7 @@ pub fn transform_path(t : Transform, path : Path) -> Path {
     }
     new_path.push(transformed_segment)
   }
-  new_path
+  Path(new_path)
 }
 
 /// Get the bounding box of a path (approximate)
@@ -162,7 +162,7 @@ pub fn path_bounds(path : Path) -> Box? {
     if p.y > max_y { max_y = p.y }
   }
   
-  for segment in path {
+  for segment in path.0 {
     match segment {
       MoveTo(p) | LineTo(p) => update_bounds(p)
       CurveTo(cp1, cp2, end) => {

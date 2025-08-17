@@ -64,29 +64,29 @@ test "PathSegment variants" {
     |> curve_to(point(1.0, 1.0), point(2.0, 2.0), point(3.0, 3.0))
     |> close_path()
   
-  if path.length() != 4 {
+  if path.0.length() != 4 {
     fail("Path should have 4 segments")
   }
   
   // Test that we can match on the segments
-  match path[0] {
+  match path.0[0] {
     MoveTo(p) => if p.x != 1.0 || p.y != 2.0 { fail("MoveTo point incorrect") }
     _ => fail("Expected MoveTo segment")
   }
   
-  match path[1] {
+  match path.0[1] {
     LineTo(p) => if p.x != 3.0 || p.y != 4.0 { fail("LineTo point incorrect") }
     _ => fail("Expected LineTo segment")
   }
   
-  match path[2] {
+  match path.0[2] {
     CurveTo(cp1, cp2, end) => {
       if cp1.x != 1.0 || cp2.x != 2.0 || end.x != 3.0 { fail("CurveTo points incorrect") }
     }
     _ => fail("Expected CurveTo segment")
   }
   
-  match path[3] {
+  match path.0[3] {
     Close => ()
     _ => fail("Expected Close segment")
   }

@@ -42,7 +42,7 @@ fn point_to_svg(p : Point) -> String {
 /// Convert a path to SVG path data
 fn path_to_svg_data(path : Path) -> String {
   let mut data = ""
-  for segment in path {
+  for segment in path.0 {
     match segment {
       MoveTo(p) => data = data + "M " + point_to_svg(p) + " "
       LineTo(p) => data = data + "L " + point_to_svg(p) + " "

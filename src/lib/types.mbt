@@ -50,7 +50,7 @@ pub enum PathSegment {
 } derive(Eq, Show)
 
 /// A path is a sequence of segments
-pub typealias Array[PathSegment] as Path
+pub struct Path(Array[PathSegment]) derive(Eq, Show)
 
 /// Primitive shapes (reserved for future rendering backends)
 pub enum Primitive {
