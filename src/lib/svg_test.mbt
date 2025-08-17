@@ -51,7 +51,7 @@ test "rectangle rendering" {
 }
 
 test "path rendering" {
-  let path = @lib.rect_path(0.0, 0.0, 10.0, 10.0)
+  let path = @lib.Path::rect(0.0, 0.0, 10.0, 10.0)
   let doc = @lib.new_svg(100.0, 100.0)
     |> @lib.render_path(path, @lib.green())
   

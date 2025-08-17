@@ -1,18 +1,18 @@
 // Tests for path utilities
 
 test "empty path creation" {
-  let path = @lib.empty_path()
+  let path = @lib.Path::empty()
   if path.0.length() != 0 {
     fail("Empty path should have zero segments")
   }
 }
 
 test "path building with move_to and line_to" {
-  let path = @lib.empty_path()
-    |> @lib.move_to(@lib.point(0.0, 0.0))
-    |> @lib.line_to(@lib.point(10.0, 0.0))
-    |> @lib.line_to(@lib.point(10.0, 10.0))
-    |> @lib.close_path()
+  let path = @lib.Path::empty()
+    .move_to(@lib.point(0.0, 0.0))
+    .line_to(@lib.point(10.0, 0.0))
+    .line_to(@lib.point(10.0, 10.0))
+    .close_path()
   
   if path.0.length() != 4 {
     fail("Path should have 4 segments")
@@ -30,9 +30,9 @@ test "path building with move_to and line_to" {
 }
 
 test "curve_to segment" {
-  let path = @lib.empty_path()
-    |> @lib.move_to(@lib.point(0.0, 0.0))
-    |> @lib.curve_to(@lib.point(5.0, 0.0), @lib.point(10.0, 5.0), @lib.point(10.0, 10.0))
+  let path = @lib.Path::empty()
+    .move_to(@lib.point(0.0, 0.0))
+    .curve_to(@lib.point(5.0, 0.0), @lib.point(10.0, 5.0), @lib.point(10.0, 10.0))
   
   if path.0.length() != 2 {
     fail("Path should have 2 segments")
@@ -49,7 +49,7 @@ test "curve_to segment" {
 }
 
 test "rectangle path" {
-  let path = @lib.rect_path(0.0, 0.0, 10.0, 5.0)
+  let path = @lib.Path::rect(0.0, 0.0, 10.0, 5.0)
   
   if path.0.length() != 5 {  // MoveTo + 4 LineTo + Close
     fail("Rectangle path should have 5 segments")
@@ -67,7 +67,7 @@ test "rectangle path" {
 }
 
 test "circle path approximation" {
-  let path = @lib.circle_path(@lib.point(5.0, 5.0), 3.0)
+  let path = @lib.Path::circle(@lib.point(5.0, 5.0), 3.0)
   
   // Circle approximation uses 4 cubic bezier curves + MoveTo + Close
   if path.0.length() != 6 {
@@ -99,7 +99,7 @@ test "circle path approximation" {
 }
 
 test "ellipse path" {
-  let path = @lib.ellipse_path(@lib.point(0.0, 0.0), 5.0, 3.0)
+  let path = @lib.Path::ellipse(@lib.point(0.0, 0.0), 5.0, 3.0)
   
   if path.0.length() != 6 {
     fail("Ellipse path should have 6 segments")
@@ -117,9 +117,9 @@ test "ellipse path" {
 }
 
 test "path transformation" {
-  let original_path = @lib.rect_path(0.0, 0.0, 2.0, 2.0)
+  let original_path = @lib.Path::rect(0.0, 0.0, 2.0, 2.0)
   let transform = @lib.make_translate(5.0, 3.0)
-  let transformed_path = @lib.transform_path(transform, original_path)
+  let transformed_path = original_path.transform(transform)
   
   if transformed_path.0.length() != original_path.0.length() {
     fail("Transformed path should have same number of segments")
@@ -136,12 +136,12 @@ test "path transformation" {
 }
 
 test "path bounds calculation" {
-  let path = @lib.empty_path()
-    |> @lib.move_to(@lib.point(-5.0, -3.0))
-    |> @lib.line_to(@lib.point(10.0, 7.0))
-    |> @lib.line_to(@lib.point(2.0, -8.0))
+  let path = @lib.Path::empty()
+    .move_to(@lib.point(-5.0, -3.0))
+    .line_to(@lib.point(10.0, 7.0))
+    .line_to(@lib.point(2.0, -8.0))
   
-  match @lib.path_bounds(path) {
+  match path.bounds() {
     Some(bounds) => {
       if bounds.min_x != -5.0 || bounds.max_x != 10.0 ||
          bounds.min_y != -8.0 || bounds.max_y != 7.0 {
@@ -153,21 +153,21 @@ test "path bounds calculation" {
 }
 
 test "empty path bounds" {
-  let path = empty_path()
-  match path_bounds(path) {
+  let path = Path::empty()
+  match path.bounds() {
     Some(_) => fail("Empty path should not have bounds")
     None => ()
   }
 }
 
 test "path with only close segment" {
-  let path = empty_path() |> close_path()
+  let path = Path::empty().close_path()
   
   if path.0.length() != 1 {
     fail("Path with only close should have 1 segment")
   }
   
-  match path_bounds(path) {
+  match path.bounds() {
     Some(_) => fail("Path with only Close should not have bounds")
     None => ()
   }

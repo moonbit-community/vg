@@ -58,11 +58,11 @@ test "Box creation and equality" {
 
 test "PathSegment variants" {
   // Test using path construction functions instead of direct enum construction
-  let path = empty_path()
-    |> move_to(point(1.0, 2.0))
-    |> line_to(point(3.0, 4.0))
-    |> curve_to(point(1.0, 1.0), point(2.0, 2.0), point(3.0, 3.0))
-    |> close_path()
+  let path = Path::empty()
+    .move_to(point(1.0, 2.0))
+    .line_to(point(3.0, 4.0))
+    .curve_to(point(1.0, 1.0), point(2.0, 2.0), point(3.0, 3.0))
+    .close_path()
   
   if path.0.length() != 4 {
     fail("Path should have 4 segments")

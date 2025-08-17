@@ -54,12 +54,12 @@ test "complete workflow - create and render image" {
 
 test "path to SVG integration" {
   // Create a complex path
-  let path = @lib.empty_path()
-    |> @lib.move_to(@lib.point(50.0, 50.0))
-    |> @lib.line_to(@lib.point(100.0, 50.0))
-    |> @lib.curve_to(@lib.point(125.0, 50.0), @lib.point(125.0, 75.0), @lib.point(100.0, 75.0))
-    |> @lib.line_to(@lib.point(50.0, 75.0))
-    |> @lib.close_path()
+  let path = @lib.Path::empty()
+    .move_to(@lib.point(50.0, 50.0))
+    .line_to(@lib.point(100.0, 50.0))
+    .curve_to(@lib.point(125.0, 50.0), @lib.point(125.0, 75.0), @lib.point(100.0, 75.0))
+    .line_to(@lib.point(50.0, 75.0))
+    .close_path()
   
   // Render to SVG
   let doc = @lib.new_svg(150.0, 100.0)
