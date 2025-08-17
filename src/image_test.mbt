@@ -261,3 +261,69 @@ test "opacity application" {
     fail("Alpha should be reduced to 0.5")
   }
 }
+
+test "image rendering showcase" (it : @test.T) {
+  // Create a complex composed image
+  let background = @vg.rectangle(@vg.gray(0.95), 200.0, 150.0)
+  let red_circle = @vg.circle(@vg.red(), 25.0)
+  let blue_ellipse = @vg.ellipse(@vg.blue(), 30.0, 20.0)
+  let green_rect = @vg.rectangle(@vg.green(), 40.0, 30.0)
+  
+  let composed = background
+    |> @vg.compose_imgs(@vg.translate_img(50.0, 40.0, red_circle))
+    |> @vg.compose_imgs(@vg.translate_img(100.0, 60.0, blue_ellipse))
+    |> @vg.compose_imgs(@vg.translate_img(150.0, 50.0, green_rect))
+    |> @vg.compose_imgs(@vg.translate_img(75.0, 90.0, @vg.with_opacity(@vg.circle(@vg.yellow(), 20.0), 0.7)))
+  
+  let svg_string = @vg.render_image_to_svg(composed, 200.0, 150.0, 40)
+  it.write(svg_string)
+  it.snapshot(filename="image_composition.svg")
+}
+
+test "gradient images showcase" (it : @test.T) {
+  // Linear gradients
+  let horizontal_gradient = @vg.linear_gradient(@vg.red(), @vg.blue(), @vg.point(-50.0, 0.0), @vg.point(50.0, 0.0))
+  let vertical_gradient = @vg.linear_gradient(@vg.green(), @vg.yellow(), @vg.point(0.0, -40.0), @vg.point(0.0, 40.0))
+  let diagonal_gradient = @vg.linear_gradient(@vg.purple(), @vg.cyan(), @vg.point(-35.0, -35.0), @vg.point(35.0, 35.0))
+  
+  // Radial gradients
+  let radial1 = @vg.radial_gradient(@vg.white(), @vg.red(), @vg.point(0.0, 0.0), 30.0)
+  let radial2 = @vg.radial_gradient(@vg.yellow(), @vg.purple(), @vg.point(0.0, 0.0), 25.0)
+  
+  // Render each gradient
+  let h_svg = @vg.render_image_to_svg(horizontal_gradient, 100.0, 80.0, 25)
+  let v_svg = @vg.render_image_to_svg(vertical_gradient, 100.0, 80.0, 25)
+  let d_svg = @vg.render_image_to_svg(diagonal_gradient, 100.0, 80.0, 25)
+  let r1_svg = @vg.render_image_to_svg(radial1, 100.0, 80.0, 25)
+  let r2_svg = @vg.render_image_to_svg(radial2, 100.0, 80.0, 25)
+  
+  let combined_output = "<!-- Horizontal Linear Gradient -->\n" + h_svg + 
+                       "\n\n<!-- Vertical Linear Gradient -->\n" + v_svg +
+                       "\n\n<!-- Diagonal Linear Gradient -->\n" + d_svg +
+                       "\n\n<!-- Radial Gradient 1 -->\n" + r1_svg +
+                       "\n\n<!-- Radial Gradient 2 -->\n" + r2_svg
+  
+  it.write(combined_output)
+  it.snapshot(filename="gradient_gallery.txt")
+}
+
+test "transform showcase" (it : @test.T) {
+  let base_circle = @vg.circle(@vg.red(), 20.0)
+  
+  // Apply different transformations
+  let translated = @vg.translate_img(60.0, 0.0, base_circle)
+  let scaled = @vg.scale_image(1.5, 0.8, base_circle)
+  let rotated = @vg.rotate_image(3.14159 / 4.0, base_circle)  // 45 degrees
+  
+  // Compose all transformations
+  let background = @vg.rectangle(@vg.gray(0.9), 200.0, 100.0)
+  let showcase = background
+    |> @vg.compose_imgs(@vg.translate_img(40.0, 50.0, base_circle))
+    |> @vg.compose_imgs(@vg.translate_img(100.0, 50.0, translated))
+    |> @vg.compose_imgs(@vg.translate_img(40.0, 30.0, scaled))
+    |> @vg.compose_imgs(@vg.translate_img(140.0, 30.0, rotated))
+  
+  let svg_string = @vg.render_image_to_svg(showcase, 200.0, 100.0, 30)
+  it.write(svg_string)
+  it.snapshot(filename="transform_showcase.svg")
+}

@@ -22,27 +22,26 @@ test "adding elements to SVG" {
   }
 }
 
-test "circle rendering" {
+test "circle rendering" (it : @test.T) {
   let doc = @vg.new_svg(100.0, 100.0)
     |> @vg.render_circle(@vg.point(50.0, 50.0), 25.0, @vg.red())
   
   inspect(doc, content=(
     #|{width: 100, height: 100, elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"#FF0000\"/>"]}
   ))
+  
+  let svg_string = @vg.to_svg_string(doc)
+  it.write(svg_string)
+  it.snapshot(filename="circle_rendering.svg")
 }
 
-test "rectangle rendering" {
+test "rectangle rendering" (it : @test.T) {
   let doc = @vg.new_svg(200.0, 150.0)
     |> @vg.render_rectangle(10.0, 20.0, 50.0, 30.0, @vg.blue())
   
-  if doc.elements.length() != 1 {
-    fail("Should have one rectangle element")
-  }
-  
-  let element = doc.elements[0]
-  if not(element.contains("rect")) || not(element.contains("x=\"10\"")) {
-    fail("Rectangle element should contain correct attributes")
-  }
+  let svg_string = @vg.to_svg_string(doc)
+  it.write(svg_string)
+  it.snapshot(filename="rectangle_rendering.svg")
 }
 
 test "path rendering" {
@@ -158,7 +157,7 @@ test "color with alpha in SVG" {
   ))
 }
 
-test "comprehensive svg rendering" {
+test "comprehensive svg rendering" (it : @test.T) {
   let complex_doc = @vg.new_svg(300.0, 200.0)
     |> @vg.render_rectangle(10.0, 10.0, 280.0, 180.0, @vg.gray(0.95))  // Background
     |> @vg.render_circle(@vg.point(80.0, 60.0), 30.0, @vg.red())       // Red circle
@@ -170,9 +169,13 @@ test "comprehensive svg rendering" {
   inspect(complex_doc, content=(
     #|{width: 300, height: 200, elements: ["<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>", "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>", "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>", "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>", "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\"/>", "<text x=\"150\" y=\"150\" font-size=\"16\" fill=\"#7F007F\">VG Graphics Demo</text>"]}
   ))
+  
+  let svg_string = @vg.to_svg_string(complex_doc)
+  it.write(svg_string)
+  it.snapshot(filename="comprehensive_demo.svg")
 }
 
-test "svg string generation" {
+test "svg string generation" (it : @test.T) {
   let doc = @vg.new_svg(100.0, 100.0)
     |> @vg.render_circle(@vg.point(50.0, 50.0), 25.0, @vg.red())
   
@@ -183,9 +186,11 @@ test "svg string generation" {
     #|  <circle cx="50" cy="50" r="25" fill="#FF0000"/>
     #|</svg>
   ))
+  it.write(svg_string)
+  it.snapshot(filename="svg_string.svg")
 }
 
-test "path rendering to svg" {
+test "path rendering to svg" (it : @test.T) {
   let custom_path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 10.0))
     .line_to(@vg.point(90.0, 10.0))
@@ -199,4 +204,116 @@ test "path rendering to svg" {
   inspect(doc, content=(
     #|{width: 120, height: 50, elements: ["<path d=\"M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z \" fill=\"#FF00FF\"/>"]}
   ))
+  
+  let svg_string = @vg.to_svg_string(doc)
+  it.write(svg_string)
+  it.snapshot(filename="path_rendering.svg")
+}
+
+test "gradient showcase" (it : @test.T) {
+  let doc = @vg.new_svg(400.0, 300.0)
+    |> @vg.render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.white())  // Background
+    |> @vg.render_text("Gradient Showcase", @vg.point(200.0, 30.0), 20.0, @vg.black())
+  
+  // Render gradient images as rasterized rectangles for visualization
+  let gradient_img = @vg.linear_gradient(@vg.red(), @vg.blue(), @vg.point(-50.0, 0.0), @vg.point(50.0, 0.0))
+  let gradient_svg = @vg.render_image_to_svg(gradient_img, 100.0, 50.0, 20)
+  
+  let radial_img = @vg.radial_gradient(@vg.yellow(), @vg.purple(), @vg.point(0.0, 0.0), 25.0)
+  let radial_svg = @vg.render_image_to_svg(radial_img, 100.0, 50.0, 20)
+  
+  it.write("<!-- Linear Gradient -->\n" + gradient_svg + "\n\n<!-- Radial Gradient -->\n" + radial_svg)
+  it.snapshot(filename="gradient_showcase.txt")
+}
+
+test "shape gallery" (it : @test.T) {
+  let doc = @vg.new_svg(500.0, 400.0)
+    |> @vg.render_rectangle(0.0, 0.0, 500.0, 400.0, @vg.gray(0.98))  // Light background
+    |> @vg.render_text("VG Shape Gallery", @vg.point(250.0, 30.0), 24.0, @vg.black())
+    
+    // Row 1: Basic shapes
+    |> @vg.render_circle(@vg.point(80.0, 100.0), 30.0, @vg.red())
+    |> @vg.render_rectangle(130.0, 70.0, 60.0, 60.0, @vg.green())
+    |> @vg.render_ellipse(@vg.point(250.0, 100.0), 40.0, 25.0, @vg.blue())
+    
+    // Row 2: Complex shapes
+    |> @vg.render_polygon([
+        @vg.point(325.0, 80.0), @vg.point(375.0, 80.0), @vg.point(385.0, 110.0), 
+        @vg.point(350.0, 125.0), @vg.point(315.0, 110.0)
+      ], @vg.orange())
+    |> @vg.render_polygon([
+        @vg.point(420.0, 75.0), @vg.point(395.0, 125.0), @vg.point(445.0, 125.0)
+      ], @vg.purple())
+    
+    // Row 3: Lines and text
+    |> @vg.render_line(@vg.point(50.0, 180.0), @vg.point(450.0, 180.0), @vg.black(), 3.0)
+    |> @vg.render_line(@vg.point(50.0, 200.0), @vg.point(450.0, 220.0), @vg.cyan(), 2.0)
+    |> @vg.render_line(@vg.point(50.0, 240.0), @vg.point(450.0, 200.0), @vg.magenta(), 2.0)
+    
+    // Labels
+    |> @vg.render_text("Circle", @vg.point(80.0, 150.0), 12.0, @vg.black())
+    |> @vg.render_text("Rectangle", @vg.point(160.0, 150.0), 12.0, @vg.black())
+    |> @vg.render_text("Ellipse", @vg.point(250.0, 150.0), 12.0, @vg.black())
+    |> @vg.render_text("Pentagon", @vg.point(350.0, 150.0), 12.0, @vg.black())
+    |> @vg.render_text("Triangle", @vg.point(420.0, 150.0), 12.0, @vg.black())
+    
+    // Footer
+    |> @vg.render_text("Powered by MoonBit VG Library", @vg.point(250.0, 350.0), 14.0, @vg.gray(0.6))
+  
+  let svg_string = @vg.to_svg_string(doc)
+  it.write(svg_string)
+  it.snapshot(filename="shape_gallery.svg")
+}
+
+test "path showcase" (it : @test.T) {
+  let doc = @vg.new_svg(400.0, 300.0)
+    |> @vg.render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.gray(0.95))
+    |> @vg.render_text("Path Construction Showcase", @vg.point(200.0, 30.0), 18.0, @vg.black())
+  
+  // Complex curved path
+  let curved_path = @vg.Path::empty()
+    .move_to(@vg.point(50.0, 80.0))
+    .curve_to(@vg.point(100.0, 60.0), @vg.point(150.0, 100.0), @vg.point(200.0, 80.0))
+    .curve_to(@vg.point(250.0, 60.0), @vg.point(300.0, 100.0), @vg.point(350.0, 80.0))
+    .line_to(@vg.point(350.0, 120.0))
+    .curve_to(@vg.point(300.0, 140.0), @vg.point(250.0, 100.0), @vg.point(200.0, 120.0))
+    .curve_to(@vg.point(150.0, 140.0), @vg.point(100.0, 100.0), @vg.point(50.0, 120.0))
+    .close_path()
+  
+  // Heart shape
+  let heart_path = @vg.Path::empty()
+    .move_to(@vg.point(100.0, 180.0))
+    .curve_to(@vg.point(85.0, 165.0), @vg.point(65.0, 165.0), @vg.point(50.0, 180.0))
+    .curve_to(@vg.point(35.0, 195.0), @vg.point(35.0, 215.0), @vg.point(50.0, 230.0))
+    .line_to(@vg.point(100.0, 280.0))
+    .line_to(@vg.point(150.0, 230.0))
+    .curve_to(@vg.point(165.0, 215.0), @vg.point(165.0, 195.0), @vg.point(150.0, 180.0))
+    .curve_to(@vg.point(135.0, 165.0), @vg.point(115.0, 165.0), @vg.point(100.0, 180.0))
+    .close_path()
+  
+  // Star path
+  let star_path = @vg.Path::empty()
+    .move_to(@vg.point(300.0, 170.0))
+    .line_to(@vg.point(310.0, 200.0))
+    .line_to(@vg.point(340.0, 200.0))
+    .line_to(@vg.point(318.0, 218.0))
+    .line_to(@vg.point(328.0, 248.0))
+    .line_to(@vg.point(300.0, 230.0))
+    .line_to(@vg.point(272.0, 248.0))
+    .line_to(@vg.point(282.0, 218.0))
+    .line_to(@vg.point(260.0, 200.0))
+    .line_to(@vg.point(290.0, 200.0))
+    .close_path()
+  
+  let final_doc = doc
+    |> @vg.render_path(curved_path, @vg.blue())
+    |> @vg.render_path(heart_path, @vg.red())
+    |> @vg.render_path(star_path, @vg.gold())
+    |> @vg.render_text("Curved Path", @vg.point(200.0, 150.0), 12.0, @vg.blue())
+    |> @vg.render_text("Heart", @vg.point(100.0, 160.0), 12.0, @vg.red())
+    |> @vg.render_text("Star", @vg.point(300.0, 160.0), 12.0, @vg.gold())
+  
+  let svg_string = @vg.to_svg_string(final_doc)
+  it.write(svg_string)
+  it.snapshot(filename="path_showcase.svg")
 }
