@@ -167,7 +167,8 @@ test "comprehensive svg rendering" (it : @test.T) {
     |> @vg.render_text("VG Graphics Demo", @vg.point(150.0, 150.0), 16.0, @vg.purple()) // Title text
   
   inspect(complex_doc, content=(
-    #|{width: 300, height: 200, elements: ["<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>", "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>", "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>", "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>", "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\"/>", "<text x=\"150\" y=\"150\" font-size=\"16\" fill=\"#7F007F\">VG Graphics Demo</text>"]}
+    #|{width: 300, height: 200, elements: ["<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>", "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>", "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>", "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>", "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\" fill=\"none\"/>", "<text x=\"150\" y=\"150\" font-size=\"16\" font-family=\"Arial, sans-serif\" fill=\"#7F007F\">VG Graphics Demo</text>"]}
+
   ))
   
   let svg_string = @vg.to_svg_string(complex_doc)
@@ -202,7 +203,8 @@ test "path rendering to svg" (it : @test.T) {
     |> @vg.render_path(custom_path, @vg.magenta())
   
   inspect(doc, content=(
-    #|{width: 120, height: 50, elements: ["<path d=\"M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z \" fill=\"#FF00FF\"/>"]}
+    #|{width: 120, height: 50, elements: ["<path d=\"M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z \" fill=\"#FF00FF\" stroke=\"none\"/>"]}
+
   ))
   
   let svg_string = @vg.to_svg_string(doc)
@@ -211,11 +213,7 @@ test "path rendering to svg" (it : @test.T) {
 }
 
 test "gradient showcase" (it : @test.T) {
-  let doc = @vg.new_svg(400.0, 300.0)
-    |> @vg.render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.white())  // Background
-    |> @vg.render_text("Gradient Showcase", @vg.point(200.0, 30.0), 20.0, @vg.black())
-  
-  // Render gradient images as rasterized rectangles for visualization
+  // Create a simple SVG to test gradient rendering
   let gradient_img = @vg.linear_gradient(@vg.red(), @vg.blue(), @vg.point(-50.0, 0.0), @vg.point(50.0, 0.0))
   let gradient_svg = @vg.render_image_to_svg(gradient_img, 100.0, 50.0, 20)
   
@@ -316,4 +314,35 @@ test "path showcase" (it : @test.T) {
   let svg_string = @vg.to_svg_string(final_doc)
   it.write(svg_string)
   it.snapshot(filename="path_showcase.svg")
+}
+
+test "svg rendering validation" (it : @test.T) {
+  // Create a simple test to validate SVG structure
+  let doc = @vg.new_svg(200.0, 100.0)
+    |> @vg.render_rectangle(10.0, 10.0, 180.0, 80.0, @vg.gray(0.95))
+    |> @vg.render_circle(@vg.point(100.0, 50.0), 20.0, @vg.red())
+    |> @vg.render_text("SVG Test", @vg.point(100.0, 30.0), 14.0, @vg.black())
+    |> @vg.render_line(@vg.point(20.0, 80.0), @vg.point(180.0, 80.0), @vg.blue(), 2.0)
+  
+  let svg_string = @vg.to_svg_string(doc)
+  
+  // Basic validation checks
+  if not(svg_string.contains("<?xml")) {
+    fail("SVG should start with XML declaration")
+  }
+  
+  if not(svg_string.contains("<svg")) {
+    fail("SVG should contain svg element")
+  }
+  
+  if not(svg_string.contains("</svg>")) {
+    fail("SVG should be properly closed")
+  }
+  
+  if not(svg_string.contains("font-family")) {
+    fail("SVG text should have font-family attribute")
+  }
+  
+  it.write(svg_string)
+  it.snapshot(filename="svg_validation_test.svg")
 }

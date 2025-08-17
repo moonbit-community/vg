@@ -72,7 +72,7 @@ pub fn render_rectangle(doc : SvgDocument, x : Double, y : Double, width : Doubl
 /// Render a path to SVG
 pub fn render_path(doc : SvgDocument, path : Path, color : Color) -> SvgDocument {
   let data = path_to_svg_data(path)
-  let element = "<path d=\"" + data + "\" fill=\"" + color_to_svg(color) + "\"/>"
+  let element = "<path d=\"" + data + "\" fill=\"" + color_to_svg(color) + "\" stroke=\"none\"/>"
   add_element(doc, element)
 }
 
@@ -80,14 +80,16 @@ pub fn render_path(doc : SvgDocument, path : Path, color : Color) -> SvgDocument
 pub fn render_line(doc : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
   let element = "<line x1=\"" + start.x.to_string() + "\" y1=\"" + start.y.to_string() + 
                 "\" x2=\"" + end.x.to_string() + "\" y2=\"" + end.y.to_string() + 
-                "\" stroke=\"" + color_to_svg(color) + "\" stroke-width=\"" + thickness.to_string() + "\"/>"
+                "\" stroke=\"" + color_to_svg(color) + "\" stroke-width=\"" + thickness.to_string() + 
+                "\" fill=\"none\"/>"
   add_element(doc, element)
 }
 
 /// Render text to SVG
 pub fn render_text(doc : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
   let element = "<text x=\"" + pos.x.to_string() + "\" y=\"" + pos.y.to_string() + 
-                "\" font-size=\"" + size.to_string() + "\" fill=\"" + color_to_svg(color) + "\">" + 
+                "\" font-size=\"" + size.to_string() + "\" font-family=\"Arial, sans-serif\" " +
+                "fill=\"" + color_to_svg(color) + "\">" + 
                 text + "</text>"
   add_element(doc, element)
 }
