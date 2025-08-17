@@ -72,7 +72,7 @@ test "color blending" {
 }
 
 test "color scaling" {
-  let c = @lib.rgb(0.8, 0.6, 0.4)
+  let c = @vg.rgb(0.8, 0.6, 0.4)
   let scaled = scale(c, 0.5)
   
   if scaled.r != 0.4 || scaled.g != 0.3 || scaled.b != 0.2 {

@@ -1,8 +1,8 @@
 // Tests for transformation utilities
 
 test "identity transform" {
-  let id = @lib.identity()
-  let p = @lib.point(5.0, 7.0)
+  let id = @vg.identity()
+  let p = @vg.point(5.0, 7.0)
   let transformed = apply(id, p)
   
   if transformed.x != p.x || transformed.y != p.y {
@@ -11,8 +11,8 @@ test "identity transform" {
 }
 
 test "translation transform" {
-  let t = @lib.make_translate(3.0, 4.0)
-  let p = @lib.point(1.0, 2.0)
+  let t = @vg.make_translate(3.0, 4.0)
+  let p = @vg.point(1.0, 2.0)
   let transformed = apply(t, p)
   
   if transformed.x != 4.0 || transformed.y != 6.0 {
@@ -21,8 +21,8 @@ test "translation transform" {
 }
 
 test "scale transform" {
-  let t = @lib.make_scale(2.0, 3.0)
-  let p = @lib.point(4.0, 5.0)
+  let t = @vg.make_scale(2.0, 3.0)
+  let p = @vg.point(4.0, 5.0)
   let transformed = apply(t, p)
   
   if transformed.x != 8.0 || transformed.y != 15.0 {
@@ -31,8 +31,8 @@ test "scale transform" {
 }
 
 test "uniform scale transform" {
-  let t = @lib.scale_uniform(2.5)
-  let p = @lib.point(2.0, 4.0)
+  let t = @vg.scale_uniform(2.5)
+  let p = @vg.point(2.0, 4.0)
   let transformed = apply(t, p)
   
   if transformed.x != 5.0 || transformed.y != 10.0 {
@@ -41,8 +41,8 @@ test "uniform scale transform" {
 }
 
 test "rotation transform" {
-  let t = @lib.make_rotate(3.14159265359 / 2.0)  // 90 degrees
-  let p = @lib.point(1.0, 0.0)
+  let t = @vg.make_rotate(3.14159265359 / 2.0)  // 90 degrees
+  let p = @vg.point(1.0, 0.0)
   let transformed = apply(t, p)
   
   // Should be approximately (0, 1)
@@ -52,11 +52,11 @@ test "rotation transform" {
 }
 
 test "transform composition" {
-  let t1 = @lib.make_translate(1.0, 2.0)
-  let t2 = @lib.make_scale(2.0, 3.0)
-  let composed = @lib.compose_transforms(t1, t2)
+  let t1 = @vg.make_translate(1.0, 2.0)
+  let t2 = @vg.make_scale(2.0, 3.0)
+  let composed = @vg.compose_transforms(t1, t2)
   
-  let p = @lib.point(1.0, 1.0)
+  let p = @vg.point(1.0, 1.0)
   let result1 = apply(composed, p)
   let result2 = apply(t2, apply(t1, p))
   
@@ -66,10 +66,10 @@ test "transform composition" {
 }
 
 test "transform inversion" {
-  let t = @lib.make_translate(3.0, 4.0)
-  match @lib.invert(t) {
+  let t = @vg.make_translate(3.0, 4.0)
+  match @vg.invert(t) {
     Some(inv_t) => {
-      let p = @lib.point(5.0, 7.0)
+      let p = @vg.point(5.0, 7.0)
       let transformed = apply(t, p)
       let back = apply(inv_t, transformed)
       
@@ -84,15 +84,15 @@ test "transform inversion" {
 test "non-invertible transform" {
   // Zero determinant transform (degenerate)
   let t = Transform::{ m11: 1.0, m12: 0.0, m21: 1.0, m22: 0.0, m31: 0.0, m32: 0.0 }
-  match @lib.invert(t) {
+  match @vg.invert(t) {
     Some(_) => fail("Degenerate transform should not be invertible")
     None => ()
   }
 }
 
 test "determinant calculation" {
-  let t = @lib.make_scale(2.0, 3.0)
-  let det = @lib.determinant(t)
+  let t = @vg.make_scale(2.0, 3.0)
+  let det = @vg.determinant(t)
   
   if det != 6.0 {
     fail("Determinant of scale transform should be product of scale factors")
@@ -100,23 +100,23 @@ test "determinant calculation" {
 }
 
 test "orientation preservation" {
-  let t1 = @lib.make_scale(2.0, 3.0)  // Positive determinant
-  let t2 = @lib.make_scale(-2.0, 3.0)  // Negative determinant
+  let t1 = @vg.make_scale(2.0, 3.0)  // Positive determinant
+  let t2 = @vg.make_scale(-2.0, 3.0)  // Negative determinant
   
-  if not(@lib.preserves_orientation(t1)) {
+  if not(@vg.preserves_orientation(t1)) {
     fail("Positive scale should preserve orientation")
   }
   
-  if @lib.preserves_orientation(t2) {
+  if @vg.preserves_orientation(t2) {
     fail("Negative scale should not preserve orientation")
   }
 }
 
 test "skew transforms" {
-  let skew_x_t = @lib.skew_x(0.5)
-  let skew_y_t = @lib.skew_y(0.5)
+  let skew_x_t = @vg.skew_x(0.5)
+  let skew_y_t = @vg.skew_y(0.5)
   
-  let p = @lib.point(1.0, 1.0)
+  let p = @vg.point(1.0, 1.0)
   let skewed_x = apply(skew_x_t, p)
   let skewed_y = apply(skew_y_t, p)
   

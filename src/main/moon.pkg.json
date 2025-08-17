@@ -1,6 +1,6 @@
 {
   "is-main": true,
   "import": [
-    "bobzhang/vg/lib"
+    "bobzhang/vg"
   ]
 }

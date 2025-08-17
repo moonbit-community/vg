@@ -1,0 +1,249 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bobzhang/vg"
+
+// Values
+fn add(Point, Point) -> Point
+
+fn add_element(SvgDocument, String) -> SvgDocument
+
+fn apply(Transform, Point) -> Point
+
+fn black() -> Color
+
+fn blend(Color, Color) -> Color
+
+fn blue() -> Color
+
+fn circle(Color, Double) -> (Point) -> Color
+
+fn clamp(Color) -> Color
+
+fn compose_imgs((Point) -> Color, (Point) -> Color) -> (Point) -> Color
+
+fn compose_transforms(Transform, Transform) -> Transform
+
+fn const_color(Color) -> (Point) -> Color
+
+fn cut((Point) -> Color, (Point) -> Color) -> (Point) -> Color
+
+fn cyan() -> Color
+
+fn determinant(Transform) -> Double
+
+fn distance(Point, Point) -> Double
+
+fn dot(Point, Point) -> Double
+
+fn ellipse(Color, Double, Double) -> (Point) -> Color
+
+fn empty() -> (Point) -> Color
+
+fn example() -> (Point) -> Color
+
+fn gold() -> Color
+
+fn gray(Double) -> Color
+
+fn green() -> Color
+
+fn hsv(Double, Double, Double) -> Color
+
+fn identity() -> Transform
+
+fn invert(Transform) -> Transform?
+
+fn length(Point) -> Double
+
+fn lerp(Point, Point, Double) -> Point
+
+fn lerp_color(Color, Color, Double) -> Color
+
+fn line(Color, Point, Point, Double) -> (Point) -> Color
+
+fn linear_gradient(Color, Color, Point, Point) -> (Point) -> Color
+
+fn magenta() -> Color
+
+fn make_rotate(Double) -> Transform
+
+fn make_scale(Double, Double) -> Transform
+
+fn make_translate(Double, Double) -> Transform
+
+fn new_svg(Double, Double) -> SvgDocument
+
+fn normalize(Point) -> Point
+
+fn orange() -> Color
+
+fn origin() -> Point
+
+fn point(Double, Double) -> Point
+
+fn polygon(Color, Array[Point]) -> (Point) -> Color
+
+fn preserves_orientation(Transform) -> Bool
+
+fn purple() -> Color
+
+fn radial_gradient(Color, Color, Point, Double) -> (Point) -> Color
+
+fn rectangle(Color, Double, Double) -> (Point) -> Color
+
+fn red() -> Color
+
+fn render_circle(SvgDocument, Point, Double, Color) -> SvgDocument
+
+fn render_ellipse(SvgDocument, Point, Double, Double, Color) -> SvgDocument
+
+fn render_image_to_svg((Point) -> Color, Double, Double, Int) -> String
+
+fn render_line(SvgDocument, Point, Point, Color, Double) -> SvgDocument
+
+fn render_linear_gradient(SvgDocument, String, Point, Point, Color, Color) -> SvgDocument
+
+fn render_path(SvgDocument, Path, Color) -> SvgDocument
+
+fn render_polygon(SvgDocument, Array[Point], Color) -> SvgDocument
+
+fn render_rectangle(SvgDocument, Double, Double, Double, Double, Color) -> SvgDocument
+
+fn render_text(SvgDocument, String, Point, Double, Color) -> SvgDocument
+
+fn rgb(Double, Double, Double) -> Color
+
+fn rgba(Double, Double, Double, Double) -> Color
+
+fn rotate_image(Double, (Point) -> Color) -> (Point) -> Color
+
+fn rotate_point(Point, Double) -> Point
+
+fn scale(Color, Double) -> Color
+
+fn scale_image(Double, Double, (Point) -> Color) -> (Point) -> Color
+
+fn scale_point(Point, Double) -> Point
+
+fn scale_uniform(Double) -> Transform
+
+fn skew_x(Double) -> Transform
+
+fn skew_y(Double) -> Transform
+
+fn sub(Point, Point) -> Point
+
+fn to_hex(Color) -> String
+
+fn to_svg_string(SvgDocument) -> String
+
+fn transform(Transform, (Point) -> Color) -> (Point) -> Color
+
+fn translate_img(Double, Double, (Point) -> Color) -> (Point) -> Color
+
+fn transparent() -> Color
+
+fn white() -> Color
+
+fn with_opacity((Point) -> Color, Double) -> (Point) -> Color
+
+fn yellow() -> Color
+
+// Errors
+
+// Types and methods
+pub struct Box {
+  min_x : Double
+  min_y : Double
+  max_x : Double
+  max_y : Double
+}
+impl Eq for Box
+impl Show for Box
+
+pub struct Color {
+  r : Double
+  g : Double
+  b : Double
+  a : Double
+}
+impl Eq for Color
+impl Show for Color
+
+pub enum ImageOp {
+  Const(Color)
+  Primitive(Primitive, Color)
+  Transform(Transform, (Point) -> Color)
+  Compose((Point) -> Color, (Point) -> Color)
+  Cut((Point) -> Color, (Point) -> Color)
+}
+
+pub struct Path(Array[PathSegment])
+fn Path::bounds(Self) -> Box?
+fn Path::circle(Point, Double) -> Self
+fn Path::close_path(Self) -> Self
+fn Path::curve_to(Self, Point, Point, Point) -> Self
+fn Path::ellipse(Point, Double, Double) -> Self
+fn Path::empty() -> Self
+fn Path::inner(Self) -> Array[PathSegment]
+fn Path::line_to(Self, Point) -> Self
+fn Path::move_to(Self, Point) -> Self
+fn Path::rect(Double, Double, Double, Double) -> Self
+fn Path::transform(Self, Transform) -> Self
+impl Eq for Path
+impl Show for Path
+
+pub enum PathSegment {
+  MoveTo(Point)
+  LineTo(Point)
+  CurveTo(Point, Point, Point)
+  Close
+}
+impl Eq for PathSegment
+impl Show for PathSegment
+
+pub struct Point {
+  x : Double
+  y : Double
+}
+impl Eq for Point
+impl Show for Point
+
+pub enum Primitive {
+  Circle(Point, Double)
+  Rectangle(Point, Point)
+  Path(Path)
+  Text(String, Point, Double)
+}
+impl Eq for Primitive
+impl Show for Primitive
+
+pub struct SvgDocument {
+  width : Double
+  height : Double
+  elements : Array[String]
+}
+impl Show for SvgDocument
+
+pub struct Transform {
+  m11 : Double
+  m12 : Double
+  m21 : Double
+  m22 : Double
+  m31 : Double
+  m32 : Double
+}
+impl Eq for Transform
+impl Show for Transform
+
+pub struct Vec2 {
+  x : Double
+  y : Double
+}
+impl Eq for Vec2
+impl Show for Vec2
+
+// Type aliases
+pub typealias (Point) -> Color as Image
+
+// Traits
+

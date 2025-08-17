@@ -1,17 +1,17 @@
 // Tests for path utilities
 
 test "empty path creation" {
-  let path = @lib.Path::empty()
+  let path = @vg.Path::empty()
   if path.0.length() != 0 {
     fail("Empty path should have zero segments")
   }
 }
 
 test "path building with move_to and line_to" {
-  let path = @lib.Path::empty()
-    .move_to(@lib.point(0.0, 0.0))
-    .line_to(@lib.point(10.0, 0.0))
-    .line_to(@lib.point(10.0, 10.0))
+  let path = @vg.Path::empty()
+    .move_to(@vg.point(0.0, 0.0))
+    .line_to(@vg.point(10.0, 0.0))
+    .line_to(@vg.point(10.0, 10.0))
     .close_path()
   
   if path.0.length() != 4 {
@@ -30,9 +30,9 @@ test "path building with move_to and line_to" {
 }
 
 test "curve_to segment" {
-  let path = @lib.Path::empty()
-    .move_to(@lib.point(0.0, 0.0))
-    .curve_to(@lib.point(5.0, 0.0), @lib.point(10.0, 5.0), @lib.point(10.0, 10.0))
+  let path = @vg.Path::empty()
+    .move_to(@vg.point(0.0, 0.0))
+    .curve_to(@vg.point(5.0, 0.0), @vg.point(10.0, 5.0), @vg.point(10.0, 10.0))
   
   if path.0.length() != 2 {
     fail("Path should have 2 segments")
@@ -49,7 +49,7 @@ test "curve_to segment" {
 }
 
 test "rectangle path" {
-  let path = @lib.Path::rect(0.0, 0.0, 10.0, 5.0)
+  let path = @vg.Path::rect(0.0, 0.0, 10.0, 5.0)
   
   if path.0.length() != 5 {  // MoveTo + 4 LineTo + Close
     fail("Rectangle path should have 5 segments")
@@ -67,7 +67,7 @@ test "rectangle path" {
 }
 
 test "circle path approximation" {
-  let path = @lib.Path::circle(@lib.point(5.0, 5.0), 3.0)
+  let path = @vg.Path::circle(@vg.point(5.0, 5.0), 3.0)
   
   // Circle approximation uses 4 cubic bezier curves + MoveTo + Close
   if path.0.length() != 6 {
@@ -99,7 +99,7 @@ test "circle path approximation" {
 }
 
 test "ellipse path" {
-  let path = @lib.Path::ellipse(@lib.point(0.0, 0.0), 5.0, 3.0)
+  let path = @vg.Path::ellipse(@vg.point(0.0, 0.0), 5.0, 3.0)
   
   if path.0.length() != 6 {
     fail("Ellipse path should have 6 segments")
@@ -117,8 +117,8 @@ test "ellipse path" {
 }
 
 test "path transformation" {
-  let original_path = @lib.Path::rect(0.0, 0.0, 2.0, 2.0)
-  let transform = @lib.make_translate(5.0, 3.0)
+  let original_path = @vg.Path::rect(0.0, 0.0, 2.0, 2.0)
+  let transform = @vg.make_translate(5.0, 3.0)
   let transformed_path = original_path.transform(transform)
   
   if transformed_path.0.length() != original_path.0.length() {
@@ -136,10 +136,10 @@ test "path transformation" {
 }
 
 test "path bounds calculation" {
-  let path = @lib.Path::empty()
-    .move_to(@lib.point(-5.0, -3.0))
-    .line_to(@lib.point(10.0, 7.0))
-    .line_to(@lib.point(2.0, -8.0))
+  let path = @vg.Path::empty()
+    .move_to(@vg.point(-5.0, -3.0))
+    .line_to(@vg.point(10.0, 7.0))
+    .line_to(@vg.point(2.0, -8.0))
   
   match path.bounds() {
     Some(bounds) => {

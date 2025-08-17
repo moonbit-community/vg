@@ -1,146 +1,146 @@
 // Tests for image combinators
 
 test "constant image" {
-  let red_img = @lib.const_color(@lib.red())
-  let p1 = @lib.point(0.0, 0.0)
-  let p2 = @lib.point(100.0, -50.0)
+  let red_img = @vg.const_color(@vg.red())
+  let p1 = @vg.point(0.0, 0.0)
+  let p2 = @vg.point(100.0, -50.0)
   
   let c1 = red_img(p1)
   let c2 = red_img(p2)
   
-  if c1 != @lib.red() || c2 != @lib.red() {
+  if c1 != @vg.red() || c2 != @vg.red() {
     fail("Constant image should return same color everywhere")
   }
 }
 
 test "empty image" {
-  let empty_img = @lib.empty()
-  let p = @lib.point(5.0, 10.0)
+  let empty_img = @vg.empty()
+  let p = @vg.point(5.0, 10.0)
   let c = empty_img(p)
   
-  if c != @lib.transparent() {
+  if c != @vg.transparent() {
     fail("Empty image should be transparent everywhere")
   }
 }
 
 test "circle image" {
-  let circle_img = @lib.circle(@lib.blue(), 5.0)
+  let circle_img = @vg.circle(@vg.blue(), 5.0)
   
-  let inside = @lib.point(3.0, 0.0)  // Distance 3 < radius 5
-  let outside = @lib.point(10.0, 0.0)  // Distance 10 > radius 5
-  let on_edge = @lib.point(5.0, 0.0)  // Distance 5 = radius 5
+  let inside = @vg.point(3.0, 0.0)  // Distance 3 < radius 5
+  let outside = @vg.point(10.0, 0.0)  // Distance 10 > radius 5
+  let on_edge = @vg.point(5.0, 0.0)  // Distance 5 = radius 5
   
   let c_inside = circle_img(inside)
   let c_outside = circle_img(outside)
   let c_edge = circle_img(on_edge)
   
-  if c_inside != @lib.blue() {
+  if c_inside != @vg.blue() {
     fail("Point inside circle should be blue")
   }
   
-  if c_outside != @lib.transparent() {
+  if c_outside != @vg.transparent() {
     fail("Point outside circle should be transparent")
   }
   
-  if c_edge != @lib.blue() {
+  if c_edge != @vg.blue() {
     fail("Point on circle edge should be blue")
   }
 }
 
 test "rectangle image" {
-  let rect_img = @lib.rectangle(@lib.green(), 10.0, 6.0)
+  let rect_img = @vg.rectangle(@vg.green(), 10.0, 6.0)
   
-  let inside = @lib.point(2.0, 1.0)  // Within [-5,5] x [-3,3]
-  let outside = @lib.point(8.0, 1.0)  // Outside width bounds
-  let on_edge = @lib.point(5.0, 0.0)  // On width edge
+  let inside = @vg.point(2.0, 1.0)  // Within [-5,5] x [-3,3]
+  let outside = @vg.point(8.0, 1.0)  // Outside width bounds
+  let on_edge = @vg.point(5.0, 0.0)  // On width edge
   
   let c_inside = rect_img(inside)
   let c_outside = rect_img(outside)
   let c_edge = rect_img(on_edge)
   
-  if c_inside != @lib.green() {
+  if c_inside != @vg.green() {
     fail("Point inside rectangle should be green")
   }
   
-  if c_outside != @lib.transparent() {
+  if c_outside != @vg.transparent() {
     fail("Point outside rectangle should be transparent")
   }
   
-  if c_edge != @lib.green() {
+  if c_edge != @vg.green() {
     fail("Point on rectangle edge should be green")
   }
 }
 
 test "image translation" {
-  let circle_img = @lib.circle(@lib.red(), 3.0)
-  let translated = @lib.translate_img(5.0, 0.0, circle_img)
+  let circle_img = @vg.circle(@vg.red(), 3.0)
+  let translated = @vg.translate_img(5.0, 0.0, circle_img)
   
-  let original_center = @lib.point(0.0, 0.0)
-  let new_center = @lib.point(5.0, 0.0)
+  let original_center = @vg.point(0.0, 0.0)
+  let new_center = @vg.point(5.0, 0.0)
   
   let c_original = translated(original_center)
   let c_new = translated(new_center)
   
-  if c_original != @lib.transparent() {
+  if c_original != @vg.transparent() {
     fail("Original center should be transparent after translation")
   }
   
-  if c_new != @lib.red() {
+  if c_new != @vg.red() {
     fail("New center should be red after translation")
   }
 }
 
 test "image scaling" {
-  let circle_img = @lib.circle(@lib.blue(), 2.0)
-  let scaled = @lib.scale_image(2.0, 2.0, circle_img)
+  let circle_img = @vg.circle(@vg.blue(), 2.0)
+  let scaled = @vg.scale_image(2.0, 2.0, circle_img)
   
-  let p = @lib.point(3.0, 0.0)  // Would be outside original circle but inside scaled
+  let p = @vg.point(3.0, 0.0)  // Would be outside original circle but inside scaled
   let c = scaled(p)
   
-  if c != @lib.blue() {
+  if c != @vg.blue() {
     fail("Scaled image should be larger")
   }
 }
 
 test "image composition" {
-  let red_circle = @lib.circle(@lib.red(), 3.0)
-  let blue_circle = @lib.translate_img(2.0, 0.0, @lib.circle(@lib.blue(), 3.0))
-  let composed = @lib.compose_imgs(red_circle, blue_circle)
+  let red_circle = @vg.circle(@vg.red(), 3.0)
+  let blue_circle = @vg.translate_img(2.0, 0.0, @vg.circle(@vg.blue(), 3.0))
+  let composed = @vg.compose_imgs(red_circle, blue_circle)
   
-  let red_only = @lib.point(-2.0, 0.0)  // Only in red circle
-  let blue_only = @lib.point(4.0, 0.0)  // Only in blue circle
-  let overlap = @lib.point(1.0, 0.0)    // In both circles
+  let red_only = @vg.point(-2.0, 0.0)  // Only in red circle
+  let blue_only = @vg.point(4.0, 0.0)  // Only in blue circle
+  let overlap = @vg.point(1.0, 0.0)    // In both circles
   
   let c_red = composed(red_only)
   let c_blue = composed(blue_only)
   let c_overlap = composed(overlap)
   
-  if c_red != @lib.red() {
+  if c_red != @vg.red() {
     fail("Red-only area should be red")
   }
   
-  if c_blue != @lib.blue() {
+  if c_blue != @vg.blue() {
     fail("Blue-only area should be blue")
   }
   
   // Overlap should be a blend of red and blue
-  if c_overlap == @lib.red() || c_overlap == @lib.blue() || c_overlap == @lib.transparent() {
+  if c_overlap == @vg.red() || c_overlap == @vg.blue() || c_overlap == @vg.transparent() {
     fail("Overlap area should be blended")
   }
 }
 
 test "image cutting" {
-  let red_rect = @lib.rectangle(@lib.red(), 10.0, 10.0)
-  let circle_mask = @lib.circle(@lib.white(), 3.0)  // White mask
-  let cut_img = @lib.cut(red_rect, circle_mask)
+  let red_rect = @vg.rectangle(@vg.red(), 10.0, 10.0)
+  let circle_mask = @vg.circle(@vg.white(), 3.0)  // White mask
+  let cut_img = @vg.cut(red_rect, circle_mask)
   
-  let inside_mask = @lib.point(2.0, 0.0)  // Inside circle mask
-  let outside_mask = @lib.point(8.0, 0.0)  // Outside circle mask
+  let inside_mask = @vg.point(2.0, 0.0)  // Inside circle mask
+  let outside_mask = @vg.point(8.0, 0.0)  // Outside circle mask
   
   let c_inside = cut_img(inside_mask)
   let c_outside = cut_img(outside_mask)
   
-  if c_inside != @lib.red() {
+  if c_inside != @vg.red() {
     fail("Area inside mask should show original color")
   }
   

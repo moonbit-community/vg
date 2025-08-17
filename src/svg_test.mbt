@@ -1,7 +1,7 @@
 // Tests for SVG rendering
 
 test "SVG document creation" {
-  let doc = @lib.new_svg(100.0, 200.0)
+  let doc = @vg.new_svg(100.0, 200.0)
   
   if doc.width != 100.0 || doc.height != 200.0 {
     fail("SVG document dimensions incorrect")
@@ -13,9 +13,9 @@ test "SVG document creation" {
 }
 
 test "adding elements to SVG" {
-  let doc = @lib.new_svg(100.0, 100.0)
-    |> @lib.add_element("<circle cx=\"50\" cy=\"50\" r=\"25\"/>")
-    |> @lib.add_element("<rect x=\"10\" y=\"10\" width=\"30\" height=\"20\"/>")
+  let doc = @vg.new_svg(100.0, 100.0)
+    |> @vg.add_element("<circle cx=\"50\" cy=\"50\" r=\"25\"/>")
+    |> @vg.add_element("<rect x=\"10\" y=\"10\" width=\"30\" height=\"20\"/>")
   
   if doc.elements.length() != 2 {
     fail("SVG document should have 2 elements")
@@ -23,8 +23,8 @@ test "adding elements to SVG" {
 }
 
 test "circle rendering" {
-  let doc = @lib.new_svg(100.0, 100.0)
-    |> @lib.render_circle(@lib.point(50.0, 50.0), 25.0, @lib.red())
+  let doc = @vg.new_svg(100.0, 100.0)
+    |> @vg.render_circle(@vg.point(50.0, 50.0), 25.0, @vg.red())
   
   if doc.elements.length() != 1 {
     fail("Should have one circle element")
@@ -37,8 +37,8 @@ test "circle rendering" {
 }
 
 test "rectangle rendering" {
-  let doc = @lib.new_svg(200.0, 150.0)
-    |> @lib.render_rectangle(10.0, 20.0, 50.0, 30.0, @lib.blue())
+  let doc = @vg.new_svg(200.0, 150.0)
+    |> @vg.render_rectangle(10.0, 20.0, 50.0, 30.0, @vg.blue())
   
   if doc.elements.length() != 1 {
     fail("Should have one rectangle element")
@@ -51,9 +51,9 @@ test "rectangle rendering" {
 }
 
 test "path rendering" {
-  let path = @lib.Path::rect(0.0, 0.0, 10.0, 10.0)
-  let doc = @lib.new_svg(100.0, 100.0)
-    |> @lib.render_path(path, @lib.green())
+  let path = @vg.Path::rect(0.0, 0.0, 10.0, 10.0)
+  let doc = @vg.new_svg(100.0, 100.0)
+    |> @vg.render_path(path, @vg.green())
   
   if doc.elements.length() != 1 {
     fail("Should have one path element")
@@ -66,10 +66,10 @@ test "path rendering" {
 }
 
 test "line rendering" {
-  let start = @lib.point(0.0, 0.0)
-  let end = @lib.point(100.0, 50.0)
-  let doc = @lib.new_svg(150.0, 100.0)
-    |> @lib.render_line(start, end, @lib.black(), 2.0)
+  let start = @vg.point(0.0, 0.0)
+  let end = @vg.point(100.0, 50.0)
+  let doc = @vg.new_svg(150.0, 100.0)
+    |> @vg.render_line(start, end, @vg.black(), 2.0)
   
   if doc.elements.length() != 1 {
     fail("Should have one line element")
@@ -82,8 +82,8 @@ test "line rendering" {
 }
 
 test "text rendering" {
-  let doc = @lib.new_svg(200.0, 100.0)
-    |> @lib.render_text("Hello World", @lib.point(50.0, 30.0), 16.0, @lib.black())
+  let doc = @vg.new_svg(200.0, 100.0)
+    |> @vg.render_text("Hello World", @vg.point(50.0, 30.0), 16.0, @vg.black())
   
   if doc.elements.length() != 1 {
     fail("Should have one text element")
@@ -96,10 +96,10 @@ test "text rendering" {
 }
 
 test "SVG string generation" {
-  let doc = @lib.new_svg(100.0, 100.0)
-    |> @lib.render_circle(@lib.point(50.0, 50.0), 25.0, @lib.red())
+  let doc = @vg.new_svg(100.0, 100.0)
+    |> @vg.render_circle(@vg.point(50.0, 50.0), 25.0, @vg.red())
   
-  let svg_string = @lib.to_svg_string(doc)
+  let svg_string = @vg.to_svg_string(doc)
   
   if not(svg_string.contains("<?xml")) {
     fail("SVG string should contain XML declaration")
@@ -123,17 +123,17 @@ test "SVG string generation" {
 }
 
 test "complex SVG document" {
-  let doc = @lib.new_svg(200.0, 200.0)
-    |> @lib.render_rectangle(10.0, 10.0, 180.0, 180.0, @lib.gray(0.9))
-    |> @lib.render_circle(@lib.point(100.0, 100.0), 50.0, @lib.red())
-    |> @lib.render_line(@lib.point(50.0, 50.0), @lib.point(150.0, 150.0), @lib.blue(), 3.0)
-    |> @lib.render_text("Test", @lib.point(100.0, 180.0), 14.0, @lib.black())
+  let doc = @vg.new_svg(200.0, 200.0)
+    |> @vg.render_rectangle(10.0, 10.0, 180.0, 180.0, @vg.gray(0.9))
+    |> @vg.render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
+    |> @vg.render_line(@vg.point(50.0, 50.0), @vg.point(150.0, 150.0), @vg.blue(), 3.0)
+    |> @vg.render_text("Test", @vg.point(100.0, 180.0), 14.0, @vg.black())
   
   if doc.elements.length() != 4 {
     fail("Complex document should have 4 elements")
   }
   
-  let svg_string = @lib.to_svg_string(doc)
+  let svg_string = @vg.to_svg_string(doc)
   if not(svg_string.contains("rect")) || not(svg_string.contains("circle")) ||
      not(svg_string.contains("line")) || not(svg_string.contains("text")) {
     fail("Complex SVG should contain all element types")
@@ -141,8 +141,8 @@ test "complex SVG document" {
 }
 
 test "image to SVG rendering" {
-  let img = @lib.circle(@lib.red(), 25.0)
-  let svg_string = @lib.render_image_to_svg(img, 100.0, 100.0, 20)
+  let img = @vg.circle(@vg.red(), 25.0)
+  let svg_string = @vg.render_image_to_svg(img, 100.0, 100.0, 20)
   
   if not(svg_string.contains("svg")) {
     fail("Image rendering should produce valid SVG")

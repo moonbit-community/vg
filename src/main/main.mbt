@@ -3,7 +3,7 @@ fn main {
   println("==============================================")
   
   // Test the example function - this creates a composed image
-  let _example_img = @lib.example()
+  let _example_img = @vg.example()
   println("✓ Created example image successfully!")
   
   println("\nVg library port to MoonBit is complete!")
