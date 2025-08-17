@@ -210,6 +210,10 @@ test "ellipse image" {
   let c_outside = ellipse_img(outside)
   let c_edge = ellipse_img(edge)
   
+  inspect(c_inside, content="{r: 0, g: 1, b: 0, a: 1}")
+  inspect(c_outside, content="{r: 0, g: 0, b: 0, a: 0}")
+  inspect(c_edge, content="{r: 0, g: 1, b: 0, a: 1}")
+  
   if c_inside != green() {
     fail("Point inside ellipse should be green")
   }

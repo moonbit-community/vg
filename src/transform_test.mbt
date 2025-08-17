@@ -120,13 +120,68 @@ test "skew transforms" {
   let skewed_x = apply(skew_x_t, p)
   let skewed_y = apply(skew_y_t, p)
   
-  // Skew X should affect x coordinate based on y
-  if skewed_x.y != 1.0 {
-    fail("Skew X should not affect Y coordinate")
+  let skew_results = [
+    ("original_point", p),
+    ("skewed_x_result", skewed_x),
+    ("skewed_y_result", skewed_y)
+  ]
+  inspect(skew_results, content=(
+    #|[("original_point", {x: 1, y: 1}), ("skewed_x_result", {x: 1.5463024898437905, y: 1}), ("skewed_y_result", {x: 1, y: 1.5463024898437905})]
+  ))
+}
+
+test "comprehensive transform matrix operations" {
+  let test_point = @vg.point(2.0, 3.0)
+  
+  let identity_t = @vg.identity()
+  let translate_t = @vg.make_translate(5.0, 3.0)
+  let scale_t = @vg.make_scale(2.0, 3.0)
+  let rotate_t = @vg.make_rotate(3.14159265359 / 2.0)
+  let uniform_scale_t = @vg.scale_uniform(2.0)
+  let skew_x_t = @vg.skew_x(0.5)
+  let skew_y_t = @vg.skew_y(0.25)
+  
+  let transform_results = [
+    ("identity", identity_t, apply(identity_t, test_point), @vg.determinant(identity_t)),
+    ("translate_5_3", translate_t, apply(translate_t, test_point), @vg.determinant(translate_t)),
+    ("scale_2_3", scale_t, apply(scale_t, test_point), @vg.determinant(scale_t)),
+    ("rotate_90deg", rotate_t, apply(rotate_t, test_point), @vg.determinant(rotate_t)),
+    ("uniform_scale_2", uniform_scale_t, apply(uniform_scale_t, test_point), @vg.determinant(uniform_scale_t)),
+    ("skew_x_half", skew_x_t, apply(skew_x_t, test_point), @vg.determinant(skew_x_t)),
+    ("skew_y_quarter", skew_y_t, apply(skew_y_t, test_point), @vg.determinant(skew_y_t))
+  ]
+  
+  inspect(transform_results, content=(
+    #|[("identity", {m11: 1, m12: 0, m21: 0, m22: 1, m31: 0, m32: 0}, {x: 2, y: 3}, 1), ("translate_5_3", {m11: 1, m12: 0, m21: 0, m22: 1, m31: 5, m32: 3}, {x: 7, y: 6}, 1), ("scale_2_3", {m11: 2, m12: 0, m21: 0, m22: 3, m31: 0, m32: 0}, {x: 4, y: 9}, 6), ("rotate_90deg", {m11: -1.0341155355510722e-13, m12: -1, m21: 1, m22: -1.0341155355510722e-13, m31: 0, m32: 0}, {x: -3.000000000000207, y: 1.9999999999996898}, 1), ("uniform_scale_2", {m11: 2, m12: 0, m21: 0, m22: 2, m31: 0, m32: 0}, {x: 4, y: 6}, 4), ("skew_x_half", {m11: 1, m12: 0.5463024898437905, m21: 0, m22: 1, m31: 0, m32: 0}, {x: 3.6389074695313717, y: 3}, 1), ("skew_y_quarter", {m11: 1, m12: 0, m21: 0.25534192122103627, m22: 1, m31: 0, m32: 0}, {x: 2, y: 3.5106838424420728}, 1)]
+  ))
+}
+
+test "transform composition and inversion" {
+  let t1 = @vg.make_translate(10.0, 5.0)
+  let t2 = @vg.make_scale(2.0, 3.0)
+  let t3 = @vg.make_rotate(3.14159 / 4.0)  // 45 degrees
+  
+  let composed = @vg.compose_transforms(@vg.compose_transforms(t1, t2), t3)
+  let test_point = @vg.point(1.0, 1.0)
+  
+  let composition_results = [
+    ("original_point", test_point),
+    ("after_translate", apply(t1, test_point)),
+    ("after_scale", apply(t2, apply(t1, test_point))),
+    ("after_rotate", apply(t3, apply(t2, apply(t1, test_point)))),
+    ("composed_result", apply(composed, test_point))
+  ]
+  
+  // Test inversion
+  let inversion_results = match @vg.invert(t1) {
+    Some(inv_t1) => {
+      let round_trip = apply(inv_t1, apply(t1, test_point))
+      ("has_inverse", true, round_trip)
+    }
+    None => ("has_inverse", false, @vg.origin())
   }
   
-  // Skew Y should affect y coordinate based on x  
-  if skewed_y.x != 1.0 {
-    fail("Skew Y should not affect X coordinate")
-  }
+  inspect((composition_results, inversion_results), content=(
+    #|([("original_point", {x: 1, y: 1}), ("after_translate", {x: 11, y: 6}), ("after_scale", {x: 22, y: 18}), ("after_rotate", {x: 2.8284458884589423, y: 28.284269371084342}), ("composed_result", {x: 24.748741563359225, y: 0.7071231994355944})], ("has_inverse", true, {x: 1, y: 1}))
+  ))
 }
