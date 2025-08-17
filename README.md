@@ -12,8 +12,9 @@ This is a MoonBit port of the original [Vg library](https://github.com/dbuenzli/
 - ✅ **Transformations**: Translation, scaling, rotation, skewing, composition
 - ✅ **Basic Shapes**: Circle, rectangle, line, ellipse, polygon
 - ✅ **Image Combinators**: Shapes, gradients, composition, cutting, opacity
-- ✅ **Path Construction**: Move, line, curve, close operations
-- ✅ **Advanced Paths**: Circle, ellipse, rectangle path generation
+- ✅ **Path Construction**: Move, line, curve, close operations with OO-style API
+- ✅ **Advanced Paths**: Circle, ellipse, rectangle path generation with method chaining
+- ✅ **Fluent API**: Object-oriented method calls with `Path::empty().move_to().line_to()`
 - ✅ **Gradients**: Linear and radial gradients with color interpolation
 - ✅ **SVG Rendering**: Complete SVG backend with all shape support
 - ✅ **Comprehensive Tests**: Extensive test suite for all components
@@ -48,11 +49,18 @@ let translated_ellipse = translate_img(50.0, 0.0, blue_ellipse)
 // Compose images
 let composed = compose_imgs(semi_transparent, translated_ellipse)
 
+// Create paths with object-oriented API
+let custom_path = Path::empty()
+  .move_to(point(10.0, 10.0))
+  .line_to(point(90.0, 10.0))
+  .curve_to(point(110.0, 10.0), point(110.0, 30.0), point(90.0, 30.0))
+  .close_path()
+
 // Create SVG output with advanced shapes
 let svg_doc = new_svg(200.0, 200.0)
   |> render_circle(point(100.0, 100.0), 50.0, red())
   |> render_ellipse(point(150.0, 100.0), 30.0, 20.0, blue())
-  |> render_polygon([point(50.0, 50.0), point(80.0, 50.0), point(65.0, 80.0)], green())
+  |> render_path(custom_path, green())
 
 let svg_string = to_svg_string(svg_doc)
 ```
@@ -126,23 +134,66 @@ let radial = radial_gradient(
 )
 ```
 
-### Paths
+### Paths (Object-Oriented API)
 ```moonbit
-// Create a custom path
-let path = empty_path()
-  |> move_to(point(10.0, 10.0))
-  |> line_to(point(90.0, 10.0))
-  |> curve_to(point(110.0, 10.0), point(110.0, 30.0), point(90.0, 30.0))
-  |> close_path()
+// Create a custom path with method chaining
+let path = Path::empty()
+  .move_to(point(10.0, 10.0))
+  .line_to(point(90.0, 10.0))
+  .curve_to(point(110.0, 10.0), point(110.0, 30.0), point(90.0, 30.0))
+  .close_path()
+
+// Create predefined shapes
+let rectangle = Path::rect(0.0, 0.0, 50.0, 30.0)
+let circle = Path::circle(point(25.0, 25.0), 20.0)
+let ellipse = Path::ellipse(point(0.0, 0.0), 30.0, 15.0)
+
+// Transform paths
+let transform = make_translate(10.0, 20.0)
+let moved_path = path.transform(transform)
+
+// Get path bounds
+match path.bounds() {
+  Some(bounds) => println("Path bounds: " + bounds.to_string())
+  None => println("Empty path")
+}
 
 // Render path to SVG
 let svg = new_svg(100.0, 100.0)
   |> render_path(path, green())
 ```
 
+## Migration Guide
+
+The Path API has been updated to use MoonBit's object-oriented style. Here's how to migrate:
+
+### Before (Functional Style)
+```moonbit
+let path = empty_path()
+  |> move_to(point(0.0, 0.0))
+  |> line_to(point(10.0, 0.0))
+  |> close_path()
+
+let rect = rect_path(0.0, 0.0, 10.0, 5.0)
+let bounds = path_bounds(path)
+let transformed = transform_path(transform, path)
+```
+
+### After (Object-Oriented Style)
+```moonbit
+let path = Path::empty()
+  .move_to(point(0.0, 0.0))
+  .line_to(point(10.0, 0.0))
+  .close_path()
+
+let rect = Path::rect(0.0, 0.0, 10.0, 5.0)
+let bounds = path.bounds()
+let transformed = path.transform(transform)
+```
+
 ## Status
 
-✅ **Complete and Working**: The library successfully compiles and runs, demonstrating all core functionality of the original Vg library adapted for MoonBit's syntax and type system.
+✅ **Complete and Working**: The library successfully compiles and runs, demonstrating all core functionality of the original Vg library adapted for MoonBit's syntax and type system with modern object-oriented API design.
 
 ## License
 
