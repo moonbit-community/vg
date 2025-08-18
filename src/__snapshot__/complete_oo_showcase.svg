@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="200" viewBox="0 0 350 200">
+  <rect x="0" y="0" width="350" height="200" fill="#F9F9F9"/>
+  <text x="175" y="30" font-size="18" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">Complete OO-Style API Showcase</text>
+  <path d="M 50,75 Q 100,25 150,75 C 225,125 225,125 275,75 A 25 15 0 0 1 225,100 Z " fill="#0000FF" stroke="none"/>
+  <circle cx="100" cy="150" r="20" fill="#FF0000"/>
+  <polygon points="250,130 270,140 265,160 235,160 230,140" fill="#00FF00"/>
+  <line x1="50" y1="180" x2="300" y2="180" stroke="#7F007F" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <text x="175" y="170" font-size="12" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#999999">Fluent • Modern • Type-Safe</text>
+</svg>

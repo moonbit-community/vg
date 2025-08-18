@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OO-Style Canvas Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+    canvas { border: 1px solid #ccc; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>OO-Style Canvas Demo</h1>
+  <canvas id="vgCanvas"></canvas>
+  <script>
+// Generated Canvas JavaScript
+function drawVgGraphics(canvas) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 200;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Drawing commands
+  ctx.fillStyle = '#F2F2F2';
+  ctx.fillRect(0, 0, 300, 200);
+  ctx.beginPath();
+  ctx.arc(80, 100, 30, 0, 2 * Math.PI);
+  ctx.fillStyle = '#FF0000';
+  ctx.fill();
+  ctx.fillStyle = '#00FF00';
+  ctx.fillRect(150, 70, 60, 60);
+  ctx.font = '16px Arial, sans-serif';
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('OO-Style Canvas', 150, 40);
+  ctx.beginPath();
+  ctx.moveTo(50, 160);
+  ctx.lineTo(250, 160);
+  ctx.strokeStyle = '#0000FF';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+}
+
+// Usage: drawVgGraphics(document.getElementById('myCanvas'));
+    drawVgGraphics(document.getElementById('vgCanvas'));
+  </script>
+</body>
+</html>

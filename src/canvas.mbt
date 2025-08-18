@@ -193,3 +193,45 @@ pub fn to_canvas_html(doc : CanvasDocument, title : String) -> String {
   "  </script>\n" +
   "</body>\n</html>"
 }
+
+// ===== OBJECT-ORIENTED API METHODS =====
+
+/// Add a command to the Canvas document (OO-style)
+pub fn CanvasDocument::add_command(self : CanvasDocument, command : String) -> CanvasDocument {
+  add_canvas_command(self, command)
+}
+
+/// Render a circle to Canvas (OO-style)
+pub fn CanvasDocument::render_circle(self : CanvasDocument, center : Point, radius : Double, color : Color) -> CanvasDocument {
+  render_canvas_circle(self, center, radius, color)
+}
+
+/// Render a rectangle to Canvas (OO-style)
+pub fn CanvasDocument::render_rectangle(self : CanvasDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> CanvasDocument {
+  render_canvas_rectangle(self, x, y, width, height, color)
+}
+
+/// Render a line to Canvas (OO-style)
+pub fn CanvasDocument::render_line(self : CanvasDocument, start : Point, end : Point, color : Color, thickness : Double) -> CanvasDocument {
+  render_canvas_line(self, start, end, color, thickness)
+}
+
+/// Render text to Canvas (OO-style)
+pub fn CanvasDocument::render_text(self : CanvasDocument, text : String, pos : Point, size : Double, color : Color) -> CanvasDocument {
+  render_canvas_text(self, text, pos, size, color)
+}
+
+/// Render a path to Canvas (OO-style)
+pub fn CanvasDocument::render_path(self : CanvasDocument, path : Path, color : Color) -> CanvasDocument {
+  render_canvas_path(self, path, color)
+}
+
+/// Convert to JavaScript (OO-style)
+pub fn CanvasDocument::to_js(self : CanvasDocument) -> String {
+  to_canvas_js(self)
+}
+
+/// Convert to HTML (OO-style)
+pub fn CanvasDocument::to_html(self : CanvasDocument, title : String) -> String {
+  to_canvas_html(self, title)
+}

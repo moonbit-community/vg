@@ -193,3 +193,35 @@ pub fn to_pdf_string(doc : PdfDocument) -> String {
   
   pdf
 }
+
+// ===== OBJECT-ORIENTED API METHODS =====
+
+/// Render a circle to PDF (OO-style)
+pub fn PdfDocument::render_circle(self : PdfDocument, center : Point, radius : Double, color : Color) -> PdfDocument {
+  render_pdf_circle(self, center, radius, color)
+}
+
+/// Render a rectangle to PDF (OO-style)
+pub fn PdfDocument::render_rectangle(self : PdfDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> PdfDocument {
+  render_pdf_rectangle(self, x, y, width, height, color)
+}
+
+/// Render a line to PDF (OO-style)
+pub fn PdfDocument::render_line(self : PdfDocument, start : Point, end : Point, color : Color, thickness : Double) -> PdfDocument {
+  render_pdf_line(self, start, end, color, thickness)
+}
+
+/// Render text to PDF (OO-style)
+pub fn PdfDocument::render_text(self : PdfDocument, text : String, pos : Point, size : Double, color : Color) -> PdfDocument {
+  render_pdf_text(self, text, pos, size, color)
+}
+
+/// Render a path to PDF (OO-style)
+pub fn PdfDocument::render_path(self : PdfDocument, path : Path, color : Color) -> PdfDocument {
+  render_pdf_path(self, path, color)
+}
+
+/// Convert to PDF string (OO-style)
+pub fn PdfDocument::to_string(self : PdfDocument) -> String {
+  to_pdf_string(self)
+}

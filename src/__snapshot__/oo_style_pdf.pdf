@@ -1,0 +1,86 @@
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 300 200]
+/Resources <<
+/Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >>
+>>
+/Contents 4 0 R
+>>
+endobj
+
+4 0 obj
+<<
+/Length 368
+>>
+stream
+q
+0.95 0.95 0.95 rg
+0 0 300 200 re
+f
+Q
+q
+1 0 0 rg
+80 130 m
+96.568542494 130 110 116.568542494 110 100 c
+110 83.431457506 96.568542494 70 80 70 c
+63.431457506 70 50 83.431457506 50 100 c
+50 116.568542494 63.431457506 130 80 130 c
+f
+Q
+q
+0 1 0 rg
+150 70 60 60 re
+f
+Q
+q
+BT
+/F1 16 Tf
+0 0 0 rg rg
+150 160 Td
+(OO-Style PDF) Tj
+ET
+Q
+q
+0 0 1 rg RG
+2 w
+1 J
+50 40 m
+250 40 l
+S
+Q
+endstream
+endobj
+
+xref
+0 5
+0000000000 65535 f 
+0000000009 65535 n 
+0000000074 65535 n 
+0000000120 65535 n 
+0000000300 65535 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+905
+%%EOF

@@ -22,6 +22,11 @@ pub fn add_element(doc : SvgDocument, element : String) -> SvgDocument {
   { width: doc.width, height: doc.height, elements: new_elements }
 }
 
+/// Add an element to the SVG document (OO-style)
+pub fn SvgDocument::add_element(self : SvgDocument, element : String) -> SvgDocument {
+  add_element(self, element)
+}
+
 /// Convert a color to SVG color string
 fn color_to_svg(c : Color) -> String {
   if c.a < 1.0 {
@@ -67,6 +72,11 @@ pub fn render_circle(doc : SvgDocument, center : Point, radius : Double, color :
   let element = "<circle cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
                 "\" r=\"" + radius.to_string() + "\" fill=\"" + color_to_svg(color) + "\"/>"
   add_element(doc, element)
+}
+
+/// Render a circle to SVG (OO-style)
+pub fn SvgDocument::render_circle(self : SvgDocument, center : Point, radius : Double, color : Color) -> SvgDocument {
+  render_circle(self, center, radius, color)
 }
 
 /// Render a rectangle to SVG
@@ -126,6 +136,48 @@ pub fn to_svg_string(doc : SvgDocument) -> String {
   
   svg = svg + "</svg>"
   svg
+}
+
+// ===== OBJECT-ORIENTED API METHODS =====
+
+/// Render a rectangle to SVG (OO-style)
+pub fn SvgDocument::render_rectangle(self : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
+  render_rectangle(self, x, y, width, height, color)
+}
+
+/// Render a path to SVG (OO-style)
+pub fn SvgDocument::render_path(self : SvgDocument, path : Path, color : Color) -> SvgDocument {
+  render_path(self, path, color)
+}
+
+/// Render a line to SVG (OO-style)
+pub fn SvgDocument::render_line(self : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
+  render_line(self, start, end, color, thickness)
+}
+
+/// Render text to SVG (OO-style)
+pub fn SvgDocument::render_text(self : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
+  render_text(self, text, pos, size, color)
+}
+
+/// Render an ellipse to SVG (OO-style)
+pub fn SvgDocument::render_ellipse(self : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
+  render_ellipse(self, center, rx, ry, color)
+}
+
+/// Render a polygon to SVG (OO-style)
+pub fn SvgDocument::render_polygon(self : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
+  render_polygon(self, points, color)
+}
+
+/// Render a linear gradient to SVG (OO-style)
+pub fn SvgDocument::render_linear_gradient(self : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
+  render_linear_gradient(self, id, start, end, color1, color2)
+}
+
+/// Convert to SVG string (OO-style)
+pub fn SvgDocument::to_string(self : SvgDocument) -> String {
+  to_svg_string(self)
 }
 
 /// Sample an image at regular intervals and render to SVG

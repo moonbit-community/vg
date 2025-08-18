@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150" viewBox="0 0 250 150">
+  <rect x="0" y="0" width="250" height="150" fill="#FFFFFF"/>
+  <path d="M 50,50 L 150,50 Q 200,75 150,100 C 75,125 75,125 50,100 Z " fill="#7F007F" stroke="none"/>
+  <text x="125" y="30" font-size="14" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">OO Path + SVG</text>
+</svg>
