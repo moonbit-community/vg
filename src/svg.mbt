@@ -150,57 +150,6 @@ pub fn SvgDocument::to_string(self : SvgDocument) -> String {
   svg
 }
 
-// ===== BACKWARD COMPATIBILITY WRAPPERS =====
-
-/// Add an element to the SVG document (functional-style wrapper)
-pub fn add_element(doc : SvgDocument, element : String) -> SvgDocument {
-  doc.add_element(element)
-}
-
-/// Render a circle to SVG (functional-style wrapper)
-pub fn render_circle(doc : SvgDocument, center : Point, radius : Double, color : Color) -> SvgDocument {
-  doc.render_circle(center, radius, color)
-}
-
-/// Render a rectangle to SVG (functional-style wrapper)
-pub fn render_rectangle(doc : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
-  doc.render_rectangle(x, y, width, height, color)
-}
-
-/// Render a path to SVG (functional-style wrapper)
-pub fn render_path(doc : SvgDocument, path : Path, color : Color) -> SvgDocument {
-  doc.render_path(path, color)
-}
-
-/// Render a line to SVG (functional-style wrapper)
-pub fn render_line(doc : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
-  doc.render_line(start, end, color, thickness)
-}
-
-/// Render text to SVG (functional-style wrapper)
-pub fn render_text(doc : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
-  doc.render_text(text, pos, size, color)
-}
-
-/// Render an ellipse to SVG (functional-style wrapper)
-pub fn render_ellipse(doc : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
-  doc.render_ellipse(center, rx, ry, color)
-}
-
-/// Render a polygon to SVG (functional-style wrapper)
-pub fn render_polygon(doc : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
-  doc.render_polygon(points, color)
-}
-
-/// Render a linear gradient to SVG (functional-style wrapper)
-pub fn render_linear_gradient(doc : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
-  doc.render_linear_gradient(id, start, end, color1, color2)
-}
-
-/// Convert SVG document to string (functional-style wrapper)
-pub fn to_svg_string(doc : SvgDocument) -> String {
-  doc.to_string()
-}
 
 /// Sample an image at regular intervals and render to SVG
 pub fn render_image_to_svg(img : Image, width : Double, height : Double, samples : Int) -> String {

@@ -10,10 +10,10 @@ test "quadratic bezier curves" (it : @test.T) {
   inspect(qcurve_path, content="Path([MoveTo({x: 10, y: 50}), QCurveTo({x: 50, y: 10}, {x: 90, y: 50}), QCurveTo({x: 50, y: 90}, {x: 10, y: 50}), Close])")
   
   let doc = @vg.new_svg(100.0, 100.0)
-    |> @vg.render_rectangle(0.0, 0.0, 100.0, 100.0, @vg.gray(0.95))
-    |> @vg.render_path(qcurve_path, @vg.blue())
+    .render_rectangle(0.0, 0.0, 100.0, 100.0, @vg.gray(0.95))
+    .render_path(qcurve_path, @vg.blue())
   
-  let svg_string = @vg.to_svg_string(doc)
+  let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="quadratic_curves.svg")
 }
@@ -28,10 +28,10 @@ test "elliptical arcs" (it : @test.T) {
   inspect(arc_path, content="Path([MoveTo({x: 20, y: 50}), EArcTo(30, 20, 0, false, true, {x: 80, y: 50}), EArcTo(30, 20, 0, false, true, {x: 20, y: 50}), Close])")
   
   let doc = @vg.new_svg(100.0, 100.0)
-    |> @vg.render_rectangle(0.0, 0.0, 100.0, 100.0, @vg.gray(0.95))
-    |> @vg.render_path(arc_path, @vg.green())
+    .render_rectangle(0.0, 0.0, 100.0, 100.0, @vg.gray(0.95))
+    .render_path(arc_path, @vg.green())
   
-  let svg_string = @vg.to_svg_string(doc)
+  let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="elliptical_arcs.svg")
 }
@@ -46,10 +46,10 @@ test "smooth curve stitching" (it : @test.T) {
   inspect(smooth_path, content="Path([MoveTo({x: 10, y: 50}), CurveTo({x: 30, y: 10}, {x: 50, y: 10}, {x: 70, y: 50}), CurveTo({x: 90, y: 90}, {x: 110, y: 90}, {x: 130, y: 50}), CurveTo({x: 150, y: 10}, {x: 150, y: 10}, {x: 170, y: 50})])")
   
   let doc = @vg.new_svg(180.0, 100.0)
-    |> @vg.render_rectangle(0.0, 0.0, 180.0, 100.0, @vg.gray(0.95))
-    |> @vg.render_path(smooth_path, @vg.purple())
+    .render_rectangle(0.0, 0.0, 180.0, 100.0, @vg.gray(0.95))
+    .render_path(smooth_path, @vg.purple())
   
-  let svg_string = @vg.to_svg_string(doc)
+  let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="smooth_curves.svg")
 }
@@ -107,8 +107,8 @@ test "checkerboard pattern" (it : @test.T) {
 
 test "advanced path showcase" (it : @test.T) {
   let doc = @vg.new_svg(400.0, 300.0)
-    |> @vg.render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.gray(0.98))
-    |> @vg.render_text("Advanced Path Features", @vg.point(200.0, 30.0), 18.0, @vg.black())
+    .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.gray(0.98))
+    .render_text("Advanced Path Features", @vg.point(200.0, 30.0), 18.0, @vg.black())
   
   // Quadratic curve example
   let q_path = @vg.Path::empty()
@@ -132,14 +132,14 @@ test "advanced path showcase" (it : @test.T) {
     .smooth_ccurve_to(@vg.point(225.0, 120.0), @vg.point(250.0, 150.0))
   
   let final_doc = doc
-    |> @vg.render_path(q_path, @vg.blue())
-    |> @vg.render_path(arc_path, @vg.green())
-    |> @vg.render_path(smooth_path, @vg.red())
-    |> @vg.render_text("Quadratic", @vg.point(100.0, 130.0), 12.0, @vg.blue())
-    |> @vg.render_text("Elliptical Arc", @vg.point(240.0, 130.0), 12.0, @vg.green())
-    |> @vg.render_text("Smooth Curves", @vg.point(150.0, 200.0), 12.0, @vg.red())
+    .render_path(q_path, @vg.blue())
+    .render_path(arc_path, @vg.green())
+    .render_path(smooth_path, @vg.red())
+    .render_text("Quadratic", @vg.point(100.0, 130.0), 12.0, @vg.blue())
+    .render_text("Elliptical Arc", @vg.point(240.0, 130.0), 12.0, @vg.green())
+    .render_text("Smooth Curves", @vg.point(150.0, 200.0), 12.0, @vg.red())
   
-  let svg_string = @vg.to_svg_string(final_doc)
+  let svg_string = final_doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="advanced_paths.svg")
 }

@@ -83,8 +83,8 @@ test "oo-style api comparison" (it : @test.T) {
   
   // Functional style (original)
   let svg_functional = @vg.new_svg(200.0, 100.0)
-    |> @vg.render_circle(@vg.point(100.0, 50.0), 25.0, @vg.red())
-    |> @vg.render_text("Functional Style", @vg.point(100.0, 80.0), 12.0, @vg.black())
+    .render_circle(@vg.point(100.0, 50.0), 25.0, @vg.red())
+    .render_text("Functional Style", @vg.point(100.0, 80.0), 12.0, @vg.black())
   
   // OO style (new)  
   let svg_oo = @vg.new_svg(200.0, 100.0)
@@ -92,7 +92,7 @@ test "oo-style api comparison" (it : @test.T) {
     .render_text("OO Style", @vg.point(100.0, 80.0), 12.0, @vg.black())
   
   // Get outputs for comparison
-  let functional_output = @vg.to_svg_string(svg_functional)
+  let functional_output = svg_functional.to_string()
   let oo_output = svg_oo.to_string()
   
   // Create comparison even if different (for debugging)

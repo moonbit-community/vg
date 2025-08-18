@@ -207,34 +207,4 @@ pub fn PdfDocument::to_string(self : PdfDocument) -> String {
   pdf
 }
 
-// ===== BACKWARD COMPATIBILITY WRAPPERS =====
 
-/// Render a circle to PDF (functional-style wrapper)
-pub fn render_pdf_circle(doc : PdfDocument, center : Point, radius : Double, color : Color) -> PdfDocument {
-  doc.render_circle(center, radius, color)
-}
-
-/// Render a rectangle to PDF (functional-style wrapper)
-pub fn render_pdf_rectangle(doc : PdfDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> PdfDocument {
-  doc.render_rectangle(x, y, width, height, color)
-}
-
-/// Render a line to PDF (functional-style wrapper)
-pub fn render_pdf_line(doc : PdfDocument, start : Point, end : Point, color : Color, thickness : Double) -> PdfDocument {
-  doc.render_line(start, end, color, thickness)
-}
-
-/// Render text to PDF (functional-style wrapper)
-pub fn render_pdf_text(doc : PdfDocument, text : String, pos : Point, size : Double, color : Color) -> PdfDocument {
-  doc.render_text(text, pos, size, color)
-}
-
-/// Render a path to PDF (functional-style wrapper)
-pub fn render_pdf_path(doc : PdfDocument, path : Path, color : Color) -> PdfDocument {
-  doc.render_path(path, color)
-}
-
-/// Convert to PDF string (functional-style wrapper)
-pub fn to_pdf_string(doc : PdfDocument) -> String {
-  doc.to_string()
-}

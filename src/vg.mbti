@@ -4,10 +4,6 @@ package "bobzhang/vg"
 // Values
 fn add(Point, Point) -> Point
 
-fn add_canvas_command(CanvasDocument, String) -> CanvasDocument
-
-fn add_element(SvgDocument, String) -> SvgDocument
-
 fn apply(Transform, Point) -> Point
 
 fn axial_gradient(Color, Color, Point, Point) -> (Point) -> Color
@@ -110,43 +106,7 @@ fn rectangle(Color, Double, Double) -> (Point) -> Color
 
 fn red() -> Color
 
-fn render_canvas_circle(CanvasDocument, Point, Double, Color) -> CanvasDocument
-
-fn render_canvas_line(CanvasDocument, Point, Point, Color, Double) -> CanvasDocument
-
-fn render_canvas_path(CanvasDocument, Path, Color) -> CanvasDocument
-
-fn render_canvas_rectangle(CanvasDocument, Double, Double, Double, Double, Color) -> CanvasDocument
-
-fn render_canvas_text(CanvasDocument, String, Point, Double, Color) -> CanvasDocument
-
-fn render_circle(SvgDocument, Point, Double, Color) -> SvgDocument
-
-fn render_ellipse(SvgDocument, Point, Double, Double, Color) -> SvgDocument
-
 fn render_image_to_svg((Point) -> Color, Double, Double, Int) -> String
-
-fn render_line(SvgDocument, Point, Point, Color, Double) -> SvgDocument
-
-fn render_linear_gradient(SvgDocument, String, Point, Point, Color, Color) -> SvgDocument
-
-fn render_path(SvgDocument, Path, Color) -> SvgDocument
-
-fn render_pdf_circle(PdfDocument, Point, Double, Color) -> PdfDocument
-
-fn render_pdf_line(PdfDocument, Point, Point, Color, Double) -> PdfDocument
-
-fn render_pdf_path(PdfDocument, Path, Color) -> PdfDocument
-
-fn render_pdf_rectangle(PdfDocument, Double, Double, Double, Double, Color) -> PdfDocument
-
-fn render_pdf_text(PdfDocument, String, Point, Double, Color) -> PdfDocument
-
-fn render_polygon(SvgDocument, Array[Point], Color) -> SvgDocument
-
-fn render_rectangle(SvgDocument, Double, Double, Double, Double, Color) -> SvgDocument
-
-fn render_text(SvgDocument, String, Point, Double, Color) -> SvgDocument
 
 fn rgb(Double, Double, Double) -> Color
 
@@ -176,15 +136,7 @@ fn sub(Point, Point) -> Point
 
 fn tile_image((Point) -> Color, Double, Double) -> (Point) -> Color
 
-fn to_canvas_html(CanvasDocument, String) -> String
-
-fn to_canvas_js(CanvasDocument) -> String
-
 fn to_hex(Color) -> String
-
-fn to_pdf_string(PdfDocument) -> String
-
-fn to_svg_string(SvgDocument) -> String
 
 fn transform(Transform, (Point) -> Color) -> (Point) -> Color
 
