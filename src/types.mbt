@@ -45,7 +45,9 @@ pub typealias (Point) -> Color as Image
 pub enum PathSegment {
   MoveTo(Point)
   LineTo(Point)
-  CurveTo(Point, Point, Point)  // control1, control2, end
+  CurveTo(Point, Point, Point)  // control1, control2, end (cubic Bézier)
+  QCurveTo(Point, Point)        // control, end (quadratic Bézier)
+  EArcTo(Double, Double, Double, Bool, Bool, Point)  // rx, ry, rotation, large_arc, sweep, end
   Close
 } derive(Eq, Show)
 

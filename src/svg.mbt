@@ -48,6 +48,14 @@ fn path_to_svg_data(path : Path) -> String {
       LineTo(p) => data = data + "L " + point_to_svg(p) + " "
       CurveTo(cp1, cp2, end) => 
         data = data + "C " + point_to_svg(cp1) + " " + point_to_svg(cp2) + " " + point_to_svg(end) + " "
+      QCurveTo(cp, end) =>
+        data = data + "Q " + point_to_svg(cp) + " " + point_to_svg(end) + " "
+      EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+        let large_flag = if large_arc { "1" } else { "0" }
+        let sweep_flag = if sweep { "1" } else { "0" }
+        data = data + "A " + rx.to_string() + " " + ry.to_string() + " " + 
+               rotation.to_string() + " " + large_flag + " " + sweep_flag + " " + point_to_svg(end) + " "
+      }
       Close => data = data + "Z "
     }
   }

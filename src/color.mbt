@@ -122,3 +122,69 @@ pub fn lerp_color(c1 : Color, c2 : Color, t : Double) -> Color {
     a: c1.a + (c2.a - c1.a) * t_clamped
   }
 }
+
+/// Multiply blend mode
+pub fn multiply_blend(c1 : Color, c2 : Color) -> Color {
+  {
+    r: c1.r * c2.r,
+    g: c1.g * c2.g,
+    b: c1.b * c2.b,
+    a: c1.a + c2.a - c1.a * c2.a  // Alpha compositing
+  }
+}
+
+/// Screen blend mode  
+pub fn screen_blend(c1 : Color, c2 : Color) -> Color {
+  {
+    r: 1.0 - (1.0 - c1.r) * (1.0 - c2.r),
+    g: 1.0 - (1.0 - c1.g) * (1.0 - c2.g),
+    b: 1.0 - (1.0 - c1.b) * (1.0 - c2.b),
+    a: c1.a + c2.a - c1.a * c2.a
+  }
+}
+
+/// Overlay blend mode
+pub fn overlay_blend(c1 : Color, c2 : Color) -> Color {
+  fn overlay_component(base : Double, overlay : Double) -> Double {
+    if base < 0.5 {
+      2.0 * base * overlay
+    } else {
+      1.0 - 2.0 * (1.0 - base) * (1.0 - overlay)
+    }
+  }
+  
+  {
+    r: overlay_component(c1.r, c2.r),
+    g: overlay_component(c1.g, c2.g),
+    b: overlay_component(c1.b, c2.b),
+    a: c1.a + c2.a - c1.a * c2.a
+  }
+}
+
+/// Hard light blend mode
+pub fn hard_light_blend(c1 : Color, c2 : Color) -> Color {
+  overlay_blend(c2, c1)  // Hard light is overlay with arguments swapped
+}
+
+/// Soft light blend mode
+pub fn soft_light_blend(c1 : Color, c2 : Color) -> Color {
+  fn soft_light_component(base : Double, overlay : Double) -> Double {
+    if overlay < 0.5 {
+      base - (1.0 - 2.0 * overlay) * base * (1.0 - base)
+    } else {
+      let d = if base < 0.25 {
+        ((16.0 * base - 12.0) * base + 4.0) * base
+      } else {
+        base.sqrt()
+      }
+      base + (2.0 * overlay - 1.0) * (d - base)
+    }
+  }
+  
+  {
+    r: soft_light_component(c1.r, c2.r),
+    g: soft_light_component(c1.g, c2.g),
+    b: soft_light_component(c1.b, c2.b),
+    a: c1.a + c2.a - c1.a * c2.a
+  }
+}

@@ -196,3 +196,51 @@ pub fn with_opacity(img : Image, opacity : Double) -> Image {
     { r: c.r, g: c.g, b: c.b, a: c.a * opacity }
   }
 }
+
+/// Create an axial gradient (alternative name for linear gradient)
+pub fn axial_gradient(color1 : Color, color2 : Color, start : Point, end : Point) -> Image {
+  linear_gradient(color1, color2, start, end)
+}
+
+/// Create a conic gradient (angular gradient around a center point)
+pub fn conic_gradient(color1 : Color, color2 : Color, center : Point, start_angle : Double) -> Image {
+  fn(p : Point) -> Color {
+    let vec = sub(p, center)
+    // Simple angle calculation without atan2
+    let angle = if vec.x == 0.0 {
+      if vec.y >= 0.0 { 3.14159265359 / 2.0 } else { -3.14159265359 / 2.0 }
+    } else {
+      let basic_angle = @math.atan(vec.y / vec.x)
+      if vec.x < 0.0 { basic_angle + 3.14159265359 } else { basic_angle }
+    }
+    let normalized_angle = (angle - start_angle + 2.0 * 3.14159265359) % (2.0 * 3.14159265359)
+    let t = normalized_angle / (2.0 * 3.14159265359)
+    
+    {
+      r: color1.r + (color2.r - color1.r) * t,
+      g: color1.g + (color2.g - color1.g) * t,
+      b: color1.b + (color2.b - color1.b) * t,
+      a: color1.a + (color2.a - color1.a) * t
+    }
+  }
+}
+
+/// Create a repeated/tiled image
+pub fn tile_image(img : Image, tile_width : Double, tile_height : Double) -> Image {
+  fn(p : Point) -> Color {
+    let tiled_x = p.x % tile_width
+    let tiled_y = p.y % tile_height
+    let normalized_x = if tiled_x < 0.0 { tiled_x + tile_width } else { tiled_x }
+    let normalized_y = if tiled_y < 0.0 { tiled_y + tile_height } else { tiled_y }
+    img(point(normalized_x - tile_width / 2.0, normalized_y - tile_height / 2.0))
+  }
+}
+
+/// Create a checkerboard pattern
+pub fn checkerboard(color1 : Color, color2 : Color, size : Double) -> Image {
+  fn(p : Point) -> Color {
+    let x_cell = (p.x / size).floor().to_int()
+    let y_cell = (p.y / size).floor().to_int()
+    if (x_cell + y_cell) % 2 == 0 { color1 } else { color2 }
+  }
+}
