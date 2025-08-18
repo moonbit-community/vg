@@ -13,15 +13,7 @@ pub fn new_pdf(width : Double, height : Double) -> PdfDocument {
   { width, height, objects: [], object_count: 0 }
 }
 
-/// Add an object to the PDF document
-fn add_pdf_object(doc : PdfDocument, obj : String) -> PdfDocument {
-  let new_objects = Array::new()
-  for o in doc.objects {
-    new_objects.push(o)
-  }
-  new_objects.push(obj)
-  { width: doc.width, height: doc.height, objects: new_objects, object_count: doc.object_count + 1 }
-}
+
 
 /// Convert color to PDF color values (0-1 range)
 fn color_to_pdf(c : Color) -> String {
@@ -33,80 +25,13 @@ fn point_to_pdf(p : Point, height : Double) -> String {
   p.x.to_string() + " " + (height - p.y).to_string()
 }
 
-/// Render a circle to PDF (approximated with curves)
-pub fn render_pdf_circle(doc : PdfDocument, center : Point, radius : Double, color : Color) -> PdfDocument {
-  let kappa = 0.5522847498
-  let offset = radius * kappa
-  
-  let content = 
-    "q\n" +  // Save graphics state
-    color_to_pdf(color) + "\n" +
-    point_to_pdf(point(center.x, center.y - radius), doc.height) + " m\n" +  // Move to top
-    // Four cubic curves to approximate circle
-    point_to_pdf(point(center.x + offset, center.y - radius), doc.height) + " " +
-    point_to_pdf(point(center.x + radius, center.y - offset), doc.height) + " " +
-    point_to_pdf(point(center.x + radius, center.y), doc.height) + " c\n" +
-    
-    point_to_pdf(point(center.x + radius, center.y + offset), doc.height) + " " +
-    point_to_pdf(point(center.x + offset, center.y + radius), doc.height) + " " +
-    point_to_pdf(point(center.x, center.y + radius), doc.height) + " c\n" +
-    
-    point_to_pdf(point(center.x - offset, center.y + radius), doc.height) + " " +
-    point_to_pdf(point(center.x - radius, center.y + offset), doc.height) + " " +
-    point_to_pdf(point(center.x - radius, center.y), doc.height) + " c\n" +
-    
-    point_to_pdf(point(center.x - radius, center.y - offset), doc.height) + " " +
-    point_to_pdf(point(center.x - offset, center.y - radius), doc.height) + " " +
-    point_to_pdf(point(center.x, center.y - radius), doc.height) + " c\n" +
-    
-    "f\n" +  // Fill
-    "Q"       // Restore graphics state
-  
-  add_pdf_object(doc, content)
-}
 
-/// Render a rectangle to PDF
-pub fn render_pdf_rectangle(doc : PdfDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> PdfDocument {
-  let content = 
-    "q\n" +  // Save graphics state
-    color_to_pdf(color) + "\n" +
-    x.to_string() + " " + (doc.height - y - height).to_string() + " " + 
-    width.to_string() + " " + height.to_string() + " re\n" +  // Rectangle
-    "f\n" +  // Fill
-    "Q"       // Restore graphics state
-  
-  add_pdf_object(doc, content)
-}
 
-/// Render a line to PDF
-pub fn render_pdf_line(doc : PdfDocument, start : Point, end : Point, color : Color, thickness : Double) -> PdfDocument {
-  let content = 
-    "q\n" +  // Save graphics state
-    color_to_pdf(color) + " RG\n" +  // Stroke color
-    thickness.to_string() + " w\n" +  // Line width
-    "1 J\n" +  // Round line caps
-    point_to_pdf(start, doc.height) + " m\n" +  // Move to start
-    point_to_pdf(end, doc.height) + " l\n" +    // Line to end
-    "S\n" +   // Stroke
-    "Q"        // Restore graphics state
-  
-  add_pdf_object(doc, content)
-}
 
-/// Render text to PDF
-pub fn render_pdf_text(doc : PdfDocument, text : String, pos : Point, size : Double, color : Color) -> PdfDocument {
-  let content = 
-    "q\n" +  // Save graphics state
-    "BT\n" +  // Begin text
-    "/F1 " + size.to_string() + " Tf\n" +  // Font and size
-    color_to_pdf(color) + " rg\n" +  // Text color
-    point_to_pdf(pos, doc.height) + " Td\n" +  // Text position
-    "(" + text + ") Tj\n" +  // Show text
-    "ET\n" +  // End text
-    "Q"        // Restore graphics state
-  
-  add_pdf_object(doc, content)
-}
+
+
+
+
 
 /// Convert a path to PDF path commands
 fn path_to_pdf_commands(path : Path, height : Double) -> Array[String] {
@@ -136,9 +61,100 @@ fn path_to_pdf_commands(path : Path, height : Double) -> Array[String] {
   commands
 }
 
-/// Render a path to PDF
-pub fn render_pdf_path(doc : PdfDocument, path : Path, color : Color) -> PdfDocument {
-  let path_commands = path_to_pdf_commands(path, doc.height)
+
+
+
+
+// ===== OBJECT-ORIENTED API METHODS =====
+
+/// Add an object to the PDF document (OO-style)
+fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
+  let new_objects = Array::new()
+  for o in self.objects {
+    new_objects.push(o)
+  }
+  new_objects.push(obj)
+  { width: self.width, height: self.height, objects: new_objects, object_count: self.object_count + 1 }
+}
+
+/// Render a circle to PDF (OO-style)
+pub fn PdfDocument::render_circle(self : PdfDocument, center : Point, radius : Double, color : Color) -> PdfDocument {
+  let kappa = 0.5522847498
+  let offset = radius * kappa
+  
+  let content = 
+    "q\n" +  // Save graphics state
+    color_to_pdf(color) + "\n" +
+    point_to_pdf(point(center.x, center.y - radius), self.height) + " m\n" +  // Move to top
+    // Four cubic curves to approximate circle
+    point_to_pdf(point(center.x + offset, center.y - radius), self.height) + " " +
+    point_to_pdf(point(center.x + radius, center.y - offset), self.height) + " " +
+    point_to_pdf(point(center.x + radius, center.y), self.height) + " c\n" +
+    
+    point_to_pdf(point(center.x + radius, center.y + offset), self.height) + " " +
+    point_to_pdf(point(center.x + offset, center.y + radius), self.height) + " " +
+    point_to_pdf(point(center.x, center.y + radius), self.height) + " c\n" +
+    
+    point_to_pdf(point(center.x - offset, center.y + radius), self.height) + " " +
+    point_to_pdf(point(center.x - radius, center.y + offset), self.height) + " " +
+    point_to_pdf(point(center.x - radius, center.y), self.height) + " c\n" +
+    
+    point_to_pdf(point(center.x - radius, center.y - offset), self.height) + " " +
+    point_to_pdf(point(center.x - offset, center.y - radius), self.height) + " " +
+    point_to_pdf(point(center.x, center.y - radius), self.height) + " c\n" +
+    
+    "f\n" +  // Fill
+    "Q"       // Restore graphics state
+  
+  self.add_object(content)
+}
+
+/// Render a rectangle to PDF (OO-style)
+pub fn PdfDocument::render_rectangle(self : PdfDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> PdfDocument {
+  let content = 
+    "q\n" +  // Save graphics state
+    color_to_pdf(color) + "\n" +
+    x.to_string() + " " + (self.height - y - height).to_string() + " " + 
+    width.to_string() + " " + height.to_string() + " re\n" +  // Rectangle
+    "f\n" +  // Fill
+    "Q"       // Restore graphics state
+  
+  self.add_object(content)
+}
+
+/// Render a line to PDF (OO-style)
+pub fn PdfDocument::render_line(self : PdfDocument, start : Point, end : Point, color : Color, thickness : Double) -> PdfDocument {
+  let content = 
+    "q\n" +  // Save graphics state
+    color_to_pdf(color) + " RG\n" +  // Stroke color
+    thickness.to_string() + " w\n" +  // Line width
+    "1 J\n" +  // Round line caps
+    point_to_pdf(start, self.height) + " m\n" +  // Move to start
+    point_to_pdf(end, self.height) + " l\n" +    // Line to end
+    "S\n" +   // Stroke
+    "Q"        // Restore graphics state
+  
+  self.add_object(content)
+}
+
+/// Render text to PDF (OO-style)
+pub fn PdfDocument::render_text(self : PdfDocument, text : String, pos : Point, size : Double, color : Color) -> PdfDocument {
+  let content = 
+    "q\n" +  // Save graphics state
+    "BT\n" +  // Begin text
+    "/F1 " + size.to_string() + " Tf\n" +  // Font and size
+    color_to_pdf(color) + " rg\n" +  // Text color
+    point_to_pdf(pos, self.height) + " Td\n" +  // Text position
+    "(" + text + ") Tj\n" +  // Show text
+    "ET\n" +  // End text
+    "Q"        // Restore graphics state
+  
+  self.add_object(content)
+}
+
+/// Render a path to PDF (OO-style)
+pub fn PdfDocument::render_path(self : PdfDocument, path : Path, color : Color) -> PdfDocument {
+  let path_commands = path_to_pdf_commands(path, self.height)
   
   let mut content = "q\n"  // Save graphics state
   content = content + color_to_pdf(color) + "\n"
@@ -150,11 +166,11 @@ pub fn render_pdf_path(doc : PdfDocument, path : Path, color : Color) -> PdfDocu
   content = content + "f\n"  // Fill
   content = content + "Q"     // Restore graphics state
   
-  add_pdf_object(doc, content)
+  self.add_object(content)
 }
 
-/// Convert PDF document to PDF content
-pub fn to_pdf_string(doc : PdfDocument) -> String {
+/// Convert to PDF string (OO-style)
+pub fn PdfDocument::to_string(self : PdfDocument) -> String {
   let mut pdf = "%PDF-1.4\n"
   
   // PDF Header
@@ -165,13 +181,13 @@ pub fn to_pdf_string(doc : PdfDocument) -> String {
   
   // Page object
   pdf = pdf + "3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n"
-  pdf = pdf + "/MediaBox [0 0 " + doc.width.to_string() + " " + doc.height.to_string() + "]\n"
+  pdf = pdf + "/MediaBox [0 0 " + self.width.to_string() + " " + self.height.to_string() + "]\n"
   pdf = pdf + "/Resources <<\n/Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >>\n>>\n"
   pdf = pdf + "/Contents 4 0 R\n>>\nendobj\n\n"
   
   // Content stream
   let mut content_stream = ""
-  for obj in doc.objects {
+  for obj in self.objects {
     content_stream = content_stream + obj + "\n"
   }
   
@@ -194,34 +210,34 @@ pub fn to_pdf_string(doc : PdfDocument) -> String {
   pdf
 }
 
-// ===== OBJECT-ORIENTED API METHODS =====
+// ===== BACKWARD COMPATIBILITY WRAPPERS =====
 
-/// Render a circle to PDF (OO-style)
-pub fn PdfDocument::render_circle(self : PdfDocument, center : Point, radius : Double, color : Color) -> PdfDocument {
-  render_pdf_circle(self, center, radius, color)
+/// Render a circle to PDF (functional-style wrapper)
+pub fn render_pdf_circle(doc : PdfDocument, center : Point, radius : Double, color : Color) -> PdfDocument {
+  doc.render_circle(center, radius, color)
 }
 
-/// Render a rectangle to PDF (OO-style)
-pub fn PdfDocument::render_rectangle(self : PdfDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> PdfDocument {
-  render_pdf_rectangle(self, x, y, width, height, color)
+/// Render a rectangle to PDF (functional-style wrapper)
+pub fn render_pdf_rectangle(doc : PdfDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> PdfDocument {
+  doc.render_rectangle(x, y, width, height, color)
 }
 
-/// Render a line to PDF (OO-style)
-pub fn PdfDocument::render_line(self : PdfDocument, start : Point, end : Point, color : Color, thickness : Double) -> PdfDocument {
-  render_pdf_line(self, start, end, color, thickness)
+/// Render a line to PDF (functional-style wrapper)
+pub fn render_pdf_line(doc : PdfDocument, start : Point, end : Point, color : Color, thickness : Double) -> PdfDocument {
+  doc.render_line(start, end, color, thickness)
 }
 
-/// Render text to PDF (OO-style)
-pub fn PdfDocument::render_text(self : PdfDocument, text : String, pos : Point, size : Double, color : Color) -> PdfDocument {
-  render_pdf_text(self, text, pos, size, color)
+/// Render text to PDF (functional-style wrapper)
+pub fn render_pdf_text(doc : PdfDocument, text : String, pos : Point, size : Double, color : Color) -> PdfDocument {
+  doc.render_text(text, pos, size, color)
 }
 
-/// Render a path to PDF (OO-style)
-pub fn PdfDocument::render_path(self : PdfDocument, path : Path, color : Color) -> PdfDocument {
-  render_pdf_path(self, path, color)
+/// Render a path to PDF (functional-style wrapper)
+pub fn render_pdf_path(doc : PdfDocument, path : Path, color : Color) -> PdfDocument {
+  doc.render_path(path, color)
 }
 
-/// Convert to PDF string (OO-style)
-pub fn PdfDocument::to_string(self : PdfDocument) -> String {
-  to_pdf_string(self)
+/// Convert to PDF string (functional-style wrapper)
+pub fn to_pdf_string(doc : PdfDocument) -> String {
+  doc.to_string()
 }

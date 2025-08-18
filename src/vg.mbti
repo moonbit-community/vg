@@ -215,6 +215,14 @@ pub struct CanvasDocument {
   height : Double
   commands : Array[String]
 }
+fn CanvasDocument::add_command(Self, String) -> Self
+fn CanvasDocument::render_circle(Self, Point, Double, Color) -> Self
+fn CanvasDocument::render_line(Self, Point, Point, Color, Double) -> Self
+fn CanvasDocument::render_path(Self, Path, Color) -> Self
+fn CanvasDocument::render_rectangle(Self, Double, Double, Double, Double, Color) -> Self
+fn CanvasDocument::render_text(Self, String, Point, Double, Color) -> Self
+fn CanvasDocument::to_html(Self, String) -> String
+fn CanvasDocument::to_js(Self) -> String
 impl Show for CanvasDocument
 
 pub struct Color {
@@ -270,6 +278,12 @@ pub struct PdfDocument {
   objects : Array[String]
   object_count : Int
 }
+fn PdfDocument::render_circle(Self, Point, Double, Color) -> Self
+fn PdfDocument::render_line(Self, Point, Point, Color, Double) -> Self
+fn PdfDocument::render_path(Self, Path, Color) -> Self
+fn PdfDocument::render_rectangle(Self, Double, Double, Double, Double, Color) -> Self
+fn PdfDocument::render_text(Self, String, Point, Double, Color) -> Self
+fn PdfDocument::to_string(Self) -> String
 impl Show for PdfDocument
 
 pub struct Point {
@@ -293,6 +307,16 @@ pub struct SvgDocument {
   height : Double
   elements : Array[String]
 }
+fn SvgDocument::add_element(Self, String) -> Self
+fn SvgDocument::render_circle(Self, Point, Double, Color) -> Self
+fn SvgDocument::render_ellipse(Self, Point, Double, Double, Color) -> Self
+fn SvgDocument::render_line(Self, Point, Point, Color, Double) -> Self
+fn SvgDocument::render_linear_gradient(Self, String, Point, Point, Color, Color) -> Self
+fn SvgDocument::render_path(Self, Path, Color) -> Self
+fn SvgDocument::render_polygon(Self, Array[Point], Color) -> Self
+fn SvgDocument::render_rectangle(Self, Double, Double, Double, Double, Color) -> Self
+fn SvgDocument::render_text(Self, String, Point, Double, Color) -> Self
+fn SvgDocument::to_string(Self) -> String
 impl Show for SvgDocument
 
 pub struct Transform {

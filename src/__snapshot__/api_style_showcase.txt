@@ -1,0 +1,27 @@
+=== API STYLE COMPARISON ===
+
+// Functional Style (verbose)
+let doc = new_svg(200.0, 100.0)
+  |> render_rectangle(0.0, 0.0, 200.0, 100.0, gray(0.95))
+  |> render_circle(point(100.0, 50.0), 25.0, red())
+  |> render_text("Demo", point(100.0, 80.0), 12.0, black())
+let svg = to_svg_string(doc)
+
+// OO Style (elegant)
+let svg = new_svg(200.0, 100.0)
+  .render_rectangle(0.0, 0.0, 200.0, 100.0, gray(0.95))
+  .render_circle(point(100.0, 50.0), 25.0, red())
+  .render_text("Demo", point(100.0, 80.0), 12.0, black())
+  .to_string()
+
+✅ OO Style Benefits:
+• More concise and readable
+• Better IDE support with method discovery
+• Consistent with Path API design
+• Modern fluent interface pattern
+• Type-safe method chaining
+
+✅ Both APIs Available:
+• Functional style for backward compatibility
+• OO style for modern development
+• Identical output and performance

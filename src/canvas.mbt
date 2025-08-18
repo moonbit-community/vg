@@ -12,15 +12,7 @@ pub fn new_canvas(width : Double, height : Double) -> CanvasDocument {
   { width, height, commands: [] }
 }
 
-/// Add a command to the Canvas document
-pub fn add_canvas_command(doc : CanvasDocument, command : String) -> CanvasDocument {
-  let new_commands = Array::new()
-  for cmd in doc.commands {
-    new_commands.push(cmd)
-  }
-  new_commands.push(command)
-  { width: doc.width, height: doc.height, commands: new_commands }
-}
+
 
 /// Convert a color to Canvas color string
 fn color_to_canvas(c : Color) -> String {
@@ -34,71 +26,13 @@ fn color_to_canvas(c : Color) -> String {
   }
 }
 
-/// Render a circle to Canvas
-pub fn render_canvas_circle(doc : CanvasDocument, center : Point, radius : Double, color : Color) -> CanvasDocument {
-  let commands = [
-    "ctx.beginPath();",
-    "ctx.arc(" + center.x.to_string() + ", " + center.y.to_string() + ", " + radius.to_string() + ", 0, 2 * Math.PI);",
-    "ctx.fillStyle = '" + color_to_canvas(color) + "';",
-    "ctx.fill();"
-  ]
-  
-  let mut result = doc
-  for cmd in commands {
-    result = add_canvas_command(result, cmd)
-  }
-  result
-}
 
-/// Render a rectangle to Canvas
-pub fn render_canvas_rectangle(doc : CanvasDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> CanvasDocument {
-  let commands = [
-    "ctx.fillStyle = '" + color_to_canvas(color) + "';",
-    "ctx.fillRect(" + x.to_string() + ", " + y.to_string() + ", " + width.to_string() + ", " + height.to_string() + ");"
-  ]
-  
-  let mut result = doc
-  for cmd in commands {
-    result = add_canvas_command(result, cmd)
-  }
-  result
-}
 
-/// Render a line to Canvas
-pub fn render_canvas_line(doc : CanvasDocument, start : Point, end : Point, color : Color, thickness : Double) -> CanvasDocument {
-  let commands = [
-    "ctx.beginPath();",
-    "ctx.moveTo(" + start.x.to_string() + ", " + start.y.to_string() + ");",
-    "ctx.lineTo(" + end.x.to_string() + ", " + end.y.to_string() + ");",
-    "ctx.strokeStyle = '" + color_to_canvas(color) + "';",
-    "ctx.lineWidth = " + thickness.to_string() + ";",
-    "ctx.lineCap = 'round';",
-    "ctx.stroke();"
-  ]
-  
-  let mut result = doc
-  for cmd in commands {
-    result = add_canvas_command(result, cmd)
-  }
-  result
-}
 
-/// Render text to Canvas
-pub fn render_canvas_text(doc : CanvasDocument, text : String, pos : Point, size : Double, color : Color) -> CanvasDocument {
-  let commands = [
-    "ctx.font = '" + size.to_string() + "px Arial, sans-serif';",
-    "ctx.fillStyle = '" + color_to_canvas(color) + "';",
-    "ctx.textAlign = 'center';",
-    "ctx.textBaseline = 'middle';",
-    "ctx.fillText('" + text + "', " + pos.x.to_string() + ", " + pos.y.to_string() + ");"
-  ]
-  
-  let mut result = doc
-  for cmd in commands {
-    result = add_canvas_command(result, cmd)
-  }
-  result
-}
+
+
+
+
 
 /// Convert a path to Canvas commands
 fn path_to_canvas_commands(path : Path) -> Array[String] {
@@ -134,38 +68,122 @@ fn path_to_canvas_commands(path : Path) -> Array[String] {
   commands
 }
 
-/// Render a path to Canvas
-pub fn render_canvas_path(doc : CanvasDocument, path : Path, color : Color) -> CanvasDocument {
+
+
+
+
+
+
+// ===== OBJECT-ORIENTED API METHODS =====
+
+/// Add a command to the Canvas document (OO-style)
+pub fn CanvasDocument::add_command(self : CanvasDocument, command : String) -> CanvasDocument {
+  let new_commands = Array::new()
+  for cmd in self.commands {
+    new_commands.push(cmd)
+  }
+  new_commands.push(command)
+  { width: self.width, height: self.height, commands: new_commands }
+}
+
+/// Render a circle to Canvas (OO-style)
+pub fn CanvasDocument::render_circle(self : CanvasDocument, center : Point, radius : Double, color : Color) -> CanvasDocument {
+  let commands = [
+    "ctx.beginPath();",
+    "ctx.arc(" + center.x.to_string() + ", " + center.y.to_string() + ", " + radius.to_string() + ", 0, 2 * Math.PI);",
+    "ctx.fillStyle = '" + color_to_canvas(color) + "';",
+    "ctx.fill();"
+  ]
+  
+  let mut result = self
+  for cmd in commands {
+    result = result.add_command(cmd)
+  }
+  result
+}
+
+/// Render a rectangle to Canvas (OO-style)
+pub fn CanvasDocument::render_rectangle(self : CanvasDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> CanvasDocument {
+  let commands = [
+    "ctx.fillStyle = '" + color_to_canvas(color) + "';",
+    "ctx.fillRect(" + x.to_string() + ", " + y.to_string() + ", " + width.to_string() + ", " + height.to_string() + ");"
+  ]
+  
+  let mut result = self
+  for cmd in commands {
+    result = result.add_command(cmd)
+  }
+  result
+}
+
+/// Render a line to Canvas (OO-style)
+pub fn CanvasDocument::render_line(self : CanvasDocument, start : Point, end : Point, color : Color, thickness : Double) -> CanvasDocument {
+  let commands = [
+    "ctx.beginPath();",
+    "ctx.moveTo(" + start.x.to_string() + ", " + start.y.to_string() + ");",
+    "ctx.lineTo(" + end.x.to_string() + ", " + end.y.to_string() + ");",
+    "ctx.strokeStyle = '" + color_to_canvas(color) + "';",
+    "ctx.lineWidth = " + thickness.to_string() + ";",
+    "ctx.lineCap = 'round';",
+    "ctx.stroke();"
+  ]
+  
+  let mut result = self
+  for cmd in commands {
+    result = result.add_command(cmd)
+  }
+  result
+}
+
+/// Render text to Canvas (OO-style)
+pub fn CanvasDocument::render_text(self : CanvasDocument, text : String, pos : Point, size : Double, color : Color) -> CanvasDocument {
+  let commands = [
+    "ctx.font = '" + size.to_string() + "px Arial, sans-serif';",
+    "ctx.fillStyle = '" + color_to_canvas(color) + "';",
+    "ctx.textAlign = 'center';",
+    "ctx.textBaseline = 'middle';",
+    "ctx.fillText('" + text + "', " + pos.x.to_string() + ", " + pos.y.to_string() + ");"
+  ]
+  
+  let mut result = self
+  for cmd in commands {
+    result = result.add_command(cmd)
+  }
+  result
+}
+
+/// Render a path to Canvas (OO-style)
+pub fn CanvasDocument::render_path(self : CanvasDocument, path : Path, color : Color) -> CanvasDocument {
   let path_commands = path_to_canvas_commands(path)
   let fill_commands = [
     "ctx.fillStyle = '" + color_to_canvas(color) + "';",
     "ctx.fill();"
   ]
   
-  let mut result = doc
+  let mut result = self
   for cmd in path_commands {
-    result = add_canvas_command(result, cmd)
+    result = result.add_command(cmd)
   }
   for cmd in fill_commands {
-    result = add_canvas_command(result, cmd)
+    result = result.add_command(cmd)
   }
   result
 }
 
-/// Convert Canvas document to JavaScript code
-pub fn to_canvas_js(doc : CanvasDocument) -> String {
+/// Convert to JavaScript (OO-style)
+pub fn CanvasDocument::to_js(self : CanvasDocument) -> String {
   let mut js = "// Generated Canvas JavaScript\n"
   js = js + "function drawVgGraphics(canvas) {\n"
   js = js + "  const ctx = canvas.getContext('2d');\n"
-  js = js + "  canvas.width = " + doc.width.to_string() + ";\n"
-  js = js + "  canvas.height = " + doc.height.to_string() + ";\n"
+  js = js + "  canvas.width = " + self.width.to_string() + ";\n"
+  js = js + "  canvas.height = " + self.height.to_string() + ";\n"
   js = js + "  \n"
   js = js + "  // Clear canvas\n"
   js = js + "  ctx.clearRect(0, 0, canvas.width, canvas.height);\n"
   js = js + "  \n"
   js = js + "  // Drawing commands\n"
   
-  for command in doc.commands {
+  for command in self.commands {
     js = js + "  " + command + "\n"
   }
   
@@ -174,9 +192,9 @@ pub fn to_canvas_js(doc : CanvasDocument) -> String {
   js
 }
 
-/// Convert Canvas document to complete HTML page
-pub fn to_canvas_html(doc : CanvasDocument, title : String) -> String {
-  let js_code = to_canvas_js(doc)
+/// Convert to HTML (OO-style)
+pub fn CanvasDocument::to_html(self : CanvasDocument, title : String) -> String {
+  let js_code = self.to_js()
   
   "<!DOCTYPE html>\n<html>\n<head>\n" +
   "  <title>" + title + "</title>\n" +
@@ -194,44 +212,44 @@ pub fn to_canvas_html(doc : CanvasDocument, title : String) -> String {
   "</body>\n</html>"
 }
 
-// ===== OBJECT-ORIENTED API METHODS =====
+// ===== BACKWARD COMPATIBILITY WRAPPERS =====
 
-/// Add a command to the Canvas document (OO-style)
-pub fn CanvasDocument::add_command(self : CanvasDocument, command : String) -> CanvasDocument {
-  add_canvas_command(self, command)
+/// Add a command to the Canvas document (functional-style wrapper)
+pub fn add_canvas_command(doc : CanvasDocument, command : String) -> CanvasDocument {
+  doc.add_command(command)
 }
 
-/// Render a circle to Canvas (OO-style)
-pub fn CanvasDocument::render_circle(self : CanvasDocument, center : Point, radius : Double, color : Color) -> CanvasDocument {
-  render_canvas_circle(self, center, radius, color)
+/// Render a circle to Canvas (functional-style wrapper)
+pub fn render_canvas_circle(doc : CanvasDocument, center : Point, radius : Double, color : Color) -> CanvasDocument {
+  doc.render_circle(center, radius, color)
 }
 
-/// Render a rectangle to Canvas (OO-style)
-pub fn CanvasDocument::render_rectangle(self : CanvasDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> CanvasDocument {
-  render_canvas_rectangle(self, x, y, width, height, color)
+/// Render a rectangle to Canvas (functional-style wrapper)
+pub fn render_canvas_rectangle(doc : CanvasDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> CanvasDocument {
+  doc.render_rectangle(x, y, width, height, color)
 }
 
-/// Render a line to Canvas (OO-style)
-pub fn CanvasDocument::render_line(self : CanvasDocument, start : Point, end : Point, color : Color, thickness : Double) -> CanvasDocument {
-  render_canvas_line(self, start, end, color, thickness)
+/// Render a line to Canvas (functional-style wrapper)
+pub fn render_canvas_line(doc : CanvasDocument, start : Point, end : Point, color : Color, thickness : Double) -> CanvasDocument {
+  doc.render_line(start, end, color, thickness)
 }
 
-/// Render text to Canvas (OO-style)
-pub fn CanvasDocument::render_text(self : CanvasDocument, text : String, pos : Point, size : Double, color : Color) -> CanvasDocument {
-  render_canvas_text(self, text, pos, size, color)
+/// Render text to Canvas (functional-style wrapper)
+pub fn render_canvas_text(doc : CanvasDocument, text : String, pos : Point, size : Double, color : Color) -> CanvasDocument {
+  doc.render_text(text, pos, size, color)
 }
 
-/// Render a path to Canvas (OO-style)
-pub fn CanvasDocument::render_path(self : CanvasDocument, path : Path, color : Color) -> CanvasDocument {
-  render_canvas_path(self, path, color)
+/// Render a path to Canvas (functional-style wrapper)
+pub fn render_canvas_path(doc : CanvasDocument, path : Path, color : Color) -> CanvasDocument {
+  doc.render_path(path, color)
 }
 
-/// Convert to JavaScript (OO-style)
-pub fn CanvasDocument::to_js(self : CanvasDocument) -> String {
-  to_canvas_js(self)
+/// Convert to JavaScript (functional-style wrapper)
+pub fn to_canvas_js(doc : CanvasDocument) -> String {
+  doc.to_js()
 }
 
-/// Convert to HTML (OO-style)
-pub fn CanvasDocument::to_html(self : CanvasDocument, title : String) -> String {
-  to_canvas_html(self, title)
+/// Convert to HTML (functional-style wrapper)
+pub fn to_canvas_html(doc : CanvasDocument, title : String) -> String {
+  doc.to_html(title)
 }

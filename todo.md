@@ -1,1 +1,2 @@
 - [x] Make the API OO style like Path, like PdfDocument, SvgDocument etc (check vg.mbti) for example
+- [ ] modernize the code base using "xx\{value}" instead of string concatenation

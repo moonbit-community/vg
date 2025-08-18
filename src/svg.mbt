@@ -12,19 +12,14 @@ pub fn new_svg(width : Double, height : Double) -> SvgDocument {
   { width, height, elements: [] }
 }
 
-/// Add an element to the SVG document
-pub fn add_element(doc : SvgDocument, element : String) -> SvgDocument {
+/// Add an element to the SVG document (OO-style)
+pub fn SvgDocument::add_element(self : SvgDocument, element : String) -> SvgDocument {
   let new_elements = Array::new()
-  for elem in doc.elements {
+  for elem in self.elements {
     new_elements.push(elem)
   }
   new_elements.push(element)
-  { width: doc.width, height: doc.height, elements: new_elements }
-}
-
-/// Add an element to the SVG document (OO-style)
-pub fn SvgDocument::add_element(self : SvgDocument, element : String) -> SvgDocument {
-  add_element(self, element)
+  { width: self.width, height: self.height, elements: new_elements }
 }
 
 /// Convert a color to SVG color string
@@ -67,70 +62,106 @@ fn path_to_svg_data(path : Path) -> String {
   data
 }
 
-/// Render a circle to SVG
-pub fn render_circle(doc : SvgDocument, center : Point, radius : Double, color : Color) -> SvgDocument {
-  let element = "<circle cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
-                "\" r=\"" + radius.to_string() + "\" fill=\"" + color_to_svg(color) + "\"/>"
-  add_element(doc, element)
-}
-
 /// Render a circle to SVG (OO-style)
 pub fn SvgDocument::render_circle(self : SvgDocument, center : Point, radius : Double, color : Color) -> SvgDocument {
-  render_circle(self, center, radius, color)
+  let element = "<circle cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
+                "\" r=\"" + radius.to_string() + "\" fill=\"" + color_to_svg(color) + "\"/>"
+  self.add_element(element)
 }
 
-/// Render a rectangle to SVG
-pub fn render_rectangle(doc : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
+
+
+
+
+
+
+
+
+
+
+
+
+// ===== OBJECT-ORIENTED API METHODS =====
+
+/// Render a rectangle to SVG (OO-style)
+pub fn SvgDocument::render_rectangle(self : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
   let element = "<rect x=\"" + x.to_string() + "\" y=\"" + y.to_string() + 
                 "\" width=\"" + width.to_string() + "\" height=\"" + height.to_string() + 
                 "\" fill=\"" + color_to_svg(color) + "\"/>"
-  add_element(doc, element)
+  self.add_element(element)
 }
 
-/// Render a path to SVG
-pub fn render_path(doc : SvgDocument, path : Path, color : Color) -> SvgDocument {
+/// Render a path to SVG (OO-style)
+pub fn SvgDocument::render_path(self : SvgDocument, path : Path, color : Color) -> SvgDocument {
   let data = path_to_svg_data(path)
   let element = "<path d=\"" + data + "\" fill=\"" + color_to_svg(color) + "\" stroke=\"none\"/>"
-  add_element(doc, element)
+  self.add_element(element)
 }
 
-/// Render a line to SVG
-pub fn render_line(doc : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
+/// Render a line to SVG (OO-style)
+pub fn SvgDocument::render_line(self : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
   let element = "<line x1=\"" + start.x.to_string() + "\" y1=\"" + start.y.to_string() + 
                 "\" x2=\"" + end.x.to_string() + "\" y2=\"" + end.y.to_string() + 
                 "\" stroke=\"" + color_to_svg(color) + "\" stroke-width=\"" + thickness.to_string() + 
                 "\" stroke-linecap=\"round\" fill=\"none\"/>"
-  add_element(doc, element)
+  self.add_element(element)
 }
 
-/// Render text to SVG  
-pub fn render_text(doc : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
+/// Render text to SVG (OO-style)
+pub fn SvgDocument::render_text(self : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
   let element = "<text x=\"" + pos.x.to_string() + "\" y=\"" + pos.y.to_string() + 
                 "\" font-size=\"" + size.to_string() + "\" font-family=\"Arial, sans-serif\" " +
                 "text-anchor=\"middle\" dominant-baseline=\"central\" " +
                 "fill=\"" + color_to_svg(color) + "\">" + 
                 text + "</text>"
-  add_element(doc, element)
+  self.add_element(element)
 }
 
-/// Render a linear gradient definition
-pub fn render_linear_gradient(doc : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
+/// Render an ellipse to SVG (OO-style)
+pub fn SvgDocument::render_ellipse(self : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
+  let element = "<ellipse cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
+                "\" rx=\"" + rx.to_string() + "\" ry=\"" + ry.to_string() + 
+                "\" fill=\"" + color_to_svg(color) + "\"/>"
+  self.add_element(element)
+}
+
+/// Render a polygon to SVG (OO-style)
+pub fn SvgDocument::render_polygon(self : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
+  if points.length() < 3 {
+    self  // Can't render polygon with less than 3 points
+  } else {
+    let mut points_str = ""
+    for i = 0; i < points.length(); i = i + 1 {
+      let p = points[i]
+      points_str = points_str + p.x.to_string() + "," + p.y.to_string()
+      if i < points.length() - 1 {
+        points_str = points_str + " "
+      }
+    }
+    
+    let element = "<polygon points=\"" + points_str + "\" fill=\"" + color_to_svg(color) + "\"/>"
+    self.add_element(element)
+  }
+}
+
+/// Render a linear gradient to SVG (OO-style)
+pub fn SvgDocument::render_linear_gradient(self : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
   let gradient = "<defs><linearGradient id=\"" + id + "\" x1=\"" + start.x.to_string() + "%\" y1=\"" + start.y.to_string() + 
                  "%\" x2=\"" + end.x.to_string() + "%\" y2=\"" + end.y.to_string() + "%\">" +
                  "<stop offset=\"0%\" stop-color=\"" + color_to_svg(color1) + "\"/>" +
                  "<stop offset=\"100%\" stop-color=\"" + color_to_svg(color2) + "\"/>" +
                  "</linearGradient></defs>"
-  add_element(doc, gradient)
+  self.add_element(gradient)
 }
 
-/// Convert SVG document to string
-pub fn to_svg_string(doc : SvgDocument) -> String {
+/// Convert to SVG string (OO-style)
+pub fn SvgDocument::to_string(self : SvgDocument) -> String {
   let mut svg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  svg = svg + "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + doc.width.to_string() + 
-        "\" height=\"" + doc.height.to_string() + "\" viewBox=\"0 0 " + doc.width.to_string() + 
-        " " + doc.height.to_string() + "\">\n"
+  svg = svg + "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + self.width.to_string() + 
+        "\" height=\"" + self.height.to_string() + "\" viewBox=\"0 0 " + self.width.to_string() + 
+        " " + self.height.to_string() + "\">\n"
   
-  for element in doc.elements {
+  for element in self.elements {
     svg = svg + "  " + element + "\n"
   }
   
@@ -138,46 +169,56 @@ pub fn to_svg_string(doc : SvgDocument) -> String {
   svg
 }
 
-// ===== OBJECT-ORIENTED API METHODS =====
+// ===== BACKWARD COMPATIBILITY WRAPPERS =====
 
-/// Render a rectangle to SVG (OO-style)
-pub fn SvgDocument::render_rectangle(self : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
-  render_rectangle(self, x, y, width, height, color)
+/// Add an element to the SVG document (functional-style wrapper)
+pub fn add_element(doc : SvgDocument, element : String) -> SvgDocument {
+  doc.add_element(element)
 }
 
-/// Render a path to SVG (OO-style)
-pub fn SvgDocument::render_path(self : SvgDocument, path : Path, color : Color) -> SvgDocument {
-  render_path(self, path, color)
+/// Render a circle to SVG (functional-style wrapper)
+pub fn render_circle(doc : SvgDocument, center : Point, radius : Double, color : Color) -> SvgDocument {
+  doc.render_circle(center, radius, color)
 }
 
-/// Render a line to SVG (OO-style)
-pub fn SvgDocument::render_line(self : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
-  render_line(self, start, end, color, thickness)
+/// Render a rectangle to SVG (functional-style wrapper)
+pub fn render_rectangle(doc : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
+  doc.render_rectangle(x, y, width, height, color)
 }
 
-/// Render text to SVG (OO-style)
-pub fn SvgDocument::render_text(self : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
-  render_text(self, text, pos, size, color)
+/// Render a path to SVG (functional-style wrapper)
+pub fn render_path(doc : SvgDocument, path : Path, color : Color) -> SvgDocument {
+  doc.render_path(path, color)
 }
 
-/// Render an ellipse to SVG (OO-style)
-pub fn SvgDocument::render_ellipse(self : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
-  render_ellipse(self, center, rx, ry, color)
+/// Render a line to SVG (functional-style wrapper)
+pub fn render_line(doc : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
+  doc.render_line(start, end, color, thickness)
 }
 
-/// Render a polygon to SVG (OO-style)
-pub fn SvgDocument::render_polygon(self : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
-  render_polygon(self, points, color)
+/// Render text to SVG (functional-style wrapper)
+pub fn render_text(doc : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
+  doc.render_text(text, pos, size, color)
 }
 
-/// Render a linear gradient to SVG (OO-style)
-pub fn SvgDocument::render_linear_gradient(self : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
-  render_linear_gradient(self, id, start, end, color1, color2)
+/// Render an ellipse to SVG (functional-style wrapper)
+pub fn render_ellipse(doc : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
+  doc.render_ellipse(center, rx, ry, color)
 }
 
-/// Convert to SVG string (OO-style)
-pub fn SvgDocument::to_string(self : SvgDocument) -> String {
-  to_svg_string(self)
+/// Render a polygon to SVG (functional-style wrapper)
+pub fn render_polygon(doc : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
+  doc.render_polygon(points, color)
+}
+
+/// Render a linear gradient to SVG (functional-style wrapper)
+pub fn render_linear_gradient(doc : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
+  doc.render_linear_gradient(id, start, end, color1, color2)
+}
+
+/// Convert SVG document to string (functional-style wrapper)
+pub fn to_svg_string(doc : SvgDocument) -> String {
+  doc.to_string()
 }
 
 /// Sample an image at regular intervals and render to SVG
@@ -193,37 +234,12 @@ pub fn render_image_to_svg(img : Image, width : Double, height : Double, samples
       let color = img(p)
       
       if color.a > 0.0 {  // Only render non-transparent pixels
-        doc = render_rectangle(doc, x, y, step, step, color)
+        doc = doc.render_rectangle(x, y, step, step, color)
       }
     }
   }
   
-  to_svg_string(doc)
+  doc.to_string()
 }
 
-/// Render an ellipse to SVG
-pub fn render_ellipse(doc : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
-  let element = "<ellipse cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
-                "\" rx=\"" + rx.to_string() + "\" ry=\"" + ry.to_string() + 
-                "\" fill=\"" + color_to_svg(color) + "\"/>"
-  add_element(doc, element)
-}
 
-/// Render a polygon to SVG
-pub fn render_polygon(doc : SvgDocument, points : Array[Point], color : Color) -> SvgDocument {
-  if points.length() < 3 {
-    doc  // Can't render polygon with less than 3 points
-  } else {
-    let mut points_str = ""
-    for i = 0; i < points.length(); i = i + 1 {
-      let p = points[i]
-      points_str = points_str + p.x.to_string() + "," + p.y.to_string()
-      if i < points.length() - 1 {
-        points_str = points_str + " "
-      }
-    }
-    
-    let element = "<polygon points=\"" + points_str + "\" fill=\"" + color_to_svg(color) + "\"/>"
-    add_element(doc, element)
-  }
-}

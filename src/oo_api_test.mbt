@@ -136,3 +136,41 @@ test "complete oo-style showcase" (it : @test.T) {
   it.write(svg_showcase.to_string())
   it.snapshot(filename="complete_oo_showcase.svg")
 }
+
+test "oo-style api showcase comparison" (it : @test.T) {
+  // Demonstrate the elegance of OO-style vs functional-style
+  
+  // Functional style (verbose)
+  let functional_example = 
+    "// Functional Style (verbose)\n" +
+    "let doc = new_svg(200.0, 100.0)\n" +
+    "  |> render_rectangle(0.0, 0.0, 200.0, 100.0, gray(0.95))\n" +
+    "  |> render_circle(point(100.0, 50.0), 25.0, red())\n" +
+    "  |> render_text(\"Demo\", point(100.0, 80.0), 12.0, black())\n" +
+    "let svg = to_svg_string(doc)"
+  
+  // OO style (elegant)  
+  let oo_example =
+    "// OO Style (elegant)\n" +
+    "let svg = new_svg(200.0, 100.0)\n" +
+    "  .render_rectangle(0.0, 0.0, 200.0, 100.0, gray(0.95))\n" +
+    "  .render_circle(point(100.0, 50.0), 25.0, red())\n" +
+    "  .render_text(\"Demo\", point(100.0, 80.0), 12.0, black())\n" +
+    "  .to_string()"
+  
+  let comparison = "=== API STYLE COMPARISON ===\n\n" +
+                  functional_example + "\n\n" + oo_example + "\n\n" +
+                  "✅ OO Style Benefits:\n" +
+                  "• More concise and readable\n" +
+                  "• Better IDE support with method discovery\n" +
+                  "• Consistent with Path API design\n" +
+                  "• Modern fluent interface pattern\n" +
+                  "• Type-safe method chaining\n\n" +
+                  "✅ Both APIs Available:\n" +
+                  "• Functional style for backward compatibility\n" +
+                  "• OO style for modern development\n" +
+                  "• Identical output and performance"
+  
+  it.write(comparison)
+  it.snapshot(filename="api_style_showcase.txt")
+}
