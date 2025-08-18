@@ -1,0 +1,1 @@
+- [ ] Make the API OO style like Path, like PdfDocument, SVgDocument etc ( check vg.mgti) for example
