@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VG Canvas Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+    canvas { border: 1px solid #ccc; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>VG Canvas Demo</h1>
+  <canvas id="vgCanvas"></canvas>
+  <script>
+// Generated Canvas JavaScript
+function drawVgGraphics(canvas) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = 400;
+  canvas.height = 300;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Drawing commands
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, 400, 300);
+  ctx.beginPath();
+  ctx.arc(100, 100, 40, 0, 2 * Math.PI);
+  ctx.fillStyle = '#FF0000';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(200, 100, 35, 0, 2 * Math.PI);
+  ctx.fillStyle = 'rgba(0,255,0,0.7)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(300, 100, 30, 0, 2 * Math.PI);
+  ctx.fillStyle = '#0000FF';
+  ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,0,0.5)';
+  ctx.fillRect(50, 180, 300, 80);
+  ctx.font = '20px Arial, sans-serif';
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('HTML5 Canvas VG Demo', 200, 50);
+  ctx.font = '14px Arial, sans-serif';
+  ctx.fillStyle = '#7F007F';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Interactive Graphics', 200, 220);
+}
+
+// Usage: drawVgGraphics(document.getElementById('myCanvas'));
+    drawVgGraphics(document.getElementById('vgCanvas'));
+  </script>
+</body>
+</html>

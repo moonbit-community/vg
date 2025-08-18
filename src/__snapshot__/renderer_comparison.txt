@@ -1,0 +1,125 @@
+=== SVG VERSION ===
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150" viewBox="0 0 250 150">
+  <rect x="0" y="0" width="250" height="150" fill="#F2F2F2"/>
+  <circle cx="125" cy="75" r="40" fill="#FF0000"/>
+  <text x="125" y="30" font-size="16" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">VG Demo</text>
+</svg>
+
+=== CANVAS HTML ===
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+    canvas { border: 1px solid #ccc; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Canvas Demo</h1>
+  <canvas id="vgCanvas"></canvas>
+  <script>
+// Generated Canvas JavaScript
+function drawVgGraphics(canvas) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = 250;
+  canvas.height = 150;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Drawing commands
+  ctx.fillStyle = '#F2F2F2';
+  ctx.fillRect(0, 0, 250, 150);
+  ctx.beginPath();
+  ctx.arc(125, 75, 40, 0, 2 * Math.PI);
+  ctx.fillStyle = '#FF0000';
+  ctx.fill();
+  ctx.font = '16px Arial, sans-serif';
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('VG Demo', 125, 30);
+}
+
+// Usage: drawVgGraphics(document.getElementById('myCanvas'));
+    drawVgGraphics(document.getElementById('vgCanvas'));
+  </script>
+</body>
+</html>
+
+=== PDF CONTENT ===
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 250 150]
+/Resources <<
+/Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >>
+>>
+/Contents 4 0 R
+>>
+endobj
+
+4 0 obj
+<<
+/Length 292
+>>
+stream
+q
+0.95 0.95 0.95 rg
+0 0 250 150 re
+f
+Q
+q
+1 0 0 rg
+125 115 m
+147.091389992 115 165 97.091389992 165 75 c
+165 52.908610008 147.091389992 35 125 35 c
+102.908610008 35 85 52.908610008 85 75 c
+85 97.091389992 102.908610008 115 125 115 c
+f
+Q
+q
+BT
+/F1 16 Tf
+0 0 0 rg rg
+125 120 Td
+(VG Demo) Tj
+ET
+Q
+endstream
+endobj
+
+xref
+0 5
+0000000000 65535 f 
+0000000009 65535 n 
+0000000074 65535 n 
+0000000120 65535 n 
+0000000300 65535 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+829
+%%EOF

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="200" viewBox="0 0 350 200">
+  <rect x="0" y="0" width="350" height="200" fill="#FFFFFF"/>
+  <text x="175" y="30" font-size="16" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">Complete VG Feature Showcase</text>
+  <path d="M 50,100 L 100,80 Q 125,60 150,80 C 175,60 200,120 225,100 C 250,80 275,60 300,100 A 25 15 0 0 1 250,120 Z " fill="#0000FF" stroke="none"/>
+  <circle cx="100" cy="150" r="20" fill="#FF0000"/>
+  <polygon points="200,130 220,140 215,160 185,160 180,140" fill="#00FF00"/>
+  <text x="175" y="180" font-size="12" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#7F007F">All Features: Paths, Curves, Arcs</text>
+</svg>
