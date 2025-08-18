@@ -117,11 +117,14 @@ fn path_to_canvas_commands(path : Path) -> Array[String] {
         commands.push("ctx.quadraticCurveTo(" + cp.x.to_string() + ", " + cp.y.to_string() + ", " + 
                      end.x.to_string() + ", " + end.y.to_string() + ");")
       EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
-        // Canvas doesn't have native elliptical arcs, approximate with bezier curves
-        commands.push("// Elliptical arc approximated")
+        // Canvas doesn't have native elliptical arcs, approximate with arc and transformations
+        commands.push("// Elliptical arc: rx=" + rx.to_string() + " ry=" + ry.to_string() + 
+                     " rotation=" + rotation.to_string() + " large=" + large_arc.to_string() + 
+                     " sweep=" + sweep.to_string())
         commands.push("ctx.save();")
         commands.push("ctx.scale(" + (rx / ry).to_string() + ", 1);")
-        commands.push("ctx.arc(0, 0, " + ry.to_string() + ", 0, Math.PI);")
+        commands.push("ctx.arc(" + (end.x / (rx / ry)).to_string() + ", " + end.y.to_string() + 
+                     ", " + ry.to_string() + ", 0, " + (if sweep { "Math.PI" } else { "-Math.PI" }) + ");")
         commands.push("ctx.restore();")
       }
       Close => commands.push("ctx.closePath();")

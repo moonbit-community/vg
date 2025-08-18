@@ -4,15 +4,21 @@ package "bobzhang/vg"
 // Values
 fn add(Point, Point) -> Point
 
+fn add_canvas_command(CanvasDocument, String) -> CanvasDocument
+
 fn add_element(SvgDocument, String) -> SvgDocument
 
 fn apply(Transform, Point) -> Point
+
+fn axial_gradient(Color, Color, Point, Point) -> (Point) -> Color
 
 fn black() -> Color
 
 fn blend(Color, Color) -> Color
 
 fn blue() -> Color
+
+fn checkerboard(Color, Color, Double) -> (Point) -> Color
 
 fn circle(Color, Double) -> (Point) -> Color
 
@@ -21,6 +27,8 @@ fn clamp(Color) -> Color
 fn compose_imgs((Point) -> Color, (Point) -> Color) -> (Point) -> Color
 
 fn compose_transforms(Transform, Transform) -> Transform
+
+fn conic_gradient(Color, Color, Point, Double) -> (Point) -> Color
 
 fn const_color(Color) -> (Point) -> Color
 
@@ -46,6 +54,8 @@ fn gray(Double) -> Color
 
 fn green() -> Color
 
+fn hard_light_blend(Color, Color) -> Color
+
 fn hsv(Double, Double, Double) -> Color
 
 fn identity() -> Transform
@@ -70,6 +80,12 @@ fn make_scale(Double, Double) -> Transform
 
 fn make_translate(Double, Double) -> Transform
 
+fn multiply_blend(Color, Color) -> Color
+
+fn new_canvas(Double, Double) -> CanvasDocument
+
+fn new_pdf(Double, Double) -> PdfDocument
+
 fn new_svg(Double, Double) -> SvgDocument
 
 fn normalize(Point) -> Point
@@ -77,6 +93,8 @@ fn normalize(Point) -> Point
 fn orange() -> Color
 
 fn origin() -> Point
+
+fn overlay_blend(Color, Color) -> Color
 
 fn point(Double, Double) -> Point
 
@@ -92,6 +110,16 @@ fn rectangle(Color, Double, Double) -> (Point) -> Color
 
 fn red() -> Color
 
+fn render_canvas_circle(CanvasDocument, Point, Double, Color) -> CanvasDocument
+
+fn render_canvas_line(CanvasDocument, Point, Point, Color, Double) -> CanvasDocument
+
+fn render_canvas_path(CanvasDocument, Path, Color) -> CanvasDocument
+
+fn render_canvas_rectangle(CanvasDocument, Double, Double, Double, Double, Color) -> CanvasDocument
+
+fn render_canvas_text(CanvasDocument, String, Point, Double, Color) -> CanvasDocument
+
 fn render_circle(SvgDocument, Point, Double, Color) -> SvgDocument
 
 fn render_ellipse(SvgDocument, Point, Double, Double, Color) -> SvgDocument
@@ -103,6 +131,16 @@ fn render_line(SvgDocument, Point, Point, Color, Double) -> SvgDocument
 fn render_linear_gradient(SvgDocument, String, Point, Point, Color, Color) -> SvgDocument
 
 fn render_path(SvgDocument, Path, Color) -> SvgDocument
+
+fn render_pdf_circle(PdfDocument, Point, Double, Color) -> PdfDocument
+
+fn render_pdf_line(PdfDocument, Point, Point, Color, Double) -> PdfDocument
+
+fn render_pdf_path(PdfDocument, Path, Color) -> PdfDocument
+
+fn render_pdf_rectangle(PdfDocument, Double, Double, Double, Double, Color) -> PdfDocument
+
+fn render_pdf_text(PdfDocument, String, Point, Double, Color) -> PdfDocument
 
 fn render_polygon(SvgDocument, Array[Point], Color) -> SvgDocument
 
@@ -126,13 +164,25 @@ fn scale_point(Point, Double) -> Point
 
 fn scale_uniform(Double) -> Transform
 
+fn screen_blend(Color, Color) -> Color
+
 fn skew_x(Double) -> Transform
 
 fn skew_y(Double) -> Transform
 
+fn soft_light_blend(Color, Color) -> Color
+
 fn sub(Point, Point) -> Point
 
+fn tile_image((Point) -> Color, Double, Double) -> (Point) -> Color
+
+fn to_canvas_html(CanvasDocument, String) -> String
+
+fn to_canvas_js(CanvasDocument) -> String
+
 fn to_hex(Color) -> String
+
+fn to_pdf_string(PdfDocument) -> String
 
 fn to_svg_string(SvgDocument) -> String
 
@@ -160,6 +210,13 @@ pub struct Box {
 impl Eq for Box
 impl Show for Box
 
+pub struct CanvasDocument {
+  width : Double
+  height : Double
+  commands : Array[String]
+}
+impl Show for CanvasDocument
+
 pub struct Color {
   r : Double
   g : Double
@@ -182,12 +239,16 @@ fn Path::bounds(Self) -> Box?
 fn Path::circle(Point, Double) -> Self
 fn Path::close_path(Self) -> Self
 fn Path::curve_to(Self, Point, Point, Point) -> Self
+fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
 fn Path::ellipse(Point, Double, Double) -> Self
 fn Path::empty() -> Self
 fn Path::inner(Self) -> Array[PathSegment]
 fn Path::line_to(Self, Point) -> Self
 fn Path::move_to(Self, Point) -> Self
+fn Path::qcurve_to(Self, Point, Point) -> Self
 fn Path::rect(Double, Double, Double, Double) -> Self
+fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
+fn Path::smooth_qcurve_to(Self, Point) -> Self
 fn Path::transform(Self, Transform) -> Self
 impl Eq for Path
 impl Show for Path
@@ -196,10 +257,20 @@ pub enum PathSegment {
   MoveTo(Point)
   LineTo(Point)
   CurveTo(Point, Point, Point)
+  QCurveTo(Point, Point)
+  EArcTo(Double, Double, Double, Bool, Bool, Point)
   Close
 }
 impl Eq for PathSegment
 impl Show for PathSegment
+
+pub struct PdfDocument {
+  width : Double
+  height : Double
+  objects : Array[String]
+  object_count : Int
+}
+impl Show for PdfDocument
 
 pub struct Point {
   x : Double

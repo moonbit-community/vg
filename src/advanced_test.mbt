@@ -70,7 +70,7 @@ test "conic gradients" (it : @test.T) {
   it.snapshot(filename="conic_gradient.svg")
 }
 
-test "advanced blend modes" (it : @test.T) {
+test "advanced blend modes" {
   let red = @vg.rgba(1.0, 0.0, 0.0, 0.8)
   let blue = @vg.rgba(0.0, 0.0, 1.0, 0.8)
   
