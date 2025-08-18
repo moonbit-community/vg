@@ -17,12 +17,12 @@ pub fn new_pdf(width : Double, height : Double) -> PdfDocument {
 
 /// Convert color to PDF color values (0-1 range)
 fn color_to_pdf(c : Color) -> String {
-  c.r.to_string() + " " + c.g.to_string() + " " + c.b.to_string() + " rg"
+  "\{c.r} \{c.g} \{c.b} rg"
 }
 
 /// Convert point to PDF coordinates (flip Y axis)
 fn point_to_pdf(p : Point, height : Double) -> String {
-  p.x.to_string() + " " + (height - p.y).to_string()
+  "\{p.x} \{height - p.y}"
 }
 
 
@@ -39,20 +39,20 @@ fn path_to_pdf_commands(path : Path, height : Double) -> Array[String] {
   
   for segment in path.0 {
     match segment {
-      MoveTo(p) => commands.push(point_to_pdf(p, height) + " m")
-      LineTo(p) => commands.push(point_to_pdf(p, height) + " l")
+      MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")
+      LineTo(p) => commands.push("\{point_to_pdf(p, height)} l")
       CurveTo(cp1, cp2, end) => 
-        commands.push(point_to_pdf(cp1, height) + " " + point_to_pdf(cp2, height) + " " + point_to_pdf(end, height) + " c")
+        commands.push("\{point_to_pdf(cp1, height)} \{point_to_pdf(cp2, height)} \{point_to_pdf(end, height)} c")
       QCurveTo(cp, end) => {
         // Convert quadratic to cubic Bézier for PDF
         // PDF doesn't support quadratic curves natively
         commands.push("% Quadratic curve converted to cubic")
-        commands.push(point_to_pdf(cp, height) + " " + point_to_pdf(cp, height) + " " + point_to_pdf(end, height) + " c")
+        commands.push("\{point_to_pdf(cp, height)} \{point_to_pdf(cp, height)} \{point_to_pdf(end, height)} c")
       }
       EArcTo(_, _, _, _, _, end) => {
         // Simplified arc for PDF - just line to end point
         commands.push("% Elliptical arc simplified")
-        commands.push(point_to_pdf(end, height) + " l")
+        commands.push("\{point_to_pdf(end, height)} l")
       }
       Close => commands.push("h")  // Close path
     }
@@ -84,12 +84,10 @@ pub fn PdfDocument::render_circle(self : PdfDocument, center : Point, radius : D
   
   let content = 
     "q\n" +  // Save graphics state
-    color_to_pdf(color) + "\n" +
-    point_to_pdf(point(center.x, center.y - radius), self.height) + " m\n" +  // Move to top
+    "\{color_to_pdf(color)}\n" +
+    "\{point_to_pdf(point(center.x, center.y - radius), self.height)} m\n" +  // Move to top
     // Four cubic curves to approximate circle
-    point_to_pdf(point(center.x + offset, center.y - radius), self.height) + " " +
-    point_to_pdf(point(center.x + radius, center.y - offset), self.height) + " " +
-    point_to_pdf(point(center.x + radius, center.y), self.height) + " c\n" +
+    "\{point_to_pdf(point(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(point(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(point(center.x + radius, center.y), self.height)} c\n" +
     
     point_to_pdf(point(center.x + radius, center.y + offset), self.height) + " " +
     point_to_pdf(point(center.x + offset, center.y + radius), self.height) + " " +
@@ -114,8 +112,7 @@ pub fn PdfDocument::render_rectangle(self : PdfDocument, x : Double, y : Double,
   let content = 
     "q\n" +  // Save graphics state
     color_to_pdf(color) + "\n" +
-    x.to_string() + " " + (self.height - y - height).to_string() + " " + 
-    width.to_string() + " " + height.to_string() + " re\n" +  // Rectangle
+    "\{x} \{self.height - y - height} \{width} \{height} re\n" +  // Rectangle
     "f\n" +  // Fill
     "Q"       // Restore graphics state
   

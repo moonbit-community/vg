@@ -1,2 +1,3 @@
 - [x] Make the API OO style like Path, like PdfDocument, SvgDocument etc (check vg.mbti) for example
 - [ ] modernize the code base using "xx\{value}" instead of string concatenation
+- [ ] Not all apis like render_pdf_line are changed to OO style, plz try to convert them to OO style as much as possible (check vg.mbti for the API list)

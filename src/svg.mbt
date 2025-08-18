@@ -28,7 +28,7 @@ fn color_to_svg(c : Color) -> String {
     let r = (c.r * 255.0).to_int()
     let g = (c.g * 255.0).to_int()
     let b = (c.b * 255.0).to_int()
-    "rgba(" + r.to_string() + "," + g.to_string() + "," + b.to_string() + "," + c.a.to_string() + ")"
+    "rgba(\{r},\{g},\{b},\{c.a})"
   } else {
     to_hex(c)
   }
@@ -36,7 +36,7 @@ fn color_to_svg(c : Color) -> String {
 
 /// Convert a point to SVG coordinate string
 fn point_to_svg(p : Point) -> String {
-  p.x.to_string() + "," + p.y.to_string()
+  "\{p.x},\{p.y}"
 }
 
 /// Convert a path to SVG path data
@@ -44,17 +44,16 @@ fn path_to_svg_data(path : Path) -> String {
   let mut data = ""
   for segment in path.0 {
     match segment {
-      MoveTo(p) => data = data + "M " + point_to_svg(p) + " "
-      LineTo(p) => data = data + "L " + point_to_svg(p) + " "
+      MoveTo(p) => data = data + "M \{point_to_svg(p)} "
+      LineTo(p) => data = data + "L \{point_to_svg(p)} "
       CurveTo(cp1, cp2, end) => 
-        data = data + "C " + point_to_svg(cp1) + " " + point_to_svg(cp2) + " " + point_to_svg(end) + " "
+        data = data + "C \{point_to_svg(cp1)} \{point_to_svg(cp2)} \{point_to_svg(end)} "
       QCurveTo(cp, end) =>
-        data = data + "Q " + point_to_svg(cp) + " " + point_to_svg(end) + " "
+        data = data + "Q \{point_to_svg(cp)} \{point_to_svg(end)} "
       EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
         let large_flag = if large_arc { "1" } else { "0" }
         let sweep_flag = if sweep { "1" } else { "0" }
-        data = data + "A " + rx.to_string() + " " + ry.to_string() + " " + 
-               rotation.to_string() + " " + large_flag + " " + sweep_flag + " " + point_to_svg(end) + " "
+        data = data + "A \{rx} \{ry} \{rotation} \{large_flag} \{sweep_flag} \{point_to_svg(end)} "
       }
       Close => data = data + "Z "
     }
@@ -64,8 +63,7 @@ fn path_to_svg_data(path : Path) -> String {
 
 /// Render a circle to SVG (OO-style)
 pub fn SvgDocument::render_circle(self : SvgDocument, center : Point, radius : Double, color : Color) -> SvgDocument {
-  let element = "<circle cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
-                "\" r=\"" + radius.to_string() + "\" fill=\"" + color_to_svg(color) + "\"/>"
+  let element = "<circle cx=\"\{center.x}\" cy=\"\{center.y}\" r=\"\{radius}\" fill=\"\{color_to_svg(color)}\"/>"
   self.add_element(element)
 }
 
@@ -85,43 +83,32 @@ pub fn SvgDocument::render_circle(self : SvgDocument, center : Point, radius : D
 
 /// Render a rectangle to SVG (OO-style)
 pub fn SvgDocument::render_rectangle(self : SvgDocument, x : Double, y : Double, width : Double, height : Double, color : Color) -> SvgDocument {
-  let element = "<rect x=\"" + x.to_string() + "\" y=\"" + y.to_string() + 
-                "\" width=\"" + width.to_string() + "\" height=\"" + height.to_string() + 
-                "\" fill=\"" + color_to_svg(color) + "\"/>"
+  let element = "<rect x=\"\{x}\" y=\"\{y}\" width=\"\{width}\" height=\"\{height}\" fill=\"\{color_to_svg(color)}\"/>"
   self.add_element(element)
 }
 
 /// Render a path to SVG (OO-style)
 pub fn SvgDocument::render_path(self : SvgDocument, path : Path, color : Color) -> SvgDocument {
   let data = path_to_svg_data(path)
-  let element = "<path d=\"" + data + "\" fill=\"" + color_to_svg(color) + "\" stroke=\"none\"/>"
+  let element = "<path d=\"\{data}\" fill=\"\{color_to_svg(color)}\" stroke=\"none\"/>"
   self.add_element(element)
 }
 
 /// Render a line to SVG (OO-style)
 pub fn SvgDocument::render_line(self : SvgDocument, start : Point, end : Point, color : Color, thickness : Double) -> SvgDocument {
-  let element = "<line x1=\"" + start.x.to_string() + "\" y1=\"" + start.y.to_string() + 
-                "\" x2=\"" + end.x.to_string() + "\" y2=\"" + end.y.to_string() + 
-                "\" stroke=\"" + color_to_svg(color) + "\" stroke-width=\"" + thickness.to_string() + 
-                "\" stroke-linecap=\"round\" fill=\"none\"/>"
+  let element = "<line x1=\"\{start.x}\" y1=\"\{start.y}\" x2=\"\{end.x}\" y2=\"\{end.y}\" stroke=\"\{color_to_svg(color)}\" stroke-width=\"\{thickness}\" stroke-linecap=\"round\" fill=\"none\"/>"
   self.add_element(element)
 }
 
 /// Render text to SVG (OO-style)
 pub fn SvgDocument::render_text(self : SvgDocument, text : String, pos : Point, size : Double, color : Color) -> SvgDocument {
-  let element = "<text x=\"" + pos.x.to_string() + "\" y=\"" + pos.y.to_string() + 
-                "\" font-size=\"" + size.to_string() + "\" font-family=\"Arial, sans-serif\" " +
-                "text-anchor=\"middle\" dominant-baseline=\"central\" " +
-                "fill=\"" + color_to_svg(color) + "\">" + 
-                text + "</text>"
+  let element = "<text x=\"\{pos.x}\" y=\"\{pos.y}\" font-size=\"\{size}\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"\{color_to_svg(color)}\">\{text}</text>"
   self.add_element(element)
 }
 
 /// Render an ellipse to SVG (OO-style)
 pub fn SvgDocument::render_ellipse(self : SvgDocument, center : Point, rx : Double, ry : Double, color : Color) -> SvgDocument {
-  let element = "<ellipse cx=\"" + center.x.to_string() + "\" cy=\"" + center.y.to_string() + 
-                "\" rx=\"" + rx.to_string() + "\" ry=\"" + ry.to_string() + 
-                "\" fill=\"" + color_to_svg(color) + "\"/>"
+  let element = "<ellipse cx=\"\{center.x}\" cy=\"\{center.y}\" rx=\"\{rx}\" ry=\"\{ry}\" fill=\"\{color_to_svg(color)}\"/>"
   self.add_element(element)
 }
 
@@ -133,36 +120,30 @@ pub fn SvgDocument::render_polygon(self : SvgDocument, points : Array[Point], co
     let mut points_str = ""
     for i = 0; i < points.length(); i = i + 1 {
       let p = points[i]
-      points_str = points_str + p.x.to_string() + "," + p.y.to_string()
+      points_str = points_str + "\{p.x},\{p.y}"
       if i < points.length() - 1 {
         points_str = points_str + " "
       }
     }
     
-    let element = "<polygon points=\"" + points_str + "\" fill=\"" + color_to_svg(color) + "\"/>"
+    let element = "<polygon points=\"\{points_str}\" fill=\"\{color_to_svg(color)}\"/>"
     self.add_element(element)
   }
 }
 
 /// Render a linear gradient to SVG (OO-style)
 pub fn SvgDocument::render_linear_gradient(self : SvgDocument, id : String, start : Point, end : Point, color1 : Color, color2 : Color) -> SvgDocument {
-  let gradient = "<defs><linearGradient id=\"" + id + "\" x1=\"" + start.x.to_string() + "%\" y1=\"" + start.y.to_string() + 
-                 "%\" x2=\"" + end.x.to_string() + "%\" y2=\"" + end.y.to_string() + "%\">" +
-                 "<stop offset=\"0%\" stop-color=\"" + color_to_svg(color1) + "\"/>" +
-                 "<stop offset=\"100%\" stop-color=\"" + color_to_svg(color2) + "\"/>" +
-                 "</linearGradient></defs>"
+  let gradient = "<defs><linearGradient id=\"\{id}\" x1=\"\{start.x}%\" y1=\"\{start.y}%\" x2=\"\{end.x}%\" y2=\"\{end.y}%\"><stop offset=\"0%\" stop-color=\"\{color_to_svg(color1)}\"/><stop offset=\"100%\" stop-color=\"\{color_to_svg(color2)}\"/></linearGradient></defs>"
   self.add_element(gradient)
 }
 
 /// Convert to SVG string (OO-style)
 pub fn SvgDocument::to_string(self : SvgDocument) -> String {
   let mut svg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  svg = svg + "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + self.width.to_string() + 
-        "\" height=\"" + self.height.to_string() + "\" viewBox=\"0 0 " + self.width.to_string() + 
-        " " + self.height.to_string() + "\">\n"
+  svg = svg + "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"\{self.width}\" height=\"\{self.height}\" viewBox=\"0 0 \{self.width} \{self.height}\">\n"
   
   for element in self.elements {
-    svg = svg + "  " + element + "\n"
+    svg = svg + "  \{element}\n"
   }
   
   svg = svg + "</svg>"
