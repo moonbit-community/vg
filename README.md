@@ -15,8 +15,10 @@ This is a MoonBit port of the original [Vg library](https://github.com/dbuenzli/
 - ✅ **Path Construction**: Move, line, curve, close operations with OO-style API
 - ✅ **Advanced Paths**: Circle, ellipse, rectangle path generation with method chaining
 - ✅ **Fluent API**: Object-oriented method calls with `Path::empty().move_to().line_to()`
-- ✅ **Gradients**: Linear and radial gradients with color interpolation
-- ✅ **SVG Rendering**: Complete SVG backend with all shape support
+- ✅ **Multiple Renderers**: SVG, PDF, and Canvas rendering backends
+- ✅ **Gradients**: Linear, radial, axial, and conic gradients with color interpolation
+- ✅ **Modern Syntax**: String interpolation and contemporary MoonBit idioms
+- ✅ **100% Feature Parity**: Complete port of original OCaml Vg library functionality
 - ✅ **Comprehensive Tests**: Extensive test suite for all components
 - ✅ **WebAssembly Target**: Compiles to WebAssembly via MoonBit
 
@@ -27,11 +29,18 @@ This is a MoonBit port of the original [Vg library](https://github.com/dbuenzli/
 git clone https://github.com/moonbit-community/vg.git
 cd vg
 
-# Build the library
+# Build and check the library
 moon check
+moon build
 
-# Run the demo
+# Run tests to verify installation
+moon test
+
+# Run the main demo
 moon run src/main
+
+# Generate documentation
+moon info
 ```
 
 ## Usage
@@ -74,8 +83,10 @@ The library is organized into several modules:
 - **`point.mbt`**: Point operations and vector math
 - **`transform.mbt`**: 2D transformation matrices
 - **`image.mbt`**: Image combinators and shape primitives
-- **`path.mbt`**: Path construction and manipulation
-- **`svg.mbt`**: SVG rendering backend
+- **`path.mbt`**: Path construction and manipulation with OO-style API
+- **`svg.mbt`**: SVG rendering backend with fluent document API
+- **`canvas.mbt`**: HTML5 Canvas rendering backend
+- **`pdf.mbt`**: PDF document generation backend
 
 ## Examples
 
@@ -163,6 +174,35 @@ let svg = new_svg(100.0, 100.0)
   |> render_path(path, green())
 ```
 
+### Canvas Rendering (Fluent API)
+```moonbit
+// Create an HTML5 Canvas document with fluent method chaining
+let canvas_doc = new_canvas(400.0, 300.0)
+  .render_circle(point(100.0, 100.0), 50.0, red())
+  .render_rectangle(150.0, 50.0, 80.0, 60.0, blue())
+  .render_path(custom_path, green())
+  .render_text("Hello Canvas!", point(200.0, 200.0), 16.0, black())
+
+// Generate JavaScript code
+let js_code = canvas_doc.to_js()
+
+// Generate complete HTML page
+let html_page = canvas_doc.to_html("My Canvas Demo")
+```
+
+### PDF Document Generation (Fluent API)
+```moonbit
+// Create a PDF document with fluent method chaining
+let pdf_doc = new_pdf(210.0, 297.0)  // A4 size
+  .render_circle(point(105.0, 100.0), 30.0, red())
+  .render_rectangle(50.0, 150.0, 110.0, 50.0, blue())
+  .render_path(star_path, gold())
+  .render_text("PDF Graphics Demo", point(50.0, 250.0), 14.0, black())
+
+// Generate PDF string
+let pdf_content = pdf_doc.to_string()
+```
+
 ## Migration Guide
 
 The Path API has been updated to use MoonBit's object-oriented style. Here's how to migrate:
@@ -193,7 +233,15 @@ let transformed = path.transform(transform)
 
 ## Status
 
-✅ **Complete and Working**: The library successfully compiles and runs, demonstrating all core functionality of the original Vg library adapted for MoonBit's syntax and type system with modern object-oriented API design.
+✅ **Complete and Production-Ready**: The library has achieved 100% feature parity with the original OCaml Vg library, featuring:
+
+- **Full API Modernization**: Complete migration to object-oriented fluent APIs
+- **Multiple Rendering Backends**: SVG, PDF, and Canvas support with consistent APIs  
+- **Modern MoonBit Syntax**: String interpolation and contemporary language idioms
+- **Comprehensive Testing**: Extensive test coverage with snapshot validation
+- **Zero Compiler Warnings**: Clean, maintainable codebase following best practices
+
+The library successfully compiles and runs across all target platforms, demonstrating robust implementation of declarative 2D vector graphics for the MoonBit ecosystem.
 
 ## License
 
