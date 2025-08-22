@@ -14,11 +14,7 @@ pub struct Color {
   a : Double // Alpha component [0.0, 1.0]
 } derive(Eq, Show)
 
-///| A 2D vector (reserved for future use)
-pub struct Vec2 {
-  x : Double
-  y : Double
-} derive(Eq, Show)
+
 
 ///| 2D transformation matrix
 pub struct Transform {
@@ -62,6 +58,26 @@ pub enum Primitive {
   Text(String, Point, Double) // text, position, size
 } derive(Eq, Show)
 
+///| Create a circle primitive
+pub fn primitive_circle(center : Point, radius : Double) -> Primitive {
+  Primitive::Circle(center, radius)
+}
+
+///| Create a rectangle primitive
+pub fn primitive_rectangle(top_left : Point, bottom_right : Point) -> Primitive {
+  Primitive::Rectangle(top_left, bottom_right)
+}
+
+///| Create a path primitive
+pub fn primitive_path(path : Path) -> Primitive {
+  Primitive::Path(path)
+}
+
+///| Create a text primitive
+pub fn primitive_text(text : String, position : Point, size : Double) -> Primitive {
+  Primitive::Text(text, position, size)
+}
+
 ///| Image operations for declarative composition (reserved for future optimization)
 pub enum ImageOp {
   Const(Color)
@@ -69,4 +85,29 @@ pub enum ImageOp {
   Transform(Transform, Image)
   Compose(Image, Image)
   Cut(Image, Image) // Cut first image with second as mask
+}
+
+///| Create a constant color image operation
+pub fn imageop_const(color : Color) -> ImageOp {
+  ImageOp::Const(color)
+}
+
+///| Create a primitive image operation
+pub fn imageop_primitive(primitive : Primitive, color : Color) -> ImageOp {
+  ImageOp::Primitive(primitive, color)
+}
+
+///| Create a transform image operation
+pub fn imageop_transform(transform : Transform, image : Image) -> ImageOp {
+  ImageOp::Transform(transform, image)
+}
+
+///| Create a compose image operation
+pub fn imageop_compose(image1 : Image, image2 : Image) -> ImageOp {
+  ImageOp::Compose(image1, image2)
+}
+
+///| Create a cut image operation
+pub fn imageop_cut(image : Image, mask : Image) -> ImageOp {
+  ImageOp::Cut(image, mask)
 }
