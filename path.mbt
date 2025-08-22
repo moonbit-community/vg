@@ -1,11 +1,13 @@
 // Path construction and manipulation utilities
 
-///| Create an empty path
+///|
+/// Create an empty path
 pub fn Path::empty() -> Path {
   Path([])
 }
 
-///| Move to a point
+///|
+/// Move to a point
 pub fn Path::move_to(self : Path, p : Point) -> Path {
   let new_path = Array::new()
   for segment in self.0 {
@@ -15,7 +17,8 @@ pub fn Path::move_to(self : Path, p : Point) -> Path {
   Path(new_path)
 }
 
-///| Line to a point
+///|
+/// Line to a point
 pub fn Path::line_to(self : Path, p : Point) -> Path {
   let new_path = Array::new()
   for segment in self.0 {
@@ -25,7 +28,8 @@ pub fn Path::line_to(self : Path, p : Point) -> Path {
   Path(new_path)
 }
 
-///| Cubic bezier curve to a point
+///|
+/// Cubic bezier curve to a point
 pub fn Path::curve_to(
   self : Path,
   cp1 : Point,
@@ -40,7 +44,8 @@ pub fn Path::curve_to(
   Path(new_path)
 }
 
-///| Quadratic bezier curve to a point
+///|
+/// Quadratic bezier curve to a point
 pub fn Path::qcurve_to(self : Path, cp : Point, end : Point) -> Path {
   let new_path = Array::new()
   for segment in self.0 {
@@ -50,7 +55,8 @@ pub fn Path::qcurve_to(self : Path, cp : Point, end : Point) -> Path {
   Path(new_path)
 }
 
-///| Elliptical arc to a point
+///|
+/// Elliptical arc to a point
 pub fn Path::earc_to(
   self : Path,
   rx : Double,
@@ -68,7 +74,8 @@ pub fn Path::earc_to(
   Path(new_path)
 }
 
-///| Close the path
+///|
+/// Close the path
 pub fn Path::close_path(self : Path) -> Path {
   let new_path = Array::new()
   for segment in self.0 {
@@ -78,7 +85,8 @@ pub fn Path::close_path(self : Path) -> Path {
   Path(new_path)
 }
 
-///| Create a rectangle path
+///|
+/// Create a rectangle path
 pub fn Path::rect(
   x : Double,
   y : Double,
@@ -97,7 +105,8 @@ pub fn Path::rect(
   .close_path()
 }
 
-///| Create a circle path (approximated with bezier curves)
+///|
+/// Create a circle path (approximated with bezier curves)
 pub fn Path::circle(center : Point, radius : Double) -> Path {
   let kappa = 0.5522847498 // Magic number for circle approximation
   let offset = radius * kappa
@@ -130,7 +139,8 @@ pub fn Path::circle(center : Point, radius : Double) -> Path {
   .close_path()
 }
 
-///| Create an ellipse path
+///|
+/// Create an ellipse path
 pub fn Path::ellipse(center : Point, rx : Double, ry : Double) -> Path {
   let kappa = 0.5522847498
   let offset_x = rx * kappa
@@ -164,7 +174,8 @@ pub fn Path::ellipse(center : Point, rx : Double, ry : Double) -> Path {
   .close_path()
 }
 
-///| Transform a path
+///|
+/// Transform a path
 pub fn Path::transform(self : Path, t : Transform) -> Path {
   let new_path = Array::new()
   for segment in self.0 {
@@ -183,7 +194,8 @@ pub fn Path::transform(self : Path, t : Transform) -> Path {
   Path(new_path)
 }
 
-///| Get the bounding box of a path (approximate)
+///|
+/// Get the bounding box of a path (approximate)
 pub fn Path::bounds(self : Path) -> Box? {
   let mut min_x = 1000000.0
   let mut min_y = 1000000.0
@@ -229,7 +241,8 @@ pub fn Path::bounds(self : Path) -> Box? {
   }
 }
 
-///| Create a smooth cubic curve that connects smoothly to the previous segment
+///|
+/// Create a smooth cubic curve that connects smoothly to the previous segment
 pub fn Path::smooth_ccurve_to(self : Path, cp2 : Point, end : Point) -> Path {
   let new_path = Array::new()
   for segment in self.0 {
@@ -254,7 +267,8 @@ pub fn Path::smooth_ccurve_to(self : Path, cp2 : Point, end : Point) -> Path {
   Path(new_path)
 }
 
-///| Create a smooth quadratic curve that connects smoothly to the previous segment
+///|
+/// Create a smooth quadratic curve that connects smoothly to the previous segment
 pub fn Path::smooth_qcurve_to(self : Path, end : Point) -> Path {
   let new_path = Array::new()
   for segment in self.0 {

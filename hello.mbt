@@ -1,6 +1,7 @@
 // Main library interface
 
-///| Create a simple example image
+///|
+/// Create a simple example image
 pub fn example() -> Image {
   let red_circle = circle(red(), 30.0)
   let blue_rect = rectangle(blue(), 40.0, 40.0)

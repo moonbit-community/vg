@@ -1,18 +1,21 @@
 // HTML5 Canvas rendering backend
 
-///| Canvas document structure for JavaScript generation
+///|
+/// Canvas document structure for JavaScript generation
 pub struct CanvasDocument {
   width : Double
   height : Double
   commands : Array[String]
 } derive(Show)
 
-///| Create a new Canvas document
+///|
+/// Create a new Canvas document
 pub fn new_canvas(width : Double, height : Double) -> CanvasDocument {
   { width, height, commands: [] }
 }
 
-///| Convert a color to Canvas color string
+///|
+/// Convert a color to Canvas color string
 fn color_to_canvas(c : Color) -> String {
   if c.a < 1.0 {
     let r = (c.r * 255.0).to_int()
@@ -24,7 +27,8 @@ fn color_to_canvas(c : Color) -> String {
   }
 }
 
-///| Convert a path to Canvas commands
+///|
+/// Convert a path to Canvas commands
 fn path_to_canvas_commands(path : Path) -> Array[String] {
   let commands = Array::new()
   commands.push("ctx.beginPath();")
@@ -65,7 +69,8 @@ fn path_to_canvas_commands(path : Path) -> Array[String] {
 
 // ===== OBJECT-ORIENTED API METHODS =====
 
-///| Add a command to the Canvas document (OO-style)
+///|
+/// Add a command to the Canvas document (OO-style)
 pub fn CanvasDocument::add_command(
   self : CanvasDocument,
   command : String,
@@ -78,7 +83,8 @@ pub fn CanvasDocument::add_command(
   { width: self.width, height: self.height, commands: new_commands }
 }
 
-///| Render a circle to Canvas (OO-style)
+///|
+/// Render a circle to Canvas (OO-style)
 pub fn CanvasDocument::render_circle(
   self : CanvasDocument,
   center : Point,
@@ -98,7 +104,8 @@ pub fn CanvasDocument::render_circle(
   result
 }
 
-///| Render a rectangle to Canvas (OO-style)
+///|
+/// Render a rectangle to Canvas (OO-style)
 pub fn CanvasDocument::render_rectangle(
   self : CanvasDocument,
   x : Double,
@@ -118,7 +125,8 @@ pub fn CanvasDocument::render_rectangle(
   result
 }
 
-///| Render a line to Canvas (OO-style)
+///|
+/// Render a line to Canvas (OO-style)
 pub fn CanvasDocument::render_line(
   self : CanvasDocument,
   start : Point,
@@ -142,7 +150,8 @@ pub fn CanvasDocument::render_line(
   result
 }
 
-///| Render text to Canvas (OO-style)
+///|
+/// Render text to Canvas (OO-style)
 pub fn CanvasDocument::render_text(
   self : CanvasDocument,
   text : String,
@@ -164,7 +173,8 @@ pub fn CanvasDocument::render_text(
   result
 }
 
-///| Render a path to Canvas (OO-style)
+///|
+/// Render a path to Canvas (OO-style)
 pub fn CanvasDocument::render_path(
   self : CanvasDocument,
   path : Path,
@@ -185,7 +195,8 @@ pub fn CanvasDocument::render_path(
   result
 }
 
-///| Convert to JavaScript (OO-style)
+///|
+/// Convert to JavaScript (OO-style)
 pub fn CanvasDocument::to_js(self : CanvasDocument) -> String {
   let mut js = "// Generated Canvas JavaScript\n"
   js = js + "function drawVgGraphics(canvas) {\n"
@@ -205,7 +216,8 @@ pub fn CanvasDocument::to_js(self : CanvasDocument) -> String {
   js
 }
 
-///| Convert to HTML (OO-style)
+///|
+/// Convert to HTML (OO-style)
 pub fn CanvasDocument::to_html(self : CanvasDocument, title : String) -> String {
   let js_code = self.to_js()
   "<!DOCTYPE html>\n<html>\n<head>\n  <title>\{title}</title>\n  <style>\n    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }\n    canvas { border: 1px solid #ccc; margin: 10px; }\n  </style>\n</head>\n<body>\n  <h1>\{title}</h1>\n  <canvas id=\"vgCanvas\"></canvas>\n  <script>\n\{js_code}\n    drawVgGraphics(document.getElementById('vgCanvas'));\n  </script>\n</body>\n</html>"

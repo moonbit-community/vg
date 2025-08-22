@@ -56,6 +56,16 @@ fn hsv(Double, Double, Double) -> Color
 
 fn identity() -> Transform
 
+fn imageop_compose((Point) -> Color, (Point) -> Color) -> ImageOp
+
+fn imageop_const(Color) -> ImageOp
+
+fn imageop_cut((Point) -> Color, (Point) -> Color) -> ImageOp
+
+fn imageop_primitive(Primitive, Color) -> ImageOp
+
+fn imageop_transform(Transform, (Point) -> Color) -> ImageOp
+
 fn invert(Transform) -> Transform?
 
 fn length(Point) -> Double
@@ -97,6 +107,14 @@ fn point(Double, Double) -> Point
 fn polygon(Color, Array[Point]) -> (Point) -> Color
 
 fn preserves_orientation(Transform) -> Bool
+
+fn primitive_circle(Point, Double) -> Primitive
+
+fn primitive_path(Path) -> Primitive
+
+fn primitive_rectangle(Point, Point) -> Primitive
+
+fn primitive_text(String, Point, Double) -> Primitive
 
 fn purple() -> Color
 
@@ -281,13 +299,6 @@ pub struct Transform {
 }
 impl Eq for Transform
 impl Show for Transform
-
-pub struct Vec2 {
-  x : Double
-  y : Double
-}
-impl Eq for Vec2
-impl Show for Vec2
 
 // Type aliases
 pub typealias (Point) -> Color as Image

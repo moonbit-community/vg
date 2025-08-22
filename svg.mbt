@@ -1,18 +1,21 @@
 // SVG rendering backend
 
-///| SVG document structure
+///|
+/// SVG document structure
 pub struct SvgDocument {
   width : Double
   height : Double
   elements : Array[String]
 } derive(Show)
 
-///| Create a new SVG document
+///|
+/// Create a new SVG document
 pub fn new_svg(width : Double, height : Double) -> SvgDocument {
   { width, height, elements: [] }
 }
 
-///| Add an element to the SVG document (OO-style)
+///|
+/// Add an element to the SVG document (OO-style)
 pub fn SvgDocument::add_element(
   self : SvgDocument,
   element : String,
@@ -25,7 +28,8 @@ pub fn SvgDocument::add_element(
   { width: self.width, height: self.height, elements: new_elements }
 }
 
-///| Convert a color to SVG color string
+///|
+/// Convert a color to SVG color string
 fn color_to_svg(c : Color) -> String {
   if c.a < 1.0 {
     let r = (c.r * 255.0).to_int()
@@ -37,12 +41,14 @@ fn color_to_svg(c : Color) -> String {
   }
 }
 
-///| Convert a point to SVG coordinate string
+///|
+/// Convert a point to SVG coordinate string
 fn point_to_svg(p : Point) -> String {
   "\{p.x},\{p.y}"
 }
 
-///| Convert a path to SVG path data
+///|
+/// Convert a path to SVG path data
 fn path_to_svg_data(path : Path) -> String {
   let mut data = ""
   for segment in path.0 {
@@ -66,7 +72,8 @@ fn path_to_svg_data(path : Path) -> String {
   data
 }
 
-///| Render a circle to SVG (OO-style)
+///|
+/// Render a circle to SVG (OO-style)
 pub fn SvgDocument::render_circle(
   self : SvgDocument,
   center : Point,
@@ -79,7 +86,8 @@ pub fn SvgDocument::render_circle(
 
 // ===== OBJECT-ORIENTED API METHODS =====
 
-///| Render a rectangle to SVG (OO-style)
+///|
+/// Render a rectangle to SVG (OO-style)
 pub fn SvgDocument::render_rectangle(
   self : SvgDocument,
   x : Double,
@@ -92,7 +100,8 @@ pub fn SvgDocument::render_rectangle(
   self.add_element(element)
 }
 
-///| Render a path to SVG (OO-style)
+///|
+/// Render a path to SVG (OO-style)
 pub fn SvgDocument::render_path(
   self : SvgDocument,
   path : Path,
@@ -103,7 +112,8 @@ pub fn SvgDocument::render_path(
   self.add_element(element)
 }
 
-///| Render a line to SVG (OO-style)
+///|
+/// Render a line to SVG (OO-style)
 pub fn SvgDocument::render_line(
   self : SvgDocument,
   start : Point,
@@ -115,7 +125,8 @@ pub fn SvgDocument::render_line(
   self.add_element(element)
 }
 
-///| Render text to SVG (OO-style)
+///|
+/// Render text to SVG (OO-style)
 pub fn SvgDocument::render_text(
   self : SvgDocument,
   text : String,
@@ -127,7 +138,8 @@ pub fn SvgDocument::render_text(
   self.add_element(element)
 }
 
-///| Render an ellipse to SVG (OO-style)
+///|
+/// Render an ellipse to SVG (OO-style)
 pub fn SvgDocument::render_ellipse(
   self : SvgDocument,
   center : Point,
@@ -139,7 +151,8 @@ pub fn SvgDocument::render_ellipse(
   self.add_element(element)
 }
 
-///| Render a polygon to SVG (OO-style)
+///|
+/// Render a polygon to SVG (OO-style)
 pub fn SvgDocument::render_polygon(
   self : SvgDocument,
   points : Array[Point],
@@ -161,7 +174,8 @@ pub fn SvgDocument::render_polygon(
   }
 }
 
-///| Render a linear gradient to SVG (OO-style)
+///|
+/// Render a linear gradient to SVG (OO-style)
 pub fn SvgDocument::render_linear_gradient(
   self : SvgDocument,
   id : String,
@@ -174,7 +188,8 @@ pub fn SvgDocument::render_linear_gradient(
   self.add_element(gradient)
 }
 
-///| Convert to SVG string (OO-style)
+///|
+/// Convert to SVG string (OO-style)
 pub fn SvgDocument::to_string(self : SvgDocument) -> String {
   let mut svg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
   svg = svg +
@@ -186,7 +201,8 @@ pub fn SvgDocument::to_string(self : SvgDocument) -> String {
   svg
 }
 
-///| Sample an image at regular intervals and render to SVG
+///|
+/// Sample an image at regular intervals and render to SVG
 pub fn render_image_to_svg(
   img : Image,
   width : Double,

@@ -1,6 +1,7 @@
 // Basic PDF rendering backend
 
-///| PDF document structure
+///|
+/// PDF document structure
 pub struct PdfDocument {
   width : Double
   height : Double
@@ -8,22 +9,26 @@ pub struct PdfDocument {
   object_count : Int
 } derive(Show)
 
-///| Create a new PDF document
+///|
+/// Create a new PDF document
 pub fn new_pdf(width : Double, height : Double) -> PdfDocument {
   { width, height, objects: [], object_count: 0 }
 }
 
-///| Convert color to PDF color values (0-1 range)
+///|
+/// Convert color to PDF color values (0-1 range)
 fn color_to_pdf(c : Color) -> String {
   "\{c.r} \{c.g} \{c.b} rg"
 }
 
-///| Convert point to PDF coordinates (flip Y axis)
+///|
+/// Convert point to PDF coordinates (flip Y axis)
 fn point_to_pdf(p : Point, height : Double) -> String {
   "\{p.x} \{height - p.y}"
 }
 
-///| Convert a path to PDF path commands
+///|
+/// Convert a path to PDF path commands
 fn path_to_pdf_commands(path : Path, height : Double) -> Array[String] {
   let commands = Array::new()
   for segment in path.0 {
@@ -55,7 +60,8 @@ fn path_to_pdf_commands(path : Path, height : Double) -> Array[String] {
 
 // ===== OBJECT-ORIENTED API METHODS =====
 
-///| Add an object to the PDF document (OO-style)
+///|
+/// Add an object to the PDF document (OO-style)
 fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
   let new_objects = Array::new()
   for o in self.objects {
@@ -70,7 +76,8 @@ fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
   }
 }
 
-///| Render a circle to PDF (OO-style)
+///|
+/// Render a circle to PDF (OO-style)
 pub fn PdfDocument::render_circle(
   self : PdfDocument,
   center : Point,
@@ -107,7 +114,8 @@ pub fn PdfDocument::render_circle(
   self.add_object(content)
 }
 
-///| Render a rectangle to PDF (OO-style)
+///|
+/// Render a rectangle to PDF (OO-style)
 pub fn PdfDocument::render_rectangle(
   self : PdfDocument,
   x : Double,
@@ -125,7 +133,8 @@ pub fn PdfDocument::render_rectangle(
   self.add_object(content)
 }
 
-///| Render a line to PDF (OO-style)
+///|
+/// Render a line to PDF (OO-style)
 pub fn PdfDocument::render_line(
   self : PdfDocument,
   start : Point,
@@ -148,7 +157,8 @@ pub fn PdfDocument::render_line(
   self.add_object(content)
 }
 
-///| Render text to PDF (OO-style)
+///|
+/// Render text to PDF (OO-style)
 pub fn PdfDocument::render_text(
   self : PdfDocument,
   text : String,
@@ -173,7 +183,8 @@ pub fn PdfDocument::render_text(
   self.add_object(content)
 }
 
-///| Render a path to PDF (OO-style)
+///|
+/// Render a path to PDF (OO-style)
 pub fn PdfDocument::render_path(
   self : PdfDocument,
   path : Path,
@@ -190,7 +201,8 @@ pub fn PdfDocument::render_path(
   self.add_object(content)
 }
 
-///| Convert to PDF string (OO-style)
+///|
+/// Convert to PDF string (OO-style)
 pub fn PdfDocument::to_string(self : PdfDocument) -> String {
   let mut pdf = "%PDF-1.4\n"
 

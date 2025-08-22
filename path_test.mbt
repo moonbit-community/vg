@@ -134,13 +134,13 @@ test "path bounds calculation" {
 
 ///|
 test "empty path bounds" {
-  let path = Path::empty()
+  let path = @vg.Path::empty()
   inspect(path.bounds(), content="None")
 }
 
 ///|
 test "path with only close segment" {
-  let path = Path::empty().close_path()
+  let path = @vg.Path::empty().close_path()
   inspect((path, path.bounds()), content="(Path([Close]), None)")
 }
 

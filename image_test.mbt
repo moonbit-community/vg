@@ -134,97 +134,106 @@ test "image cutting" {
 
 ///|
 test "linear gradient" {
-  let gradient = linear_gradient(
-    red(),
-    blue(),
-    point(-5.0, 0.0),
-    point(5.0, 0.0),
+  let gradient = @vg.linear_gradient(
+    @vg.red(),
+    @vg.blue(),
+    @vg.point(-5.0, 0.0),
+    @vg.point(5.0, 0.0),
   )
-  let left = point(-5.0, 0.0) // Should be red
-  let right = point(5.0, 0.0) // Should be blue
-  let center = point(0.0, 0.0) // Should be mix
+  let left = @vg.point(-5.0, 0.0) // Should be red
+  let right = @vg.point(5.0, 0.0) // Should be blue
+  let center = @vg.point(0.0, 0.0) // Should be mix
   let c_left = gradient(left)
   let c_right = gradient(right)
   let c_center = gradient(center)
-  if c_left != red() {
+  if c_left != @vg.red() {
     fail("Gradient start should be red")
   }
-  if c_right != blue() {
+  if c_right != @vg.blue() {
     fail("Gradient end should be blue")
   }
 
   // Center should be a mix (not pure red or blue)
-  if c_center == red() || c_center == blue() {
+  if c_center == @vg.red() || c_center == @vg.blue() {
     fail("Gradient center should be interpolated")
   }
 }
 
 ///|
 test "radial gradient" {
-  let gradient = radial_gradient(white(), black(), point(0.0, 0.0), 5.0)
-  let center = point(0.0, 0.0) // Should be white
-  let edge = point(5.0, 0.0) // Should be black
-  let middle = point(2.5, 0.0) // Should be gray
+  let gradient = @vg.radial_gradient(
+    @vg.white(),
+    @vg.black(),
+    @vg.point(0.0, 0.0),
+    5.0,
+  )
+  let center = @vg.point(0.0, 0.0) // Should be white
+  let edge = @vg.point(5.0, 0.0) // Should be black
+  let middle = @vg.point(2.5, 0.0) // Should be gray
   let c_center = gradient(center)
   let c_edge = gradient(edge)
   let c_middle = gradient(middle)
-  if c_center != white() {
+  if c_center != @vg.white() {
     fail("Radial gradient center should be white")
   }
-  if c_edge != black() {
+  if c_edge != @vg.black() {
     fail("Radial gradient edge should be black")
   }
 
   // Middle should be between white and black
-  if c_middle == white() || c_middle == black() {
+  if c_middle == @vg.white() || c_middle == @vg.black() {
     fail("Radial gradient middle should be interpolated")
   }
 }
 
 ///|
 test "ellipse image" {
-  let ellipse_img = ellipse(green(), 4.0, 2.0)
-  let inside = point(2.0, 1.0) // Inside ellipse
-  let outside = point(5.0, 0.0) // Outside ellipse
-  let edge = point(4.0, 0.0) // On edge
+  let ellipse_img = @vg.ellipse(@vg.green(), 4.0, 2.0)
+  let inside = @vg.point(2.0, 1.0) // Inside ellipse
+  let outside = @vg.point(5.0, 0.0) // Outside ellipse
+  let edge = @vg.point(4.0, 0.0) // On edge
   let c_inside = ellipse_img(inside)
   let c_outside = ellipse_img(outside)
   let c_edge = ellipse_img(edge)
   inspect(c_inside, content="{r: 0, g: 1, b: 0, a: 1}")
   inspect(c_outside, content="{r: 0, g: 0, b: 0, a: 0}")
   inspect(c_edge, content="{r: 0, g: 1, b: 0, a: 1}")
-  if c_inside != green() {
+  if c_inside != @vg.green() {
     fail("Point inside ellipse should be green")
   }
-  if c_outside != transparent() {
+  if c_outside != @vg.transparent() {
     fail("Point outside ellipse should be transparent")
   }
-  if c_edge != green() {
+  if c_edge != @vg.green() {
     fail("Point on ellipse edge should be green")
   }
 }
 
 ///|
 test "polygon image" {
-  let triangle_points = [point(0.0, -2.0), point(-2.0, 2.0), point(2.0, 2.0)]
-  let triangle_img = polygon(blue(), triangle_points)
-  let inside = point(0.0, 0.0) // Inside triangle
-  let outside = point(0.0, -3.0) // Outside triangle
+  let triangle_points = [
+    @vg.point(0.0, -2.0),
+    @vg.point(-2.0, 2.0),
+    @vg.point(2.0, 2.0),
+  ]
+  let triangle_img = @vg.polygon(@vg.blue(), triangle_points)
+  let inside = @vg.point(0.0, 0.0) // Inside triangle
+  let outside = @vg.point(0.0, -3.0) // Outside triangle
   let c_inside = triangle_img(inside)
   let c_outside = triangle_img(outside)
-  if c_inside != blue() {
+  if c_inside != @vg.blue() {
     fail("Point inside triangle should be blue")
   }
-  if c_outside != transparent() {
+  if c_outside != @vg.transparent() {
     fail("Point outside triangle should be transparent")
   }
 }
 
 ///|
 test "opacity application" {
-  let red_img = circle(red(), 5.0)
-  let semi_transparent = with_opacity(red_img, 0.5)
-  let center = point(0.0, 0.0)
+  let red_img = @vg.circle(@vg.red(), 5.0)
+  let semi_transparent = @vg.with_opacity(red_img, 0.5)
+  let center = @vg.point(0.0, 0.0)
   let color = semi_transparent(center)
   if color.r != 1.0 || color.g != 0.0 || color.b != 0.0 {
     fail("Color components should remain unchanged")
