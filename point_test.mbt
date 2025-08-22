@@ -2,7 +2,7 @@
 
 ///|
 test "point creation" {
-  let p = point(3.0, 4.0)
+  let p = @vg.point(3.0, 4.0)
   if p.x != 3.0 || p.y != 4.0 {
     fail("Point creation incorrect")
   }
@@ -10,7 +10,7 @@ test "point creation" {
 
 ///|
 test "origin point" {
-  let o = origin()
+  let o = @vg.origin()
   if o.x != 0.0 || o.y != 0.0 {
     fail("Origin should be (0, 0)")
   }
@@ -20,7 +20,7 @@ test "origin point" {
 test "point addition" {
   let p1 = @vg.point(1.0, 2.0)
   let p2 = @vg.point(3.0, 4.0)
-  let sum = add(p1, p2)
+  let sum = @vg.add(p1, p2)
   if sum.x != 4.0 || sum.y != 6.0 {
     fail("Point addition incorrect")
   }
@@ -30,7 +30,7 @@ test "point addition" {
 test "point subtraction" {
   let p1 = @vg.point(5.0, 7.0)
   let p2 = @vg.point(2.0, 3.0)
-  let diff = sub(p1, p2)
+  let diff = @vg.sub(p1, p2)
   if diff.x != 3.0 || diff.y != 4.0 {
     fail("Point subtraction incorrect")
   }

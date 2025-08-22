@@ -2,42 +2,42 @@
 
 ///|
 test "rgba color creation" {
-  let c = rgba(0.5, 0.7, 0.9, 0.8)
+  let c = @vg.rgba(0.5, 0.7, 0.9, 0.8)
   inspect(c, content="{r: 0.5, g: 0.7, b: 0.9, a: 0.8}")
 }
 
 ///|
 test "rgb color creation" {
-  let c = rgb(0.2, 0.4, 0.6)
+  let c = @vg.rgb(0.2, 0.4, 0.6)
   inspect(c, content="{r: 0.2, g: 0.4, b: 0.6, a: 1}")
 }
 
 ///|
 test "gray color creation" {
-  let c = gray(0.5)
+  let c = @vg.gray(0.5)
   inspect(c, content="{r: 0.5, g: 0.5, b: 0.5, a: 1}")
 }
 
 ///|
 test "transparent color" {
-  let c = transparent()
+  let c = @vg.transparent()
   inspect(c, content="{r: 0, g: 0, b: 0, a: 0}")
 }
 
 ///|
 test "predefined colors" {
   let colors = [
-    ("red", red()),
-    ("green", green()),
-    ("blue", blue()),
-    ("white", white()),
-    ("black", black()),
-    ("cyan", cyan()),
-    ("magenta", magenta()),
-    ("yellow", yellow()),
-    ("orange", orange()),
-    ("purple", purple()),
-    ("gold", gold()),
+    ("red", @vg.red()),
+    ("green", @vg.green()),
+    ("blue", @vg.blue()),
+    ("white", @vg.white()),
+    ("black", @vg.black()),
+    ("cyan", @vg.cyan()),
+    ("magenta", @vg.magenta()),
+    ("yellow", @vg.yellow()),
+    ("orange", @vg.orange()),
+    ("purple", @vg.purple()),
+    ("gold", @vg.gold()),
   ]
   inspect(
     colors,
@@ -49,9 +49,9 @@ test "predefined colors" {
 
 ///|
 test "color blending" {
-  let c1 = rgba(1.0, 0.0, 0.0, 0.5) // Semi-transparent red
-  let c2 = rgba(0.0, 1.0, 0.0, 0.5) // Semi-transparent green
-  let blended = blend(c1, c2)
+  let c1 = @vg.rgba(1.0, 0.0, 0.0, 0.5) // Semi-transparent red
+  let c2 = @vg.rgba(0.0, 1.0, 0.0, 0.5) // Semi-transparent green
+  let blended = @vg.blend(c1, c2)
   inspect(
     blended,
     content="{r: 0.6666666666666666, g: 0.3333333333333333, b: 0, a: 0.75}",
@@ -61,14 +61,14 @@ test "color blending" {
 ///|
 test "color scaling" {
   let c = @vg.rgb(0.8, 0.6, 0.4)
-  let scaled = scale(c, 0.5)
+  let scaled = @vg.scale(c, 0.5)
   inspect(scaled, content="{r: 0.4, g: 0.3, b: 0.2, a: 1}")
 }
 
 ///|
 test "color clamping" {
-  let c = rgba(1.5, -0.5, 0.5, 2.0)
-  let clamped = clamp(c)
+  let c = @vg.rgba(1.5, -0.5, 0.5, 2.0)
+  let clamped = @vg.clamp(c)
   if clamped.r != 1.0 ||
     clamped.g != 0.0 ||
     clamped.b != 0.5 ||
@@ -80,11 +80,11 @@ test "color clamping" {
 ///|
 test "color to hex conversion" {
   let colors_and_hex = [
-    ("red", red(), to_hex(red())),
-    ("green", green(), to_hex(green())),
-    ("blue", blue(), to_hex(blue())),
-    ("orange", rgb(1.0, 0.5, 0.0), to_hex(rgb(1.0, 0.5, 0.0))),
-    ("gray", gray(0.5), to_hex(gray(0.5))),
+    ("red", @vg.red(), @vg.to_hex(@vg.red())),
+    ("green", @vg.green(), @vg.to_hex(@vg.green())),
+    ("blue", @vg.blue(), @vg.to_hex(@vg.blue())),
+    ("orange", @vg.rgb(1.0, 0.5, 0.0), @vg.to_hex(@vg.rgb(1.0, 0.5, 0.0))),
+    ("gray", @vg.gray(0.5), @vg.to_hex(@vg.gray(0.5))),
   ]
   inspect(
     colors_and_hex,
@@ -97,14 +97,14 @@ test "color to hex conversion" {
 ///|
 test "hsv color space" {
   let hsv_colors = [
-    ("red_hsv", hsv(0.0, 1.0, 1.0)), // Pure red
-    ("green_hsv", hsv(120.0, 1.0, 1.0)), // Pure green  
-    ("blue_hsv", hsv(240.0, 1.0, 1.0)), // Pure blue
-    ("yellow_hsv", hsv(60.0, 1.0, 1.0)), // Pure yellow
-    ("orange_hsv", hsv(30.0, 1.0, 1.0)), // Orange
-    ("purple_hsv", hsv(300.0, 1.0, 1.0)), // Purple
-    ("gray_hsv", hsv(0.0, 0.0, 0.5)), // Gray (no saturation)
-    ("dark_red", hsv(0.0, 1.0, 0.5)), // Dark red (low value)
+    ("red_hsv", @vg.hsv(0.0, 1.0, 1.0)), // Pure red
+    ("green_hsv", @vg.hsv(120.0, 1.0, 1.0)), // Pure green  
+    ("blue_hsv", @vg.hsv(240.0, 1.0, 1.0)), // Pure blue
+    ("yellow_hsv", @vg.hsv(60.0, 1.0, 1.0)), // Pure yellow
+    ("orange_hsv", @vg.hsv(30.0, 1.0, 1.0)), // Orange
+    ("purple_hsv", @vg.hsv(300.0, 1.0, 1.0)), // Purple
+    ("gray_hsv", @vg.hsv(0.0, 0.0, 0.5)), // Gray (no saturation)
+    ("dark_red", @vg.hsv(0.0, 1.0, 0.5)), // Dark red (low value)
   ]
   inspect(
     hsv_colors,
@@ -117,13 +117,13 @@ test "hsv color space" {
 ///|
 test "color interpolation" {
   let interpolations = [
-    ("red_to_blue_0", lerp_color(red(), blue(), 0.0)),
-    ("red_to_blue_25", lerp_color(red(), blue(), 0.25)),
-    ("red_to_blue_50", lerp_color(red(), blue(), 0.5)),
-    ("red_to_blue_75", lerp_color(red(), blue(), 0.75)),
-    ("red_to_blue_100", lerp_color(red(), blue(), 1.0)),
-    ("white_to_black_50", lerp_color(white(), black(), 0.5)),
-    ("transparent_to_opaque", lerp_color(transparent(), red(), 0.5)),
+    ("red_to_blue_0", @vg.lerp_color(@vg.red(), @vg.blue(), 0.0)),
+    ("red_to_blue_25", @vg.lerp_color(@vg.red(), @vg.blue(), 0.25)),
+    ("red_to_blue_50", @vg.lerp_color(@vg.red(), @vg.blue(), 0.5)),
+    ("red_to_blue_75", @vg.lerp_color(@vg.red(), @vg.blue(), 0.75)),
+    ("red_to_blue_100", @vg.lerp_color(@vg.red(), @vg.blue(), 1.0)),
+    ("white_to_black_50", @vg.lerp_color(@vg.white(), @vg.black(), 0.5)),
+    ("transparent_to_opaque", @vg.lerp_color(@vg.transparent(), @vg.red(), 0.5)),
   ]
   inspect(
     interpolations,

@@ -48,29 +48,29 @@ moon info
 ```moonbit
 test "basic shapes" {
   // Create basic shapes
-  let red_circle = circle(red(), 50.0)
-  let blue_ellipse = ellipse(blue(), 60.0, 40.0)
-  let triangle = polygon(green(), [point(0.0, -30.0), point(-30.0, 30.0), point(30.0, 30.0)])
+  let red_circle = @vg.circle(@vg.red(), 50.0)
+  let blue_ellipse = @vg.ellipse(@vg.blue(), 60.0, 40.0)
+  let triangle = @vg.polygon(@vg.green(), [@vg.point(0.0, -30.0), @vg.point(-30.0, 30.0), @vg.point(30.0, 30.0)])
 
   // Apply transformations and effects
-  let semi_transparent = with_opacity(red_circle, 0.7)
-  let translated_ellipse = translate_img(50.0, 0.0, blue_ellipse)
+  let semi_transparent = @vg.with_opacity(red_circle, 0.7)
+  let translated_ellipse = @vg.translate_img(50.0, 0.0, blue_ellipse)
 
   // Compose images
-  let composed = compose_imgs(semi_transparent, translated_ellipse)
+  let composed = @vg.compose_imgs(semi_transparent, translated_ellipse)
 
   // Create paths with object-oriented API
-  let custom_path = Path::empty()
-    .move_to(point(10.0, 10.0))
-    .line_to(point(90.0, 10.0))
-    .curve_to(point(110.0, 10.0), point(110.0, 30.0), point(90.0, 30.0))
+  let custom_path = @vg.Path::empty()
+    .move_to(@vg.point(10.0, 10.0))
+    .line_to(@vg.point(90.0, 10.0))
+    .curve_to(@vg.point(110.0, 10.0), @vg.point(110.0, 30.0), @vg.point(90.0, 30.0))
     .close_path()
 
   // Create SVG output with advanced shapes
-  let svg_doc = new_svg(200.0, 200.0)
-    .render_circle(point(100.0, 100.0), 50.0, red())
-    .render_ellipse(point(150.0, 100.0), 30.0, 20.0, blue())
-    .render_path(custom_path, green())
+  let svg_doc = @vg.new_svg(200.0, 200.0)
+    .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
+    .render_ellipse(@vg.point(150.0, 100.0), 30.0, 20.0, @vg.blue())
+    .render_path(custom_path, @vg.green())
 
   let svg_string = svg_doc.to_string()
   
@@ -101,19 +101,19 @@ The library is organized into several modules:
 ```moonbit
 test "basic shapes examples" {
   // Create a red circle
-  let circle_img = circle(red(), 25.0)
+  let circle_img = @vg.circle(@vg.red(), 25.0)
 
   // Create a blue rectangle
-  let rect_img = rectangle(blue(), 50.0, 30.0)
+  let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
 
   // Create an ellipse
-  let ellipse_img = ellipse(green(), 40.0, 20.0)
+  let ellipse_img = @vg.ellipse(@vg.green(), 40.0, 20.0)
 
   // Create a polygon (triangle)
-  let triangle = polygon(yellow(), [
-    point(0.0, -20.0), 
-    point(-20.0, 20.0), 
-    point(20.0, 20.0)
+  let triangle = @vg.polygon(@vg.yellow(), [
+    @vg.point(0.0, -20.0), 
+    @vg.point(-20.0, 20.0), 
+    @vg.point(20.0, 20.0)
   ])
   
   // Use the variables to avoid unused warnings
@@ -127,17 +127,17 @@ test "basic shapes examples" {
 ### Transformations
 ```moonbit
 test "transformations examples" {
-  let circle_img = circle(red(), 25.0)
-  let rect_img = rectangle(blue(), 50.0, 30.0)
+  let circle_img = @vg.circle(@vg.red(), 25.0)
+  let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
   
   // Translate an image
-  let moved = translate_img(10.0, 20.0, circle_img)
+  let moved = @vg.translate_img(10.0, 20.0, circle_img)
 
   // Scale an image
-  let scaled = scale_image(2.0, 1.5, rect_img)
+  let scaled = @vg.scale_image(2.0, 1.5, rect_img)
 
   // Rotate an image
-  let rotated = rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
+  let rotated = @vg.rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
   
   // Use the variables to avoid unused warnings
   ignore(moved)
@@ -150,24 +150,24 @@ test "transformations examples" {
 ```moonbit
 test "colors and effects examples" {
   // HSV color creation
-  let bright_orange = hsv(30.0, 1.0, 1.0)  // Hue, Saturation, Value
+  let bright_orange = @vg.hsv(30.0, 1.0, 1.0)  // Hue, Saturation, Value
 
   // Color interpolation
-  let purple_to_cyan = lerp_color(purple(), cyan(), 0.5)
+  let purple_to_cyan = @vg.lerp_color(@vg.purple(), @vg.cyan(), 0.5)
 
   // Apply opacity
-  let semi_transparent = with_opacity(circle(red(), 30.0), 0.6)
+  let semi_transparent = @vg.with_opacity(@vg.circle(@vg.red(), 30.0), 0.6)
 
   // Linear gradient
-  let gradient = linear_gradient(
-    red(), blue(), 
-    point(-50.0, 0.0), point(50.0, 0.0)
+  let gradient = @vg.linear_gradient(
+    @vg.red(), @vg.blue(), 
+    @vg.point(-50.0, 0.0), @vg.point(50.0, 0.0)
   )
 
   // Radial gradient
-  let radial = radial_gradient(
-    white(), black(),
-    point(0.0, 0.0), 50.0
+  let radial = @vg.radial_gradient(
+    @vg.white(), @vg.black(),
+    @vg.point(0.0, 0.0), 50.0
   )
   
   // Use the variables to avoid unused warnings
@@ -183,19 +183,19 @@ test "colors and effects examples" {
 ```moonbit
 test "paths examples" {
   // Create a custom path with method chaining
-  let path = Path::empty()
-    .move_to(point(10.0, 10.0))
-    .line_to(point(90.0, 10.0))
-    .curve_to(point(110.0, 10.0), point(110.0, 30.0), point(90.0, 30.0))
+  let path = @vg.Path::empty()
+    .move_to(@vg.point(10.0, 10.0))
+    .line_to(@vg.point(90.0, 10.0))
+    .curve_to(@vg.point(110.0, 10.0), @vg.point(110.0, 30.0), @vg.point(90.0, 30.0))
     .close_path()
 
   // Create predefined shapes
-  let rectangle = Path::rect(0.0, 0.0, 50.0, 30.0)
-  let circle = Path::circle(point(25.0, 25.0), 20.0)
-  let ellipse = Path::ellipse(point(0.0, 0.0), 30.0, 15.0)
+  let rectangle = @vg.Path::rect(0.0, 0.0, 50.0, 30.0)
+  let circle = @vg.Path::circle(@vg.point(25.0, 25.0), 20.0)
+  let ellipse = @vg.Path::ellipse(@vg.point(0.0, 0.0), 30.0, 15.0)
 
   // Transform paths
-  let transform = make_translate(10.0, 20.0)
+  let transform = @vg.make_translate(10.0, 20.0)
   let moved_path = path.transform(transform)
 
   // Get path bounds
@@ -205,8 +205,8 @@ test "paths examples" {
   }
 
   // Render path to SVG
-  let svg = new_svg(100.0, 100.0)
-    .render_path(path, green())
+  let svg = @vg.new_svg(100.0, 100.0)
+    .render_path(path, @vg.green())
     
   // Use the variables to avoid unused warnings
   ignore(rectangle)
@@ -220,17 +220,17 @@ test "paths examples" {
 ### Canvas Rendering (Fluent API)
 ```moonbit
 test "canvas rendering examples" {
-  let custom_path = Path::empty()
-    .move_to(point(10.0, 10.0))
-    .line_to(point(50.0, 10.0))
+  let custom_path = @vg.Path::empty()
+    .move_to(@vg.point(10.0, 10.0))
+    .line_to(@vg.point(50.0, 10.0))
     .close_path()
     
   // Create an HTML5 Canvas document with fluent method chaining
-  let canvas_doc = new_canvas(400.0, 300.0)
-    .render_circle(point(100.0, 100.0), 50.0, red())
-    .render_rectangle(150.0, 50.0, 80.0, 60.0, blue())
-    .render_path(custom_path, green())
-    .render_text("Hello Canvas!", point(200.0, 200.0), 16.0, black())
+  let canvas_doc = @vg.new_canvas(400.0, 300.0)
+    .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
+    .render_rectangle(150.0, 50.0, 80.0, 60.0, @vg.blue())
+    .render_path(custom_path, @vg.green())
+    .render_text("Hello Canvas!", @vg.point(200.0, 200.0), 16.0, @vg.black())
 
   // Generate JavaScript code
   let js_code = canvas_doc.to_js()
@@ -247,18 +247,18 @@ test "canvas rendering examples" {
 ### PDF Document Generation (Fluent API)
 ```moonbit
 test "pdf generation examples" {
-  let star_path = Path::empty()
-    .move_to(point(0.0, -20.0))
-    .line_to(point(5.0, -5.0))
-    .line_to(point(20.0, -5.0))
+  let star_path = @vg.Path::empty()
+    .move_to(@vg.point(0.0, -20.0))
+    .line_to(@vg.point(5.0, -5.0))
+    .line_to(@vg.point(20.0, -5.0))
     .close_path()
     
   // Create a PDF document with fluent method chaining
-  let pdf_doc = new_pdf(210.0, 297.0)  // A4 size
-    .render_circle(point(105.0, 100.0), 30.0, red())
-    .render_rectangle(50.0, 150.0, 110.0, 50.0, blue())
-    .render_path(star_path, gold())
-    .render_text("PDF Graphics Demo", point(50.0, 250.0), 14.0, black())
+  let pdf_doc = @vg.new_pdf(210.0, 297.0)  // A4 size
+    .render_circle(@vg.point(105.0, 100.0), 30.0, @vg.red())
+    .render_rectangle(50.0, 150.0, 110.0, 50.0, @vg.blue())
+    .render_path(star_path, @vg.gold())
+    .render_text("PDF Graphics Demo", @vg.point(50.0, 250.0), 14.0, @vg.black())
 
   // Generate PDF string
   let pdf_content = pdf_doc.to_string()
@@ -293,14 +293,14 @@ test "functional style example" {
 ### After (Object-Oriented Style)
 ```moonbit
 test "object oriented style example" {
-  let path = Path::empty()
-    .move_to(point(0.0, 0.0))
-    .line_to(point(10.0, 0.0))
+  let path = @vg.Path::empty()
+    .move_to(@vg.point(0.0, 0.0))
+    .line_to(@vg.point(10.0, 0.0))
     .close_path()
 
-  let rect = Path::rect(0.0, 0.0, 10.0, 5.0)
+  let rect = @vg.Path::rect(0.0, 0.0, 10.0, 5.0)
   let bounds = path.bounds()
-  let transform = make_translate(5.0, 5.0)
+  let transform = @vg.make_translate(5.0, 5.0)
   let transformed = path.transform(transform)
   
   // Use the variables to avoid unused warnings

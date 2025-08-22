@@ -160,9 +160,9 @@ test "image to SVG rendering" {
 
 ///|
 test "color with alpha in SVG" {
-  let semi_transparent = rgba(1.0, 0.0, 0.0, 0.5)
-  let doc = new_svg(100.0, 100.0).render_circle(
-    point(50.0, 50.0),
+  let semi_transparent = @vg.rgba(1.0, 0.0, 0.0, 0.5)
+  let doc = @vg.new_svg(100.0, 100.0).render_circle(
+    @vg.point(50.0, 50.0),
     25.0,
     semi_transparent,
   )

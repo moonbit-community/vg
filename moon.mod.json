@@ -6,5 +6,6 @@
   "license": "ISC",
   "keywords": ["graphics", "vector", "2d", "svg", "canvas"],
   "description": "Declarative 2D vector graphics library for MoonBit",
-  "warn-list": "-6-9"
+  "warn-list": "-6-9",
+  "alert-list": "+test_import_all"
 }

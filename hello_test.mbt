@@ -132,8 +132,8 @@ test "color operations" {
   let c1 = @vg.rgba(1.0, 0.5, 0.0, 0.8)
   let c2 = @vg.rgba(0.0, 0.5, 1.0, 0.6)
   let blended = @vg.blend(c1, c2)
-  let scaled = scale(c1, 0.5)
-  let clamped = clamp(rgba(1.5, -0.2, 0.5, 2.0))
+  let scaled = @vg.scale(c1, 0.5)
+  let clamped = @vg.clamp(@vg.rgba(1.5, -0.2, 0.5, 2.0))
 
   // Blended should have higher alpha than individual colors
   if blended.a <= c1.a && blended.a <= c2.a {
