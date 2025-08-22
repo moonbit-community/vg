@@ -161,7 +161,12 @@ test "linear gradient" {
 
 ///|
 test "radial gradient" {
-  let gradient = @vg.radial_gradient(@vg.white(), @vg.black(), @vg.point(0.0, 0.0), 5.0)
+  let gradient = @vg.radial_gradient(
+    @vg.white(),
+    @vg.black(),
+    @vg.point(0.0, 0.0),
+    5.0,
+  )
   let center = @vg.point(0.0, 0.0) // Should be white
   let edge = @vg.point(5.0, 0.0) // Should be black
   let middle = @vg.point(2.5, 0.0) // Should be gray
@@ -206,7 +211,11 @@ test "ellipse image" {
 
 ///|
 test "polygon image" {
-  let triangle_points = [@vg.point(0.0, -2.0), @vg.point(-2.0, 2.0), @vg.point(2.0, 2.0)]
+  let triangle_points = [
+    @vg.point(0.0, -2.0),
+    @vg.point(-2.0, 2.0),
+    @vg.point(2.0, 2.0),
+  ]
   let triangle_img = @vg.polygon(@vg.blue(), triangle_points)
   let inside = @vg.point(0.0, 0.0) // Inside triangle
   let outside = @vg.point(0.0, -3.0) // Outside triangle

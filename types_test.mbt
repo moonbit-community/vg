@@ -90,7 +90,7 @@ test "PathSegment variants" {
 test "Primitive constructors and equality" {
   let center = @vg.point(5.0, 5.0)
   let circle = @vg.primitive_circle(center, 10.0)
-  
+
   // Test circle primitive
   match circle {
     Circle(c, r) => {
@@ -103,7 +103,7 @@ test "Primitive constructors and equality" {
     }
     _ => fail("Expected Circle primitive")
   }
-  
+
   // Test rectangle primitive
   let top_left = @vg.point(0.0, 0.0)
   let bottom_right = @vg.point(10.0, 10.0)
@@ -119,19 +119,20 @@ test "Primitive constructors and equality" {
     }
     _ => fail("Expected Rectangle primitive")
   }
-  
+
   // Test path primitive
-  let path = @vg.Path::empty().move_to(@vg.point(1.0, 1.0)).line_to(@vg.point(2.0, 2.0))
+  let path = @vg.Path::empty()
+    .move_to(@vg.point(1.0, 1.0))
+    .line_to(@vg.point(2.0, 2.0))
   let path_prim = @vg.primitive_path(path)
   match path_prim {
-    Path(p) => {
+    Path(p) =>
       if p.inner().length() != 2 {
         fail("Path should have 2 segments")
       }
-    }
     _ => fail("Expected Path primitive")
   }
-  
+
   // Test text primitive
   let text_pos = @vg.point(100.0, 200.0)
   let text_prim = @vg.primitive_text("Hello World", text_pos, 14.0)
@@ -149,12 +150,11 @@ test "Primitive constructors and equality" {
     }
     _ => fail("Expected Text primitive")
   }
-  
+
   // Test equality
   let circle1 = @vg.primitive_circle(center, 10.0)
   let circle2 = @vg.primitive_circle(center, 10.0)
   let circle3 = @vg.primitive_circle(center, 20.0)
-  
   if circle1 != circle2 {
     fail("Identical circles should be equal")
   }
@@ -172,13 +172,13 @@ test "ImageOp constructors and variants" {
     Const(_color) => () // Successfully created const operation
     _ => fail("Expected Const operation")
   }
-  
+
   // Test primitive operation
   let circle = @vg.primitive_circle(@vg.origin(), 5.0)
   let blue = @vg.blue()
   let prim_op = @vg.imageop_primitive(circle, blue)
   match prim_op {
-    Primitive(prim, _color) => {
+    Primitive(prim, _color) =>
       match prim {
         Circle(center, radius) => {
           if center.x != 0.0 || center.y != 0.0 {
@@ -190,10 +190,9 @@ test "ImageOp constructors and variants" {
         }
         _ => fail("Expected Circle primitive")
       }
-    }
     _ => fail("Expected Primitive operation")
   }
-  
+
   // Test transform operation
   let identity_transform = @vg.identity()
   let dummy_image = fn(_p) { red }
@@ -202,7 +201,7 @@ test "ImageOp constructors and variants" {
     Transform(_transform, _image) => () // Successfully created transform operation
     _ => fail("Expected Transform operation")
   }
-  
+
   // Test compose operation
   let image1 = fn(_p) { red }
   let image2 = fn(_p) { blue }
@@ -211,7 +210,7 @@ test "ImageOp constructors and variants" {
     Compose(_img1, _img2) => () // Successfully created compose operation
     _ => fail("Expected Compose operation")
   }
-  
+
   // Test cut operation
   let mask_image = fn(_p) { @vg.gray(0.5) }
   let cut_op = @vg.imageop_cut(image1, mask_image)
@@ -227,36 +226,35 @@ test "Primitive and ImageOp integration" {
   let red_color = @vg.red()
   let green_color = @vg.green()
   let blue_color = @vg.blue()
-  
+
   // Create primitives
   let circle = @vg.primitive_circle(@vg.point(50.0, 50.0), 25.0)
-  let rect = @vg.primitive_rectangle(@vg.point(0.0, 0.0), @vg.point(100.0, 20.0))
+  let rect = @vg.primitive_rectangle(
+    @vg.point(0.0, 0.0),
+    @vg.point(100.0, 20.0),
+  )
   let text = @vg.primitive_text("Test", @vg.point(10.0, 80.0), 12.0)
-  
+
   // Create image operations
   let circle_op = @vg.imageop_primitive(circle, red_color)
-  let rect_op = @vg.imageop_primitive(rect, green_color)  
+  let rect_op = @vg.imageop_primitive(rect, green_color)
   let text_op = @vg.imageop_primitive(text, blue_color)
-  
+
   // Verify the operations work correctly
   match circle_op {
-    Primitive(Circle(center, radius), _color) => {
+    Primitive(Circle(center, radius), _color) =>
       if center.x != 50.0 || center.y != 50.0 || radius != 25.0 {
         fail("Circle primitive data incorrect")
       }
-    }
     _ => fail("Expected circle primitive operation")
   }
-  
   match rect_op {
-    Primitive(Rectangle(tl, br), _color) => {
+    Primitive(Rectangle(tl, br), _color) =>
       if tl.x != 0.0 || br.x != 100.0 {
-        fail("Rectangle primitive data incorrect") 
+        fail("Rectangle primitive data incorrect")
       }
-    }
     _ => fail("Expected rectangle primitive operation")
   }
-  
   match text_op {
     Primitive(Text(content, pos, size), _color) => {
       if content != "Test" {

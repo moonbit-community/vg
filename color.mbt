@@ -1,21 +1,25 @@
 // Color utilities and predefined colors
 
-///| Create a color from RGBA components
+///|
+/// Create a color from RGBA components
 pub fn rgba(r : Double, g : Double, b : Double, a : Double) -> Color {
   { r, g, b, a }
 }
 
-///| Create a color from RGB components (alpha = 1.0)
+///|
+/// Create a color from RGB components (alpha = 1.0)
 pub fn rgb(r : Double, g : Double, b : Double) -> Color {
   { r, g, b, a: 1.0 }
 }
 
-///| Create a grayscale color
+///|
+/// Create a grayscale color
 pub fn gray(value : Double) -> Color {
   { r: value, g: value, b: value, a: 1.0 }
 }
 
-///| Transparent color
+///|
+/// Transparent color
 pub fn transparent() -> Color {
   { r: 0.0, g: 0.0, b: 0.0, a: 0.0 }
 }
@@ -77,7 +81,8 @@ pub fn purple() -> Color {
   rgb(0.5, 0.0, 0.5)
 }
 
-///| Blend two colors using alpha compositing
+///|
+/// Blend two colors using alpha compositing
 pub fn blend(c1 : Color, c2 : Color) -> Color {
   let alpha = c1.a + c2.a * (1.0 - c1.a)
   if alpha == 0.0 {
@@ -93,12 +98,14 @@ pub fn blend(c1 : Color, c2 : Color) -> Color {
   }
 }
 
-///| Multiply color by a scalar
+///|
+/// Multiply color by a scalar
 pub fn scale(c : Color, factor : Double) -> Color {
   { r: c.r * factor, g: c.g * factor, b: c.b * factor, a: c.a }
 }
 
-///| Convert color to hex string
+///|
+/// Convert color to hex string
 pub fn to_hex(c : Color) -> String {
   let r = (c.r * 255.0).to_int()
   let g = (c.g * 255.0).to_int()
@@ -116,7 +123,8 @@ pub fn to_hex(c : Color) -> String {
   "#" + int_to_hex(r) + int_to_hex(g) + int_to_hex(b)
 }
 
-///| Clamp color components to valid range [0.0, 1.0]
+///|
+/// Clamp color components to valid range [0.0, 1.0]
 pub fn clamp(c : Color) -> Color {
   fn clamp_component(x : Double) -> Double {
     if x < 0.0 {
@@ -136,7 +144,8 @@ pub fn clamp(c : Color) -> Color {
   }
 }
 
-///| Create color from HSV (Hue, Saturation, Value)
+///|
+/// Create color from HSV (Hue, Saturation, Value)
 pub fn hsv(h : Double, s : Double, v : Double) -> Color {
   let h_norm = h - (h / 360.0).floor() * 360.0 // Normalize hue to [0, 360)
   let c = v * s
@@ -158,7 +167,8 @@ pub fn hsv(h : Double, s : Double, v : Double) -> Color {
   rgb(r_prime + m, g_prime + m, b_prime + m)
 }
 
-///| Interpolate between two colors
+///|
+/// Interpolate between two colors
 pub fn lerp_color(c1 : Color, c2 : Color, t : Double) -> Color {
   let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
   {
@@ -169,7 +179,8 @@ pub fn lerp_color(c1 : Color, c2 : Color, t : Double) -> Color {
   }
 }
 
-///| Multiply blend mode
+///|
+/// Multiply blend mode
 pub fn multiply_blend(c1 : Color, c2 : Color) -> Color {
   {
     r: c1.r * c2.r,
@@ -179,7 +190,8 @@ pub fn multiply_blend(c1 : Color, c2 : Color) -> Color {
   }
 }
 
-///| Screen blend mode  
+///|
+/// Screen blend mode  
 pub fn screen_blend(c1 : Color, c2 : Color) -> Color {
   {
     r: 1.0 - (1.0 - c1.r) * (1.0 - c2.r),
@@ -189,7 +201,8 @@ pub fn screen_blend(c1 : Color, c2 : Color) -> Color {
   }
 }
 
-///| Overlay blend mode
+///|
+/// Overlay blend mode
 pub fn overlay_blend(c1 : Color, c2 : Color) -> Color {
   fn overlay_component(base : Double, overlay : Double) -> Double {
     if base < 0.5 {
@@ -207,12 +220,14 @@ pub fn overlay_blend(c1 : Color, c2 : Color) -> Color {
   }
 }
 
-///| Hard light blend mode
+///|
+/// Hard light blend mode
 pub fn hard_light_blend(c1 : Color, c2 : Color) -> Color {
   overlay_blend(c2, c1) // Hard light is overlay with arguments swapped
 }
 
-///| Soft light blend mode
+///|
+/// Soft light blend mode
 pub fn soft_light_blend(c1 : Color, c2 : Color) -> Color {
   fn soft_light_component(base : Double, overlay : Double) -> Double {
     if overlay < 0.5 {

@@ -163,7 +163,12 @@ test "comprehensive transform matrix operations" {
       @vg.apply(translate_t, test_point),
       @vg.determinant(translate_t),
     ),
-    ("scale_2_3", scale_t, @vg.apply(scale_t, test_point), @vg.determinant(scale_t)),
+    (
+      "scale_2_3",
+      scale_t,
+      @vg.apply(scale_t, test_point),
+      @vg.determinant(scale_t),
+    ),
     (
       "rotate_90deg",
       rotate_t,

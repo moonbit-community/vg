@@ -1,16 +1,19 @@
 // Core image combinators and operations
 
-///| Create a constant color image
+///|
+/// Create a constant color image
 pub fn const_color(color : Color) -> Image {
   fn(_p : Point) -> Color { color }
 }
 
-///| Create an empty (transparent) image
+///|
+/// Create an empty (transparent) image
 pub fn empty() -> Image {
   const_color(transparent())
 }
 
-///| Create a circle image
+///|
+/// Create a circle image
 pub fn circle(color : Color, radius : Double) -> Image {
   fn(p : Point) -> Color {
     let dist = length(p)
@@ -22,7 +25,8 @@ pub fn circle(color : Color, radius : Double) -> Image {
   }
 }
 
-///| Create a rectangle image
+///|
+/// Create a rectangle image
 pub fn rectangle(color : Color, width : Double, height : Double) -> Image {
   fn(p : Point) -> Color {
     if p.x >= -width / 2.0 &&
@@ -36,7 +40,8 @@ pub fn rectangle(color : Color, width : Double, height : Double) -> Image {
   }
 }
 
-///| Create a line image (with thickness)
+///|
+/// Create a line image (with thickness)
 pub fn line(
   color : Color,
   start : Point,
@@ -69,7 +74,8 @@ pub fn line(
   }
 }
 
-///| Transform an image
+///|
+/// Transform an image
 pub fn transform(t : Transform, img : Image) -> Image {
   fn(p : Point) -> Color {
     match invert(t) {
@@ -79,22 +85,26 @@ pub fn transform(t : Transform, img : Image) -> Image {
   }
 }
 
-///| Translate an image
+///|
+/// Translate an image
 pub fn translate_img(dx : Double, dy : Double, img : Image) -> Image {
   transform(make_translate(dx, dy), img)
 }
 
-///| Scale an image
+///|
+/// Scale an image
 pub fn scale_image(sx : Double, sy : Double, img : Image) -> Image {
   transform(make_scale(sx, sy), img)
 }
 
-///| Rotate an image
+///|
+/// Rotate an image
 pub fn rotate_image(angle : Double, img : Image) -> Image {
   transform(make_rotate(angle), img)
 }
 
-///| Compose two images using alpha blending
+///|
+/// Compose two images using alpha blending
 pub fn compose_imgs(img1 : Image, img2 : Image) -> Image {
   fn(p : Point) -> Color {
     let c1 = img1(p)
@@ -114,7 +124,8 @@ pub fn compose_imgs(img1 : Image, img2 : Image) -> Image {
   }
 }
 
-///| Cut an image using another as a mask
+///|
+/// Cut an image using another as a mask
 pub fn cut(img : Image, mask : Image) -> Image {
   fn(p : Point) -> Color {
     let c = img(p)
@@ -123,7 +134,8 @@ pub fn cut(img : Image, mask : Image) -> Image {
   }
 }
 
-///| Create a gradient between two colors
+///|
+/// Create a gradient between two colors
 pub fn linear_gradient(
   color1 : Color,
   color2 : Color,
@@ -151,7 +163,8 @@ pub fn linear_gradient(
   }
 }
 
-///| Create a radial gradient
+///|
+/// Create a radial gradient
 pub fn radial_gradient(
   color1 : Color,
   color2 : Color,
@@ -171,7 +184,8 @@ pub fn radial_gradient(
   }
 }
 
-///| Create an ellipse image
+///|
+/// Create an ellipse image
 pub fn ellipse(color : Color, rx : Double, ry : Double) -> Image {
   fn(p : Point) -> Color {
     let normalized_x = p.x / rx
@@ -185,7 +199,8 @@ pub fn ellipse(color : Color, rx : Double, ry : Double) -> Image {
   }
 }
 
-///| Create a polygon image from a list of points
+///|
+/// Create a polygon image from a list of points
 pub fn polygon(color : Color, points : Array[Point]) -> Image {
   fn(p : Point) -> Color {
     // Point-in-polygon test using ray casting algorithm
@@ -212,7 +227,8 @@ pub fn polygon(color : Color, points : Array[Point]) -> Image {
   }
 }
 
-///| Apply opacity to an image
+///|
+/// Apply opacity to an image
 pub fn with_opacity(img : Image, opacity : Double) -> Image {
   fn(p : Point) -> Color {
     let c = img(p)
@@ -220,7 +236,8 @@ pub fn with_opacity(img : Image, opacity : Double) -> Image {
   }
 }
 
-///| Create an axial gradient (alternative name for linear gradient)
+///|
+/// Create an axial gradient (alternative name for linear gradient)
 pub fn axial_gradient(
   color1 : Color,
   color2 : Color,
@@ -230,7 +247,8 @@ pub fn axial_gradient(
   linear_gradient(color1, color2, start, end)
 }
 
-///| Create a conic gradient (angular gradient around a center point)
+///|
+/// Create a conic gradient (angular gradient around a center point)
 pub fn conic_gradient(
   color1 : Color,
   color2 : Color,
@@ -266,7 +284,8 @@ pub fn conic_gradient(
   }
 }
 
-///| Create a repeated/tiled image
+///|
+/// Create a repeated/tiled image
 pub fn tile_image(
   img : Image,
   tile_width : Double,
@@ -291,7 +310,8 @@ pub fn tile_image(
   }
 }
 
-///| Create a checkerboard pattern
+///|
+/// Create a checkerboard pattern
 pub fn checkerboard(color1 : Color, color2 : Color, size : Double) -> Image {
   fn(p : Point) -> Color {
     let x_cell = (p.x / size).floor().to_int()
