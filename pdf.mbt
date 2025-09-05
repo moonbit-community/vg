@@ -11,7 +11,7 @@ pub struct PdfDocument {
 
 ///|
 /// Create a new PDF document
-pub fn new_pdf(width : Double, height : Double) -> PdfDocument {
+pub fn PdfDocument::new(width : Double, height : Double) -> PdfDocument {
   { width, height, objects: [], object_count: 0 }
 }
 

@@ -68,7 +68,7 @@ test "canvas path rendering" (it : @test.T) {
 
 ///|
 test "pdf renderer basic shapes" (it : @test.T) {
-  let doc = @vg.new_pdf(300.0, 200.0)
+  let doc = @vg.PdfDocument::new(300.0, 200.0)
     .render_rectangle(10.0, 10.0, 280.0, 180.0, @vg.gray(0.9)) // Background
     .render_circle(@vg.point(80.0, 100.0), 30.0, @vg.red()) // Red circle
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @vg.green()) // Green rectangle
@@ -104,7 +104,7 @@ test "pdf path rendering" (it : @test.T) {
     .line_to(@vg.point(60.0, 60.0))
     .line_to(@vg.point(90.0, 60.0))
     .close_path()
-  let doc = @vg.new_pdf(200.0, 150.0)
+  let doc = @vg.PdfDocument::new(200.0, 150.0)
     .render_rectangle(0.0, 0.0, 200.0, 150.0, @vg.white())
     .render_path(star_path, @vg.gold())
     .render_text("PDF Star", @vg.point(100.0, 130.0), 12.0, @vg.black())
@@ -132,7 +132,7 @@ test "renderer comparison showcase" (it : @test.T) {
   let canvas_html = canvas_doc.to_html("Canvas Demo")
 
   // PDF version
-  let pdf_doc = @vg.new_pdf(250.0, 150.0)
+  let pdf_doc = @vg.PdfDocument::new(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.gray(0.95))
     .render_circle(@vg.point(125.0, 75.0), 40.0, @vg.red())
     .render_text("VG Demo", @vg.point(125.0, 30.0), 16.0, @vg.black())
@@ -222,7 +222,7 @@ test "complete feature showcase all renderers" (it : @test.T) {
     )
 
   // PDF version
-  let pdf_doc = @vg.new_pdf(350.0, 200.0)
+  let pdf_doc = @vg.PdfDocument::new(350.0, 200.0)
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @vg.white())
     .render_text(
       "PDF: Complete VG Features",

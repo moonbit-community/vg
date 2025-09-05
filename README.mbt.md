@@ -254,7 +254,7 @@ test "pdf generation examples" {
     .close_path()
     
   // Create a PDF document with fluent method chaining
-  let pdf_doc = @vg.new_pdf(210.0, 297.0)  // A4 size
+  let pdf_doc = @vg.PdfDocument::new(210.0, 297.0)  // A4 size
     .render_circle(@vg.point(105.0, 100.0), 30.0, @vg.red())
     .render_rectangle(50.0, 150.0, 110.0, 50.0, @vg.blue())
     .render_path(star_path, @vg.gold())

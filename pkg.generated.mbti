@@ -90,8 +90,6 @@ fn multiply_blend(Color, Color) -> Color
 
 fn new_canvas(Double, Double) -> CanvasDocument
 
-fn new_pdf(Double, Double) -> PdfDocument
-
 fn new_svg(Double, Double) -> SvgDocument
 
 fn normalize(Point) -> Point
@@ -248,6 +246,7 @@ pub struct PdfDocument {
   objects : Array[String]
   object_count : Int
 }
+fn PdfDocument::new(Double, Double) -> Self
 fn PdfDocument::render_circle(Self, Point, Double, Color) -> Self
 fn PdfDocument::render_line(Self, Point, Point, Color, Double) -> Self
 fn PdfDocument::render_path(Self, Path, Color) -> Self
