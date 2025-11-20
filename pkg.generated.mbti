@@ -218,6 +218,7 @@ fn Path::curve_to(Self, Point, Point, Point) -> Self
 fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
 fn Path::ellipse(Point, Double, Double) -> Self
 fn Path::empty() -> Self
+#deprecated
 fn Path::inner(Self) -> Array[PathSegment]
 fn Path::line_to(Self, Point) -> Self
 fn Path::move_to(Self, Point) -> Self
@@ -300,7 +301,7 @@ impl Eq for Transform
 impl Show for Transform
 
 // Type aliases
-pub typealias (Point) -> Color as Image
+pub type Image = (Point) -> Color
 
 // Traits
 

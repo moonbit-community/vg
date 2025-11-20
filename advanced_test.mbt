@@ -1,7 +1,7 @@
 // Tests for advanced VG features
 
 ///|
-test "quadratic bezier curves" (it : @test.T) {
+test "quadratic bezier curves" (it : @test.Test) {
   let qcurve_path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 50.0))
     .qcurve_to(@vg.point(50.0, 10.0), @vg.point(90.0, 50.0)) // Arch shape
@@ -20,7 +20,7 @@ test "quadratic bezier curves" (it : @test.T) {
 }
 
 ///|
-test "elliptical arcs" (it : @test.T) {
+test "elliptical arcs" (it : @test.Test) {
   let arc_path = @vg.Path::empty()
     .move_to(@vg.point(20.0, 50.0))
     .earc_to(30.0, 20.0, 0.0, false, true, @vg.point(80.0, 50.0)) // Elliptical arc
@@ -39,7 +39,7 @@ test "elliptical arcs" (it : @test.T) {
 }
 
 ///|
-test "smooth curve stitching" (it : @test.T) {
+test "smooth curve stitching" (it : @test.Test) {
   let smooth_path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 50.0))
     .curve_to(
@@ -62,7 +62,7 @@ test "smooth curve stitching" (it : @test.T) {
 }
 
 ///|
-test "axial gradients" (it : @test.T) {
+test "axial gradients" (it : @test.Test) {
   let axial_img = @vg.axial_gradient(
     @vg.red(),
     @vg.yellow(),
@@ -75,7 +75,7 @@ test "axial gradients" (it : @test.T) {
 }
 
 ///|
-test "conic gradients" (it : @test.T) {
+test "conic gradients" (it : @test.Test) {
   let conic_img = @vg.conic_gradient(
     @vg.red(),
     @vg.blue(),
@@ -108,7 +108,7 @@ test "advanced blend modes" {
 }
 
 ///|
-test "tiled images" (it : @test.T) {
+test "tiled images" (it : @test.Test) {
   let base_pattern = @vg.circle(@vg.red(), 8.0)
   let tiled = @vg.tile_image(base_pattern, 20.0, 20.0)
   let tiled_svg = @vg.render_image_to_svg(tiled, 100.0, 80.0, 25)
@@ -117,7 +117,7 @@ test "tiled images" (it : @test.T) {
 }
 
 ///|
-test "checkerboard pattern" (it : @test.T) {
+test "checkerboard pattern" (it : @test.Test) {
   let checker = @vg.checkerboard(@vg.black(), @vg.white(), 10.0)
   let checker_svg = @vg.render_image_to_svg(checker, 80.0, 80.0, 20)
   it.write(checker_svg)
@@ -125,7 +125,7 @@ test "checkerboard pattern" (it : @test.T) {
 }
 
 ///|
-test "advanced path showcase" (it : @test.T) {
+test "advanced path showcase" (it : @test.Test) {
   let doc = @vg.new_svg(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.gray(0.98))
     .render_text(

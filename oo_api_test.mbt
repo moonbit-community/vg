@@ -1,7 +1,7 @@
 // Tests for Object-Oriented API style
 
 ///|
-test "svg oo-style api" (it : @test.T) {
+test "svg oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for SVG
   let doc = @vg.new_svg(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95))
@@ -20,7 +20,7 @@ test "svg oo-style api" (it : @test.T) {
 }
 
 ///|
-test "canvas oo-style api" (it : @test.T) {
+test "canvas oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for Canvas
   let doc = @vg.new_canvas(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95))
@@ -39,7 +39,7 @@ test "canvas oo-style api" (it : @test.T) {
 }
 
 ///|
-test "pdf oo-style api" (it : @test.T) {
+test "pdf oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for PDF
   let doc = @vg.PdfDocument::new(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95))
@@ -58,7 +58,7 @@ test "pdf oo-style api" (it : @test.T) {
 }
 
 ///|
-test "oo-style path with document integration" (it : @test.T) {
+test "oo-style path with document integration" (it : @test.Test) {
   // Demonstrate how OO-style paths work with OO-style documents
   let custom_path = @vg.Path::empty()
     .move_to(@vg.point(50.0, 50.0))
@@ -91,7 +91,7 @@ test "oo-style path with document integration" (it : @test.T) {
 }
 
 ///|
-test "oo-style api comparison" (it : @test.T) {
+test "oo-style api comparison" (it : @test.Test) {
   // Compare functional vs OO-style APIs
 
   // Functional style (original)
@@ -132,7 +132,7 @@ test "oo-style api comparison" (it : @test.T) {
 }
 
 ///|
-test "complete oo-style showcase" (it : @test.T) {
+test "complete oo-style showcase" (it : @test.Test) {
   // Create a comprehensive demo using only OO-style APIs
   let advanced_path = @vg.Path::empty()
     .move_to(@vg.point(50.0, 75.0))
@@ -177,7 +177,7 @@ test "complete oo-style showcase" (it : @test.T) {
 }
 
 ///|
-test "oo-style api showcase comparison" (it : @test.T) {
+test "oo-style api showcase comparison" (it : @test.Test) {
   // Demonstrate the elegance of OO-style vs functional-style
 
   // Functional style (verbose)

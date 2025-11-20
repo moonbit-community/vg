@@ -1,7 +1,7 @@
 // Tests for all rendering backends
 
 ///|
-test "canvas renderer basic shapes" (it : @test.T) {
+test "canvas renderer basic shapes" (it : @test.Test) {
   let doc = @vg.new_canvas(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95)) // Background
     .render_circle(@vg.point(80.0, 100.0), 30.0, @vg.red()) // Red circle
@@ -25,7 +25,7 @@ test "canvas renderer basic shapes" (it : @test.T) {
 }
 
 ///|
-test "canvas renderer complete html" (it : @test.T) {
+test "canvas renderer complete html" (it : @test.Test) {
   let doc = @vg.new_canvas(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.white()) // Background
     .render_circle(@vg.point(100.0, 100.0), 40.0, @vg.red()) // Red circle
@@ -50,7 +50,7 @@ test "canvas renderer complete html" (it : @test.T) {
 }
 
 ///|
-test "canvas path rendering" (it : @test.T) {
+test "canvas path rendering" (it : @test.Test) {
   let custom_path = @vg.Path::empty()
     .move_to(@vg.point(50.0, 50.0))
     .line_to(@vg.point(150.0, 50.0))
@@ -67,7 +67,7 @@ test "canvas path rendering" (it : @test.T) {
 }
 
 ///|
-test "pdf renderer basic shapes" (it : @test.T) {
+test "pdf renderer basic shapes" (it : @test.Test) {
   let doc = @vg.PdfDocument::new(300.0, 200.0)
     .render_rectangle(10.0, 10.0, 280.0, 180.0, @vg.gray(0.9)) // Background
     .render_circle(@vg.point(80.0, 100.0), 30.0, @vg.red()) // Red circle
@@ -91,7 +91,7 @@ test "pdf renderer basic shapes" (it : @test.T) {
 }
 
 ///|
-test "pdf path rendering" (it : @test.T) {
+test "pdf path rendering" (it : @test.Test) {
   let star_path = @vg.Path::empty()
     .move_to(@vg.point(100.0, 30.0))
     .line_to(@vg.point(110.0, 60.0))
@@ -114,7 +114,7 @@ test "pdf path rendering" (it : @test.T) {
 }
 
 ///|
-test "renderer comparison showcase" (it : @test.T) {
+test "renderer comparison showcase" (it : @test.Test) {
   // Create the same graphics with all three renderers
 
   // SVG version
@@ -158,7 +158,7 @@ test "renderer comparison showcase" (it : @test.T) {
 }
 
 ///|
-test "complete feature showcase all renderers" (it : @test.T) {
+test "complete feature showcase all renderers" (it : @test.Test) {
   // Create a comprehensive demo showcasing advanced features across all renderers
 
   // Advanced path with all curve types

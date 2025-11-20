@@ -22,7 +22,7 @@ test "adding elements to SVG" {
 }
 
 ///|
-test "circle rendering" (it : @test.T) {
+test "circle rendering" (it : @test.Test) {
   let doc = @vg.new_svg(100.0, 100.0).render_circle(
     @vg.point(50.0, 50.0),
     25.0,
@@ -40,7 +40,7 @@ test "circle rendering" (it : @test.T) {
 }
 
 ///|
-test "rectangle rendering" (it : @test.T) {
+test "rectangle rendering" (it : @test.Test) {
   let doc = @vg.new_svg(200.0, 150.0).render_rectangle(
     10.0,
     20.0,
@@ -175,7 +175,7 @@ test "color with alpha in SVG" {
 }
 
 ///|
-test "comprehensive svg rendering" (it : @test.T) {
+test "comprehensive svg rendering" (it : @test.Test) {
   let complex_doc = @vg.new_svg(300.0, 200.0)
     .render_rectangle(10.0, 10.0, 280.0, 180.0, @vg.gray(0.95)) // Background
     .render_circle(@vg.point(80.0, 60.0), 30.0, @vg.red()) // Red circle
@@ -205,7 +205,7 @@ test "comprehensive svg rendering" (it : @test.T) {
 }
 
 ///|
-test "svg string generation" (it : @test.T) {
+test "svg string generation" (it : @test.Test) {
   let doc = @vg.new_svg(100.0, 100.0).render_circle(
     @vg.point(50.0, 50.0),
     25.0,
@@ -226,7 +226,7 @@ test "svg string generation" (it : @test.T) {
 }
 
 ///|
-test "path rendering to svg" (it : @test.T) {
+test "path rendering to svg" (it : @test.Test) {
   let custom_path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 10.0))
     .line_to(@vg.point(90.0, 10.0))
@@ -250,7 +250,7 @@ test "path rendering to svg" (it : @test.T) {
 }
 
 ///|
-test "gradient showcase" (it : @test.T) {
+test "gradient showcase" (it : @test.Test) {
   // Create a simple SVG to test gradient rendering
   let gradient_img = @vg.linear_gradient(
     @vg.red(),
@@ -276,7 +276,7 @@ test "gradient showcase" (it : @test.T) {
 }
 
 ///|
-test "shape gallery" (it : @test.T) {
+test "shape gallery" (it : @test.Test) {
   let doc = @vg.new_svg(500.0, 400.0)
     .render_rectangle(0.0, 0.0, 500.0, 400.0, @vg.gray(0.98)) // Light background
     .render_text("VG Shape Gallery", @vg.point(250.0, 30.0), 24.0, @vg.black())
@@ -342,7 +342,7 @@ test "shape gallery" (it : @test.T) {
 }
 
 ///|
-test "path showcase" (it : @test.T) {
+test "path showcase" (it : @test.Test) {
   let doc = @vg.new_svg(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.gray(0.95))
     .render_text(
@@ -431,7 +431,7 @@ test "path showcase" (it : @test.T) {
 }
 
 ///|
-test "svg rendering validation" (it : @test.T) {
+test "svg rendering validation" (it : @test.Test) {
   // Create a simple test to validate SVG structure
   let doc = @vg.new_svg(200.0, 100.0)
     .render_rectangle(10.0, 10.0, 180.0, 80.0, @vg.gray(0.95))
@@ -458,7 +458,7 @@ test "svg rendering validation" (it : @test.T) {
 }
 
 ///|
-test "minimal svg rendering test" (it : @test.T) {
+test "minimal svg rendering test" (it : @test.Test) {
   // Create the simplest possible SVG to test basic rendering
   let doc = @vg.new_svg(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.white()) // White background
@@ -471,7 +471,7 @@ test "minimal svg rendering test" (it : @test.T) {
 }
 
 ///|
-test "simple rendering test" (it : @test.T) {
+test "simple rendering test" (it : @test.Test) {
   // Ultra-simple SVG that should definitely render
   let doc = @vg.new_svg(100.0, 100.0).render_circle(
     @vg.point(50.0, 50.0),
@@ -484,7 +484,7 @@ test "simple rendering test" (it : @test.T) {
 }
 
 ///|
-test "html wrapped svg test" (it : @test.T) {
+test "html wrapped svg test" (it : @test.Test) {
   // Create an HTML file with embedded SVG for testing in browsers
   let doc = @vg.new_svg(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.white())

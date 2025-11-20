@@ -152,7 +152,7 @@ test "color operations" {
 }
 
 ///|
-test "complete vg library showcase" (it : @test.T) {
+test "complete vg library showcase" (it : @test.Test) {
   // Create a comprehensive demo showcasing all VG features
   let doc = @vg.new_svg(600.0, 500.0)
     .render_rectangle(0.0, 0.0, 600.0, 500.0, @vg.gray(0.97)) // Light background
