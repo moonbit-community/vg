@@ -75,7 +75,6 @@ pub fn SvgDocument::render_circle(
   radius : Double,
   color : Color,
 ) -> SvgDocument {
-  // let element = "<circle cx=\"\{center.x}\" cy=\"\{center.y}\" r=\"\{radius}\" fill=\"\{color_to_svg(color)}\"/>"
   let element =
     $|<circle cx="\{center.x}" cy="\{center.y}" r="\{radius}" fill="\{color_to_svg(color)}"/>
   self.add_element(element)
@@ -93,7 +92,6 @@ pub fn SvgDocument::render_rectangle(
   height : Double,
   color : Color,
 ) -> SvgDocument {
-  // let element = "<rect x=\"\{x}\" y=\"\{y}\" width=\"\{width}\" height=\"\{height}\" fill=\"\{color_to_svg(color)}\"/>"
   let element =
     $|<rect x="\{x}" y="\{y}" width="\{width}" height="\{height}" fill="\{color_to_svg(color)}"/>
   self.add_element(element)
@@ -107,7 +105,6 @@ pub fn SvgDocument::render_path(
   color : Color,
 ) -> SvgDocument {
   let data = path_to_svg_data(path)
-  // let element = "<path d=\"\{data}\" fill=\"\{color_to_svg(color)}\" stroke=\"none\"/>"
   let element =
     $|<path d="\{data}" fill="\{color_to_svg(color)}" stroke="none"/>
   self.add_element(element)
@@ -122,7 +119,6 @@ pub fn SvgDocument::render_line(
   color : Color,
   thickness : Double,
 ) -> SvgDocument {
-  // let element = "<line x1=\"\{start.x}\" y1=\"\{start.y}\" x2=\"\{end.x}\" y2=\"\{end.y}\" stroke=\"\{color_to_svg(color)}\" stroke-width=\"\{thickness}\" stroke-linecap=\"round\" fill=\"none\"/>"
   let element =
     $|<line x1="\{start.x}" y1="\{start.y}" x2="\{end.x}" y2="\{end.y}" stroke="\{color_to_svg(color)}" stroke-width="\{thickness}" stroke-linecap="round" fill="none"/>
   self.add_element(element)
@@ -137,7 +133,6 @@ pub fn SvgDocument::render_text(
   size : Double,
   color : Color,
 ) -> SvgDocument {
-  // let element = "<text x=\"\{pos.x}\" y=\"\{pos.y}\" font-size=\"\{size}\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"\{color_to_svg(color)}\">\{text}</text>"
   let element =
     $|<text x="\{pos.x}" y="\{pos.y}" font-size="\{size}" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="\{color_to_svg(color)}">\{text}</text>
   self.add_element(element)
@@ -152,7 +147,6 @@ pub fn SvgDocument::render_ellipse(
   ry : Double,
   color : Color,
 ) -> SvgDocument {
-  // let element = "<ellipse cx=\"\{center.x}\" cy=\"\{center.y}\" rx=\"\{rx}\" ry=\"\{ry}\" fill=\"\{color_to_svg(color)}\"/>"
   let element =
     $|<ellipse cx="\{center.x}" cy="\{center.y}" rx="\{rx}" ry="\{ry}" fill="\{color_to_svg(color)}"/>
   self.add_element(element)
@@ -192,7 +186,6 @@ pub fn SvgDocument::render_linear_gradient(
   color1 : Color,
   color2 : Color,
 ) -> SvgDocument {
-  // let gradient = "<defs><linearGradient id=\"\{id}\" x1=\"\{start.x}%\" y1=\"\{start.y}%\" x2=\"\{end.x}%\" y2=\"\{end.y}%\"><stop offset=\"0%\" stop-color=\"\{color_to_svg(color1)}\"/><stop offset=\"100%\" stop-color=\"\{color_to_svg(color2)}\"/></linearGradient></defs>"
   let gradient =
     $|<defs><linearGradient id="\{id}" x1="\{start.x}%" y1="\{start.y}%" x2="\{end.x}%" y2="\{end.y}%"><stop offset="0%" stop-color="\{color_to_svg(color1)}"/><stop offset="100%" stop-color="\{color_to_svg(color2)}"/></linearGradient></defs>"
   self.add_element(gradient)
@@ -201,14 +194,12 @@ pub fn SvgDocument::render_linear_gradient(
 ///|
 /// Convert to SVG string (OO-style)
 pub fn SvgDocument::to_string(self : SvgDocument) -> String {
-  let mut svg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  svg = svg +
-    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"\{self.width}\" height=\"\{self.height}\" viewBox=\"0 0 \{self.width} \{self.height}\">\n"
-  for element in self.elements {
-    svg = svg + "  \{element}\n"
-  }
-  svg = svg + "</svg>"
-  svg
+  (
+    $|<?xml version="1.0" encoding="UTF-8"?>
+    $|<svg xmlns="http://www.w3.org/2000/svg" width="\{self.width}" height="\{self.height}" viewBox="0 0 \{self.width} \{self.height}">
+    $|\{self.elements.map(e => "  " + e).join("\n")}
+    $|</svg>
+  )
 }
 
 ///|
