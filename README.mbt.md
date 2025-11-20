@@ -47,11 +47,11 @@ moon info
 
 ```moonbit
 ///|
-test "basic shapes" {
+test "basic_shapes" (it : @test.Test) {
   // Create basic shapes
   let red_circle = @vg.circle(@vg.red(), 50.0)
   let blue_ellipse = @vg.ellipse(@vg.blue(), 60.0, 40.0)
-  let triangle = @vg.polygon(@vg.green(), [
+  let _triangle = @vg.polygon(@vg.green(), [
     @vg.point(0.0, -30.0),
     @vg.point(-30.0, 30.0),
     @vg.point(30.0, 30.0),
@@ -62,7 +62,7 @@ test "basic shapes" {
   let translated_ellipse = @vg.translate_img(50.0, 0.0, blue_ellipse)
 
   // Compose images
-  let composed = @vg.compose_imgs(semi_transparent, translated_ellipse)
+  let _composed = @vg.compose_imgs(semi_transparent, translated_ellipse)
 
   // Create paths with object-oriented API
   let custom_path = @vg.Path::empty()
@@ -80,14 +80,14 @@ test "basic shapes" {
     .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
     .render_ellipse(@vg.point(150.0, 100.0), 30.0, 20.0, @vg.blue())
     .render_path(custom_path, @vg.green())
-  let svg_string = svg_doc.to_string()
-
-  // Use the variables to avoid unused warnings
-  ignore(triangle)
-  ignore(composed)
-  ignore(svg_string)
+  it.write(svg_doc.to_string())
+  it.snapshot(filename="basic_shapes.svg")
 }
 ```
+
+The output is rendered like this
+
+![Vg Demo Output](./__snapshot__/basic_shapes.svg)
 
 ## Architecture
 
