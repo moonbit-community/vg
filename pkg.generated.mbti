@@ -122,8 +122,6 @@ fn rectangle(Color, Double, Double) -> Image
 
 fn red() -> Color
 
-fn render_image_to_svg(Image, Double, Double, Int) -> String
-
 fn rgb(Double, Double, Double) -> Color
 
 fn rgba(Double, Double, Double, Double) -> Color
@@ -205,6 +203,7 @@ impl Show for Color
 pub(all) struct Image((Point) -> Color)
 #deprecated
 fn Image::inner(Self) -> (Point) -> Color
+fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
 
 pub enum ImageOp {
   Const(Color)
