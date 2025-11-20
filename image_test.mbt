@@ -342,3 +342,90 @@ test "transform showcase" (it : @test.Test) {
   it.write(svg_string)
   it.snapshot(filename="transform_showcase.svg")
 }
+
+///|
+test "oo-style image transformations" {
+  let circle_img = @vg.circle(@vg.red(), 2.0)
+  
+  // Test OO-style scale method
+  let scaled = circle_img.scale(2.0, 2.0)
+  let p = @vg.point(3.0, 0.0) // Would be outside original circle but inside scaled
+  let c = scaled(p)
+  if c != @vg.red() {
+    fail("OO-style scaled image should be larger")
+  }
+  
+  // Test OO-style translate method
+  let translated = circle_img.translate(5.0, 0.0)
+  let original_center = @vg.point(0.0, 0.0)
+  let new_center = @vg.point(5.0, 0.0)
+  let c_original = translated(original_center)
+  let c_new = translated(new_center)
+  if c_original != @vg.transparent() {
+    fail("OO-style: Original center should be transparent after translation")
+  }
+  if c_new != @vg.red() {
+    fail("OO-style: New center should be red after translation")
+  }
+  
+  // Test OO-style rotate method
+  let rotated = circle_img.rotate(3.14159 / 4.0) // 45 degrees
+  let center = @vg.point(0.0, 0.0)
+  let c_center = rotated(center)
+  if c_center != @vg.red() {
+    fail("OO-style: Circle center should remain red after rotation")
+  }
+}
+
+///|
+test "oo-style vs functional style equivalence" {
+  let circle_img = @vg.circle(@vg.blue(), 3.0)
+  
+  // Test that OO-style and functional style produce the same results
+  let functional_scaled = @vg.scale_image(2.0, 1.5, circle_img)
+  let oo_scaled = circle_img.scale(2.0, 1.5)
+  
+  let functional_translated = @vg.translate_img(10.0, 5.0, circle_img)
+  let oo_translated = circle_img.translate(10.0, 5.0)
+  
+  let functional_rotated = @vg.rotate_image(1.57, circle_img)
+  let oo_rotated = circle_img.rotate(1.57)
+  
+  // Test several points
+  let test_point = @vg.point(2.0, 1.0)
+  
+  if functional_scaled(test_point) != oo_scaled(test_point) {
+    fail("OO-style and functional scale should produce identical results")
+  }
+  
+  if functional_translated(test_point) != oo_translated(test_point) {
+    fail("OO-style and functional translate should produce identical results")
+  }
+  
+  if functional_rotated(test_point) != oo_rotated(test_point) {
+    fail("OO-style and functional rotate should produce identical results")
+  }
+}
+
+///|
+test "oo-style image method chaining" {
+  let base_circle = @vg.circle(@vg.green(), 5.0)
+  
+  // Test method chaining
+  let transformed = base_circle
+    .scale(2.0, 2.0)
+    .translate(10.0, 5.0)
+    .rotate(0.5)
+  
+  // Verify the chain works
+  let test_point = @vg.point(10.0, 5.0)
+  let color = transformed(test_point)
+  
+  // The color should be either green or transparent, not an error
+  if color.r < 0.0 || color.r > 1.0 ||
+     color.g < 0.0 || color.g > 1.0 ||
+     color.b < 0.0 || color.b > 1.0 ||
+     color.a < 0.0 || color.a > 1.0 {
+    fail("OO-style method chaining should produce valid colors")
+  }
+}

@@ -100,6 +100,24 @@ pub fn rotate_image(angle : Double, img : Image) -> Image {
 }
 
 ///|
+/// Scale an image (OO-style method)
+pub fn Image::scale(self : Image, sx : Double, sy : Double) -> Image {
+  transform(make_scale(sx, sy), self)
+}
+
+///|
+/// Translate an image (OO-style method)
+pub fn Image::translate(self : Image, dx : Double, dy : Double) -> Image {
+  transform(make_translate(dx, dy), self)
+}
+
+///|
+/// Rotate an image (OO-style method)
+pub fn Image::rotate(self : Image, angle : Double) -> Image {
+  transform(make_rotate(angle), self)
+}
+
+///|
 /// Compose two images using alpha blending
 pub fn compose_imgs(img1 : Image, img2 : Image) -> Image {
   fn(p : Point) -> Color {
