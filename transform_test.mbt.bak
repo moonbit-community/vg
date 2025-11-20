@@ -85,10 +85,14 @@ test "transform inversion" {
 ///|
 test "non-invertible transform" {
   // Zero determinant transform (degenerate)
-  let t = @vg.compose_transforms(
-    @vg.make_scale(1.0, 0.0),
-    @vg.make_translate(1.0, 1.0),
-  )
+  let t = @vg.Transform::{
+    m11: 1.0,
+    m12: 0.0,
+    m21: 1.0,
+    m22: 0.0,
+    m31: 0.0,
+    m32: 0.0,
+  }
   match @vg.invert(t) {
     Some(_) => fail("Degenerate transform should not be invertible")
     None => ()

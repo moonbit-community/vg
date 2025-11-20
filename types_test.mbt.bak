@@ -46,7 +46,7 @@ test "Path construction" {
     .line_to(@vg.point(3.0, 4.0))
     .curve_to(@vg.point(1.0, 1.0), @vg.point(2.0, 2.0), @vg.point(3.0, 3.0))
     .close_path()
-  if path.0.length() != 4 {
+  if path.inner().length() != 4 {
     fail("Path should have 4 segments")
   }
 }
@@ -59,12 +59,12 @@ test "PathSegment variants" {
     .line_to(@vg.point(3.0, 4.0))
     .curve_to(@vg.point(1.0, 1.0), @vg.point(2.0, 2.0), @vg.point(3.0, 3.0))
     .close_path()
-  if path.0.length() != 4 {
+  if path.inner().length() != 4 {
     fail("Path should have 4 segments")
   }
 
   // Test that we can match on the segments
-  let segments = path.0
+  let segments = path.inner()
   match segments[0] {
     MoveTo(p) => if p.x != 1.0 || p.y != 2.0 { fail("MoveTo point incorrect") }
     _ => fail("Expected MoveTo segment")
@@ -126,7 +126,10 @@ test "Primitive constructors and equality" {
     .line_to(@vg.point(2.0, 2.0))
   let path_prim = @vg.primitive_path(path)
   match path_prim {
-    Path(p) => if p.0.length() != 2 { fail("Path should have 2 segments") }
+    Path(p) =>
+      if p.inner().length() != 2 {
+        fail("Path should have 2 segments")
+      }
     _ => fail("Expected Path primitive")
   }
 

@@ -244,7 +244,7 @@ test "opacity application" {
 }
 
 ///|
-test "image rendering showcase" (it : @test.Test) {
+test "image rendering showcase" (it : @test.T) {
   // Create a complex composed image
   let background = @vg.rectangle(@vg.gray(0.95), 200.0, 150.0)
   let red_circle = @vg.circle(@vg.red(), 25.0)
@@ -267,7 +267,7 @@ test "image rendering showcase" (it : @test.Test) {
 }
 
 ///|
-test "gradient images showcase" (it : @test.Test) {
+test "gradient images showcase" (it : @test.T) {
   // Linear gradients
   let horizontal_gradient = @vg.linear_gradient(
     @vg.red(),
@@ -323,7 +323,7 @@ test "gradient images showcase" (it : @test.Test) {
 }
 
 ///|
-test "transform showcase" (it : @test.Test) {
+test "transform showcase" (it : @test.T) {
   let base_circle = @vg.circle(@vg.red(), 20.0)
 
   // Apply different transformations

@@ -173,7 +173,7 @@ test "comprehensive path shapes" {
 }
 
 ///|
-test "path bounds calculation with curves" {
+test "path bounds calculation" {
   let paths_with_bounds = [
     (
       "simple_line",

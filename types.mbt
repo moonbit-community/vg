@@ -38,7 +38,7 @@ pub struct Box {
 
 ///|
 /// An image is a function from points to colors
-pub typealias (Point) -> Color as Image
+pub type Image = (Point) -> Color
 
 ///|
 /// Path segment types

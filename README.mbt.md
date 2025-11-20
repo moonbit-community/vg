@@ -46,11 +46,16 @@ moon info
 ## Usage
 
 ```moonbit
+///|
 test "basic shapes" {
   // Create basic shapes
   let red_circle = @vg.circle(@vg.red(), 50.0)
   let blue_ellipse = @vg.ellipse(@vg.blue(), 60.0, 40.0)
-  let triangle = @vg.polygon(@vg.green(), [@vg.point(0.0, -30.0), @vg.point(-30.0, 30.0), @vg.point(30.0, 30.0)])
+  let triangle = @vg.polygon(@vg.green(), [
+    @vg.point(0.0, -30.0),
+    @vg.point(-30.0, 30.0),
+    @vg.point(30.0, 30.0),
+  ])
 
   // Apply transformations and effects
   let semi_transparent = @vg.with_opacity(red_circle, 0.7)
@@ -63,7 +68,11 @@ test "basic shapes" {
   let custom_path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 10.0))
     .line_to(@vg.point(90.0, 10.0))
-    .curve_to(@vg.point(110.0, 10.0), @vg.point(110.0, 30.0), @vg.point(90.0, 30.0))
+    .curve_to(
+      @vg.point(110.0, 10.0),
+      @vg.point(110.0, 30.0),
+      @vg.point(90.0, 30.0),
+    )
     .close_path()
 
   // Create SVG output with advanced shapes
@@ -71,14 +80,13 @@ test "basic shapes" {
     .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
     .render_ellipse(@vg.point(150.0, 100.0), 30.0, 20.0, @vg.blue())
     .render_path(custom_path, @vg.green())
-
   let svg_string = svg_doc.to_string()
-  
+
   // Use the variables to avoid unused warnings
   ignore(triangle)
   ignore(composed)
   ignore(svg_string)
-}  
+}
 ```
 
 ## Architecture
@@ -99,6 +107,7 @@ The library is organized into several modules:
 
 ### Basic Shapes
 ```moonbit
+///|
 test "basic shapes examples" {
   // Create a red circle
   let circle_img = @vg.circle(@vg.red(), 25.0)
@@ -111,11 +120,11 @@ test "basic shapes examples" {
 
   // Create a polygon (triangle)
   let triangle = @vg.polygon(@vg.yellow(), [
-    @vg.point(0.0, -20.0), 
-    @vg.point(-20.0, 20.0), 
-    @vg.point(20.0, 20.0)
+    @vg.point(0.0, -20.0),
+    @vg.point(-20.0, 20.0),
+    @vg.point(20.0, 20.0),
   ])
-  
+
   // Use the variables to avoid unused warnings
   ignore(circle_img)
   ignore(rect_img)
@@ -126,10 +135,11 @@ test "basic shapes examples" {
 
 ### Transformations
 ```moonbit
+///|
 test "transformations examples" {
   let circle_img = @vg.circle(@vg.red(), 25.0)
   let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
-  
+
   // Translate an image
   let moved = @vg.translate_img(10.0, 20.0, circle_img)
 
@@ -138,7 +148,7 @@ test "transformations examples" {
 
   // Rotate an image
   let rotated = @vg.rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
-  
+
   // Use the variables to avoid unused warnings
   ignore(moved)
   ignore(scaled)
@@ -148,9 +158,10 @@ test "transformations examples" {
 
 ### Colors and Effects
 ```moonbit
+///|
 test "colors and effects examples" {
   // HSV color creation
-  let bright_orange = @vg.hsv(30.0, 1.0, 1.0)  // Hue, Saturation, Value
+  let bright_orange = @vg.hsv(30.0, 1.0, 1.0) // Hue, Saturation, Value
 
   // Color interpolation
   let purple_to_cyan = @vg.lerp_color(@vg.purple(), @vg.cyan(), 0.5)
@@ -160,16 +171,20 @@ test "colors and effects examples" {
 
   // Linear gradient
   let gradient = @vg.linear_gradient(
-    @vg.red(), @vg.blue(), 
-    @vg.point(-50.0, 0.0), @vg.point(50.0, 0.0)
+    @vg.red(),
+    @vg.blue(),
+    @vg.point(-50.0, 0.0),
+    @vg.point(50.0, 0.0),
   )
 
   // Radial gradient
   let radial = @vg.radial_gradient(
-    @vg.white(), @vg.black(),
-    @vg.point(0.0, 0.0), 50.0
+    @vg.white(),
+    @vg.black(),
+    @vg.point(0.0, 0.0),
+    50.0,
   )
-  
+
   // Use the variables to avoid unused warnings
   ignore(bright_orange)
   ignore(purple_to_cyan)
@@ -181,12 +196,17 @@ test "colors and effects examples" {
 
 ### Paths (Object-Oriented API)
 ```moonbit
+///|
 test "paths examples" {
   // Create a custom path with method chaining
   let path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 10.0))
     .line_to(@vg.point(90.0, 10.0))
-    .curve_to(@vg.point(110.0, 10.0), @vg.point(110.0, 30.0), @vg.point(90.0, 30.0))
+    .curve_to(
+      @vg.point(110.0, 10.0),
+      @vg.point(110.0, 30.0),
+      @vg.point(90.0, 30.0),
+    )
     .close_path()
 
   // Create predefined shapes
@@ -205,9 +225,8 @@ test "paths examples" {
   }
 
   // Render path to SVG
-  let svg = @vg.new_svg(100.0, 100.0)
-    .render_path(path, @vg.green())
-    
+  let svg = @vg.new_svg(100.0, 100.0).render_path(path, @vg.green())
+
   // Use the variables to avoid unused warnings
   ignore(rectangle)
   ignore(circle)
@@ -219,12 +238,13 @@ test "paths examples" {
 
 ### Canvas Rendering (Fluent API)
 ```moonbit
+///|
 test "canvas rendering examples" {
   let custom_path = @vg.Path::empty()
     .move_to(@vg.point(10.0, 10.0))
     .line_to(@vg.point(50.0, 10.0))
     .close_path()
-    
+
   // Create an HTML5 Canvas document with fluent method chaining
   let canvas_doc = @vg.new_canvas(400.0, 300.0)
     .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
@@ -237,7 +257,7 @@ test "canvas rendering examples" {
 
   // Generate complete HTML page
   let html_page = canvas_doc.to_html("My Canvas Demo")
-  
+
   // Use the variables to avoid unused warnings
   ignore(js_code)
   ignore(html_page)
@@ -246,15 +266,16 @@ test "canvas rendering examples" {
 
 ### PDF Document Generation (Fluent API)
 ```moonbit
+///|
 test "pdf generation examples" {
   let star_path = @vg.Path::empty()
     .move_to(@vg.point(0.0, -20.0))
     .line_to(@vg.point(5.0, -5.0))
     .line_to(@vg.point(20.0, -5.0))
     .close_path()
-    
+
   // Create a PDF document with fluent method chaining
-  let pdf_doc = @vg.PdfDocument::new(210.0, 297.0)  // A4 size
+  let pdf_doc = @vg.PdfDocument::new(210.0, 297.0) // A4 size
     .render_circle(@vg.point(105.0, 100.0), 30.0, @vg.red())
     .render_rectangle(50.0, 150.0, 110.0, 50.0, @vg.blue())
     .render_path(star_path, @vg.gold())
@@ -262,7 +283,7 @@ test "pdf generation examples" {
 
   // Generate PDF string
   let pdf_content = pdf_doc.to_string()
-  
+
   // Use the variable to avoid unused warning
   ignore(pdf_content)
 }
@@ -274,6 +295,7 @@ The Path API has been updated to use MoonBit's object-oriented style. Here's how
 
 ### Before (Functional Style)
 ```moonbit
+///|
 test "functional style example" {
   // This is the old functional style (no longer supported)
   // let path = empty_path()
@@ -284,25 +306,26 @@ test "functional style example" {
   // let rect = rect_path(0.0, 0.0, 10.0, 5.0)
   // let bounds = path_bounds(path)
   // let transformed = transform_path(transform, path)
-  
+
   // Placeholder to make test valid
   let _ = 1
+
 }
 ```
 
 ### After (Object-Oriented Style)
 ```moonbit
+///|
 test "object oriented style example" {
   let path = @vg.Path::empty()
     .move_to(@vg.point(0.0, 0.0))
     .line_to(@vg.point(10.0, 0.0))
     .close_path()
-
   let rect = @vg.Path::rect(0.0, 0.0, 10.0, 5.0)
   let bounds = path.bounds()
   let transform = @vg.make_translate(5.0, 5.0)
   let transformed = path.transform(transform)
-  
+
   // Use the variables to avoid unused warnings
   ignore(rect)
   ignore(bounds)
