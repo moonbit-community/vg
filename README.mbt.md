@@ -140,19 +140,30 @@ test "transformations examples" {
   let circle_img = @vg.circle(@vg.red(), 25.0)
   let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
 
-  // Translate an image
+  // Functional style
   let moved = @vg.translate_img(10.0, 20.0, circle_img)
-
-  // Scale an image
   let scaled = @vg.scale_image(2.0, 1.5, rect_img)
-
-  // Rotate an image
   let rotated = @vg.rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
+
+  // Object-oriented style (recommended)
+  let moved_oo = circle_img.translate(10.0, 20.0)
+  let scaled_oo = rect_img.scale(2.0, 1.5)
+  let rotated_oo = circle_img.rotate(3.14159 / 4.0) // 45 degrees
+
+  // Method chaining
+  let transformed = circle_img
+    .scale(2.0, 2.0)
+    .translate(10.0, 20.0)
+    .rotate(3.14159 / 4.0)
 
   // Use the variables to avoid unused warnings
   ignore(moved)
   ignore(scaled)
   ignore(rotated)
+  ignore(moved_oo)
+  ignore(scaled_oo)
+  ignore(rotated_oo)
+  ignore(transformed)
 }
 ```
 
@@ -291,9 +302,11 @@ test "pdf generation examples" {
 
 ## Migration Guide
 
-The Path API has been updated to use MoonBit's object-oriented style. Here's how to migrate:
+Both the Path API and Image transformation APIs have been updated to use MoonBit's object-oriented style. The functional style is still supported for backward compatibility.
 
-### Before (Functional Style)
+### Path API
+
+#### Before (Functional Style)
 ```moonbit
 ///|
 test "functional style example" {
@@ -313,7 +326,7 @@ test "functional style example" {
 }
 ```
 
-### After (Object-Oriented Style)
+#### After (Object-Oriented Style)
 ```moonbit
 ///|
 test "object oriented style example" {
@@ -330,6 +343,48 @@ test "object oriented style example" {
   ignore(rect)
   ignore(bounds)
   ignore(transformed)
+}
+```
+
+### Image Transformation API
+
+#### Functional Style (Still Supported)
+```moonbit
+///|
+test "image transformations functional style" {
+  let circle = @vg.circle(@vg.red(), 25.0)
+  
+  let scaled = @vg.scale_image(2.0, 2.0, circle)
+  let translated = @vg.translate_img(10.0, 5.0, circle)
+  let rotated = @vg.rotate_image(3.14159 / 4.0, circle)
+  
+  ignore(scaled)
+  ignore(translated)
+  ignore(rotated)
+}
+```
+
+#### Object-Oriented Style (Recommended)
+```moonbit
+///|
+test "image transformations oo style" {
+  let circle = @vg.circle(@vg.red(), 25.0)
+  
+  // Individual transformations
+  let scaled = circle.scale(2.0, 2.0)
+  let translated = circle.translate(10.0, 5.0)
+  let rotated = circle.rotate(3.14159 / 4.0)
+  
+  // Method chaining for complex transformations
+  let complex = circle
+    .scale(2.0, 2.0)
+    .translate(10.0, 5.0)
+    .rotate(3.14159 / 4.0)
+  
+  ignore(scaled)
+  ignore(translated)
+  ignore(rotated)
+  ignore(complex)
 }
 ```
 
