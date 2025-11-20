@@ -59,7 +59,7 @@ test "basic_shapes" (it : @test.Test) {
 
   // Apply transformations and effects
   let semi_transparent = @vg.with_opacity(red_circle, 0.7)
-  let translated_ellipse = @vg.translate_img(50.0, 0.0, blue_ellipse)
+  let translated_ellipse = blue_ellipse.translate_img(50.0, 0.0)
 
   // Compose images
   let _composed = @vg.compose_imgs(semi_transparent, translated_ellipse)
@@ -141,7 +141,7 @@ test "transformations examples" {
   let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
 
   // Translate an image
-  let moved = @vg.translate_img(10.0, 20.0, circle_img)
+  let moved = circle_img.translate_img(10.0, 20.0)
 
   // Scale an image
   let scaled = @vg.scale_image(2.0, 1.5, rect_img)
