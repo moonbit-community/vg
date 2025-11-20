@@ -38,7 +38,7 @@ pub struct Box {
 
 ///|
 /// An image is a function from points to colors
-pub type Image = (Point) -> Color
+pub(all) struct Image((Point) -> Color)
 
 ///|
 /// Path segment types

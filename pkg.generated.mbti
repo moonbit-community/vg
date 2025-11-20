@@ -6,7 +6,7 @@ fn add(Point, Point) -> Point
 
 fn apply(Transform, Point) -> Point
 
-fn axial_gradient(Color, Color, Point, Point) -> (Point) -> Color
+fn axial_gradient(Color, Color, Point, Point) -> Image
 
 fn black() -> Color
 
@@ -14,21 +14,21 @@ fn blend(Color, Color) -> Color
 
 fn blue() -> Color
 
-fn checkerboard(Color, Color, Double) -> (Point) -> Color
+fn checkerboard(Color, Color, Double) -> Image
 
-fn circle(Color, Double) -> (Point) -> Color
+fn circle(Color, Double) -> Image
 
 fn clamp(Color) -> Color
 
-fn compose_imgs((Point) -> Color, (Point) -> Color) -> (Point) -> Color
+fn compose_imgs(Image, Image) -> Image
 
 fn compose_transforms(Transform, Transform) -> Transform
 
-fn conic_gradient(Color, Color, Point, Double) -> (Point) -> Color
+fn conic_gradient(Color, Color, Point, Double) -> Image
 
-fn const_color(Color) -> (Point) -> Color
+fn const_color(Color) -> Image
 
-fn cut((Point) -> Color, (Point) -> Color) -> (Point) -> Color
+fn cut(Image, Image) -> Image
 
 fn cyan() -> Color
 
@@ -38,11 +38,11 @@ fn distance(Point, Point) -> Double
 
 fn dot(Point, Point) -> Double
 
-fn ellipse(Color, Double, Double) -> (Point) -> Color
+fn ellipse(Color, Double, Double) -> Image
 
-fn empty() -> (Point) -> Color
+fn empty() -> Image
 
-fn example() -> (Point) -> Color
+fn example() -> Image
 
 fn gold() -> Color
 
@@ -56,15 +56,15 @@ fn hsv(Double, Double, Double) -> Color
 
 fn identity() -> Transform
 
-fn imageop_compose((Point) -> Color, (Point) -> Color) -> ImageOp
+fn imageop_compose(Image, Image) -> ImageOp
 
 fn imageop_const(Color) -> ImageOp
 
-fn imageop_cut((Point) -> Color, (Point) -> Color) -> ImageOp
+fn imageop_cut(Image, Image) -> ImageOp
 
 fn imageop_primitive(Primitive, Color) -> ImageOp
 
-fn imageop_transform(Transform, (Point) -> Color) -> ImageOp
+fn imageop_transform(Transform, Image) -> ImageOp
 
 fn invert(Transform) -> Transform?
 
@@ -74,9 +74,9 @@ fn lerp(Point, Point, Double) -> Point
 
 fn lerp_color(Color, Color, Double) -> Color
 
-fn line(Color, Point, Point, Double) -> (Point) -> Color
+fn line(Color, Point, Point, Double) -> Image
 
-fn linear_gradient(Color, Color, Point, Point) -> (Point) -> Color
+fn linear_gradient(Color, Color, Point, Point) -> Image
 
 fn magenta() -> Color
 
@@ -102,7 +102,7 @@ fn overlay_blend(Color, Color) -> Color
 
 fn point(Double, Double) -> Point
 
-fn polygon(Color, Array[Point]) -> (Point) -> Color
+fn polygon(Color, Array[Point]) -> Image
 
 fn preserves_orientation(Transform) -> Bool
 
@@ -116,25 +116,23 @@ fn primitive_text(String, Point, Double) -> Primitive
 
 fn purple() -> Color
 
-fn radial_gradient(Color, Color, Point, Double) -> (Point) -> Color
+fn radial_gradient(Color, Color, Point, Double) -> Image
 
-fn rectangle(Color, Double, Double) -> (Point) -> Color
+fn rectangle(Color, Double, Double) -> Image
 
 fn red() -> Color
-
-fn render_image_to_svg((Point) -> Color, Double, Double, Int) -> String
 
 fn rgb(Double, Double, Double) -> Color
 
 fn rgba(Double, Double, Double, Double) -> Color
 
-fn rotate_image(Double, (Point) -> Color) -> (Point) -> Color
+fn rotate_image(Double, Image) -> Image
 
 fn rotate_point(Point, Double) -> Point
 
 fn scale(Color, Double) -> Color
 
-fn scale_image(Double, Double, (Point) -> Color) -> (Point) -> Color
+fn scale_image(Double, Double, Image) -> Image
 
 fn scale_point(Point, Double) -> Point
 
@@ -150,19 +148,19 @@ fn soft_light_blend(Color, Color) -> Color
 
 fn sub(Point, Point) -> Point
 
-fn tile_image((Point) -> Color, Double, Double) -> (Point) -> Color
+fn tile_image(Image, Double, Double) -> Image
 
 fn to_hex(Color) -> String
 
-fn transform(Transform, (Point) -> Color) -> (Point) -> Color
+fn transform(Transform, Image) -> Image
 
-fn translate_img(Double, Double, (Point) -> Color) -> (Point) -> Color
+fn translate_img(Double, Double, Image) -> Image
 
 fn transparent() -> Color
 
 fn white() -> Color
 
-fn with_opacity((Point) -> Color, Double) -> (Point) -> Color
+fn with_opacity(Image, Double) -> Image
 
 fn yellow() -> Color
 
@@ -202,12 +200,17 @@ pub struct Color {
 impl Eq for Color
 impl Show for Color
 
+pub(all) struct Image((Point) -> Color)
+#deprecated
+fn Image::inner(Self) -> (Point) -> Color
+fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
+
 pub enum ImageOp {
   Const(Color)
   Primitive(Primitive, Color)
-  Transform(Transform, (Point) -> Color)
-  Compose((Point) -> Color, (Point) -> Color)
-  Cut((Point) -> Color, (Point) -> Color)
+  Transform(Transform, Image)
+  Compose(Image, Image)
+  Cut(Image, Image)
 }
 
 pub struct Path(Array[PathSegment])
@@ -301,7 +304,6 @@ impl Eq for Transform
 impl Show for Transform
 
 // Type aliases
-pub type Image = (Point) -> Color
 
 // Traits
 

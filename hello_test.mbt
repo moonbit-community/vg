@@ -45,7 +45,7 @@ test "complete workflow - create and render image" {
     |> @vg.compose_imgs(green_rect)
 
   // Render to SVG
-  let svg = @vg.render_image_to_svg(complex_image, 200.0, 200.0, 50)
+  let svg = complex_image.render_image_to_svg(200.0, 200.0, 50)
   if not(svg.contains("svg")) {
     fail("Should produce valid SVG output")
   }

@@ -69,7 +69,7 @@ test "axial gradients" (it : @test.Test) {
     @vg.point(-50.0, 0.0),
     @vg.point(50.0, 0.0),
   )
-  let axial_svg = @vg.render_image_to_svg(axial_img, 100.0, 60.0, 25)
+  let axial_svg = axial_img.render_image_to_svg(100.0, 60.0, 25)
   it.write(axial_svg)
   it.snapshot(filename="axial_gradient.svg")
 }
@@ -82,7 +82,7 @@ test "conic gradients" (it : @test.Test) {
     @vg.point(0.0, 0.0),
     0.0,
   )
-  let conic_svg = @vg.render_image_to_svg(conic_img, 100.0, 100.0, 30)
+  let conic_svg = conic_img.render_image_to_svg(100.0, 100.0, 30)
   it.write(conic_svg)
   it.snapshot(filename="conic_gradient.svg")
 }
@@ -111,7 +111,7 @@ test "advanced blend modes" {
 test "tiled images" (it : @test.Test) {
   let base_pattern = @vg.circle(@vg.red(), 8.0)
   let tiled = @vg.tile_image(base_pattern, 20.0, 20.0)
-  let tiled_svg = @vg.render_image_to_svg(tiled, 100.0, 80.0, 25)
+  let tiled_svg = tiled.render_image_to_svg(100.0, 80.0, 25)
   it.write(tiled_svg)
   it.snapshot(filename="tiled_pattern.svg")
 }
@@ -119,7 +119,7 @@ test "tiled images" (it : @test.Test) {
 ///|
 test "checkerboard pattern" (it : @test.Test) {
   let checker = @vg.checkerboard(@vg.black(), @vg.white(), 10.0)
-  let checker_svg = @vg.render_image_to_svg(checker, 80.0, 80.0, 20)
+  let checker_svg = checker.render_image_to_svg(80.0, 80.0, 20)
   it.write(checker_svg)
   it.snapshot(filename="checkerboard.svg")
 }

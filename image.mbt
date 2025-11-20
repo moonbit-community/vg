@@ -15,7 +15,7 @@ pub fn empty() -> Image {
 ///|
 /// Create a circle image
 pub fn circle(color : Color, radius : Double) -> Image {
-  fn(p : Point) -> Color {
+  p => {
     let dist = length(p)
     if dist <= radius {
       color
@@ -28,15 +28,13 @@ pub fn circle(color : Color, radius : Double) -> Image {
 ///|
 /// Create a rectangle image
 pub fn rectangle(color : Color, width : Double, height : Double) -> Image {
-  fn(p : Point) -> Color {
-    if p.x >= -width / 2.0 &&
-      p.x <= width / 2.0 &&
-      p.y >= -height / 2.0 &&
-      p.y <= height / 2.0 {
-      color
-    } else {
-      transparent()
-    }
+  p => if p.x >= -width / 2.0 &&
+    p.x <= width / 2.0 &&
+    p.y >= -height / 2.0 &&
+    p.y <= height / 2.0 {
+    color
+  } else {
+    transparent()
   }
 }
 
@@ -77,11 +75,9 @@ pub fn line(
 ///|
 /// Transform an image
 pub fn transform(t : Transform, img : Image) -> Image {
-  fn(p : Point) -> Color {
-    match invert(t) {
-      Some(inv_t) => img(apply(inv_t, p))
-      None => transparent()
-    }
+  p => match invert(t) {
+    Some(inv_t) => img(apply(inv_t, p))
+    None => transparent()
   }
 }
 
