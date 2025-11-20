@@ -65,7 +65,7 @@ test "rectangle image" {
 ///|
 test "image translation" {
   let circle_img = @vg.circle(@vg.red(), 3.0)
-  let translated = @vg.translate_img(5.0, 0.0, circle_img)
+  let translated = circle_img.translate_img(5.0, 0.0)
   let original_center = @vg.point(0.0, 0.0)
   let new_center = @vg.point(5.0, 0.0)
   let c_original = translated(original_center)
@@ -92,7 +92,7 @@ test "image scaling" {
 ///|
 test "image composition" {
   let red_circle = @vg.circle(@vg.red(), 3.0)
-  let blue_circle = @vg.translate_img(2.0, 0.0, @vg.circle(@vg.blue(), 3.0))
+  let blue_circle = @vg.circle(@vg.blue(), 3.0).translate_img(2.0, 0.0)
   let composed = @vg.compose_imgs(red_circle, blue_circle)
   let red_only = @vg.point(-2.0, 0.0) // Only in red circle
   let blue_only = @vg.point(4.0, 0.0) // Only in blue circle
@@ -251,14 +251,12 @@ test "image rendering showcase" (it : @test.Test) {
   let blue_ellipse = @vg.ellipse(@vg.blue(), 30.0, 20.0)
   let green_rect = @vg.rectangle(@vg.green(), 40.0, 30.0)
   let composed = background
-    |> @vg.compose_imgs(@vg.translate_img(50.0, 40.0, red_circle))
-    |> @vg.compose_imgs(@vg.translate_img(100.0, 60.0, blue_ellipse))
-    |> @vg.compose_imgs(@vg.translate_img(150.0, 50.0, green_rect))
+    |> @vg.compose_imgs(red_circle.translate_img(50.0, 40.0))
+    |> @vg.compose_imgs(blue_ellipse.translate_img(100.0, 60.0))
+    |> @vg.compose_imgs(green_rect.translate_img(150.0, 50.0))
     |> @vg.compose_imgs(
-      @vg.translate_img(
-        75.0,
-        90.0,
-        @vg.with_opacity(@vg.circle(@vg.yellow(), 20.0), 0.7),
+      @vg.with_opacity(@vg.circle(@vg.yellow(), 20.0), 0.7).translate_img(
+        75.0, 90.0,
       ),
     )
   let svg_string = composed.render_image_to_svg(200.0, 150.0, 40)
@@ -327,17 +325,17 @@ test "transform showcase" (it : @test.Test) {
   let base_circle = @vg.circle(@vg.red(), 20.0)
 
   // Apply different transformations
-  let translated = @vg.translate_img(60.0, 0.0, base_circle)
+  let translated = base_circle.translate_img(60.0, 0.0)
   let scaled = @vg.scale_image(1.5, 0.8, base_circle)
   let rotated = @vg.rotate_image(3.14159 / 4.0, base_circle) // 45 degrees
 
   // Compose all transformations
   let background = @vg.rectangle(@vg.gray(0.9), 200.0, 100.0)
   let showcase = background
-    |> @vg.compose_imgs(@vg.translate_img(40.0, 50.0, base_circle))
-    |> @vg.compose_imgs(@vg.translate_img(100.0, 50.0, translated))
-    |> @vg.compose_imgs(@vg.translate_img(40.0, 30.0, scaled))
-    |> @vg.compose_imgs(@vg.translate_img(140.0, 30.0, rotated))
+    |> @vg.compose_imgs(base_circle.translate_img(40.0, 50.0))
+    |> @vg.compose_imgs(translated.translate_img(100.0, 50.0))
+    |> @vg.compose_imgs(scaled.translate_img(40.0, 30.0))
+    |> @vg.compose_imgs(rotated.translate_img(140.0, 30.0))
   let svg_string = showcase.render_image_to_svg(200.0, 100.0, 30)
   it.write(svg_string)
   it.snapshot(filename="transform_showcase.svg")

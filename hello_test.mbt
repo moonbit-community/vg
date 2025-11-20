@@ -33,11 +33,9 @@ test "complete workflow - create and render image" {
   // Create a complex image
   let background = @vg.rectangle(@vg.gray(0.9), 200.0, 200.0)
   let red_circle = @vg.circle(@vg.red(), 40.0)
-  let blue_circle = @vg.translate_img(60.0, 0.0, @vg.circle(@vg.blue(), 30.0))
-  let green_rect = @vg.translate_img(
-    -50.0,
-    50.0,
-    @vg.rectangle(@vg.green(), 30.0, 20.0),
+  let blue_circle = @vg.circle(@vg.blue(), 30.0).translate_img(60.0, 0.0)
+  let green_rect = @vg.rectangle(@vg.green(), 30.0, 20.0).translate_img(
+    -50.0, 50.0,
   )
   let complex_image = background
     |> @vg.compose_imgs(red_circle)
@@ -112,7 +110,7 @@ test "transformation chain" {
   // Apply multiple transformations
   let scaled = @vg.scale_image(2.0, 1.5, original)
   let rotated = @vg.rotate_image(3.14159 / 4.0, scaled) // 45 degrees
-  let transformed = @vg.translate_img(20.0, 10.0, rotated)
+  let transformed = rotated.translate_img(20.0, 10.0)
 
   // Test that transformations work
   let origin_color = transformed(@vg.point(0.0, 0.0))
