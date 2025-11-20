@@ -149,7 +149,7 @@ test "complex SVG document" {
 ///|
 test "image to SVG rendering" {
   let img = @vg.circle(@vg.red(), 25.0)
-  let svg_string = @vg.render_image_to_svg(img, 100.0, 100.0, 20)
+  let svg_string = img.render_image_to_svg(100.0, 100.0, 20)
   if not(svg_string.contains("svg")) {
     fail("Image rendering should produce valid SVG")
   }
@@ -258,14 +258,14 @@ test "gradient showcase" (it : @test.Test) {
     @vg.point(-50.0, 0.0),
     @vg.point(50.0, 0.0),
   )
-  let gradient_svg = @vg.render_image_to_svg(gradient_img, 100.0, 50.0, 20)
+  let gradient_svg = gradient_img.render_image_to_svg(100.0, 50.0, 20)
   let radial_img = @vg.radial_gradient(
     @vg.yellow(),
     @vg.purple(),
     @vg.point(0.0, 0.0),
     25.0,
   )
-  let radial_svg = @vg.render_image_to_svg(radial_img, 100.0, 50.0, 20)
+  let radial_svg = radial_img.render_image_to_svg(100.0, 50.0, 20)
   it.write(
     "<!-- Linear Gradient -->\n" +
     gradient_svg +

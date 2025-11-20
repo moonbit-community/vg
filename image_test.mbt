@@ -261,7 +261,7 @@ test "image rendering showcase" (it : @test.Test) {
         @vg.with_opacity(@vg.circle(@vg.yellow(), 20.0), 0.7),
       ),
     )
-  let svg_string = @vg.render_image_to_svg(composed, 200.0, 150.0, 40)
+  let svg_string = composed.render_image_to_svg(200.0, 150.0, 40)
   it.write(svg_string)
   it.snapshot(filename="image_composition.svg")
 }
@@ -303,11 +303,11 @@ test "gradient images showcase" (it : @test.Test) {
   )
 
   // Render each gradient
-  let h_svg = @vg.render_image_to_svg(horizontal_gradient, 100.0, 80.0, 25)
-  let v_svg = @vg.render_image_to_svg(vertical_gradient, 100.0, 80.0, 25)
-  let d_svg = @vg.render_image_to_svg(diagonal_gradient, 100.0, 80.0, 25)
-  let r1_svg = @vg.render_image_to_svg(radial1, 100.0, 80.0, 25)
-  let r2_svg = @vg.render_image_to_svg(radial2, 100.0, 80.0, 25)
+  let h_svg = horizontal_gradient.render_image_to_svg(100.0, 80.0, 25)
+  let v_svg = vertical_gradient.render_image_to_svg(100.0, 80.0, 25)
+  let d_svg = diagonal_gradient.render_image_to_svg(100.0, 80.0, 25)
+  let r1_svg = radial1.render_image_to_svg(100.0, 80.0, 25)
+  let r2_svg = radial2.render_image_to_svg(100.0, 80.0, 25)
   let combined_output = "<!-- Horizontal Linear Gradient -->\n" +
     h_svg +
     "\n\n<!-- Vertical Linear Gradient -->\n" +
@@ -338,7 +338,7 @@ test "transform showcase" (it : @test.Test) {
     |> @vg.compose_imgs(@vg.translate_img(100.0, 50.0, translated))
     |> @vg.compose_imgs(@vg.translate_img(40.0, 30.0, scaled))
     |> @vg.compose_imgs(@vg.translate_img(140.0, 30.0, rotated))
-  let svg_string = @vg.render_image_to_svg(showcase, 200.0, 100.0, 30)
+  let svg_string = showcase.render_image_to_svg(200.0, 100.0, 30)
   it.write(svg_string)
   it.snapshot(filename="transform_showcase.svg")
 }

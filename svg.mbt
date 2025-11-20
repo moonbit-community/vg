@@ -203,9 +203,9 @@ pub fn SvgDocument::to_string(self : SvgDocument) -> String {
 }
 
 ///|
-/// Sample an image at regular intervals and render to SVG
-pub fn render_image_to_svg(
-  img : Image,
+/// Sample an image at regular intervals and render to SVG (OO-style)
+pub fn Image::render_image_to_svg(
+  self : Image,
   width : Double,
   height : Double,
   samples : Int,
@@ -217,22 +217,11 @@ pub fn render_image_to_svg(
       let x = i.to_double() * step
       let y = j.to_double() * step
       let p = point(x - width / 2.0, y - height / 2.0) // Center coordinate system
-      let color = img(p)
+      let color = self(p)
       if color.a > 0.0 { // Only render non-transparent pixels
         doc = doc.render_rectangle(x, y, step, step, color)
       }
     }
   }
   doc.to_string()
-}
-
-///|
-/// Sample an image at regular intervals and render to SVG (method syntax)
-pub fn Image::render_image_to_svg(
-  self : Image,
-  width : Double,
-  height : Double,
-  samples : Int,
-) -> String {
-  render_image_to_svg(self, width, height, samples)
 }
