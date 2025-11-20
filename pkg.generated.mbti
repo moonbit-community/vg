@@ -152,10 +152,6 @@ fn tile_image(Image, Double, Double) -> Image
 
 fn to_hex(Color) -> String
 
-fn transform(Transform, Image) -> Image
-
-fn translate_img(Double, Double, Image) -> Image
-
 fn transparent() -> Color
 
 fn white() -> Color
@@ -204,6 +200,8 @@ pub(all) struct Image((Point) -> Color)
 #deprecated
 fn Image::inner(Self) -> (Point) -> Color
 fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
+fn Image::transform(Self, Transform) -> Self
+fn Image::translate_img(Self, Double, Double) -> Self
 
 pub enum ImageOp {
   Const(Color)

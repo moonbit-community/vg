@@ -74,7 +74,7 @@ pub fn line(
 
 ///|
 /// Transform an image
-pub fn transform(t : Transform, img : Image) -> Image {
+pub fn Image::transform(img : Image, t : Transform) -> Image {
   p => match invert(t) {
     Some(inv_t) => img(apply(inv_t, p))
     None => transparent()
@@ -83,20 +83,20 @@ pub fn transform(t : Transform, img : Image) -> Image {
 
 ///|
 /// Translate an image
-pub fn translate_img(dx : Double, dy : Double, img : Image) -> Image {
-  transform(make_translate(dx, dy), img)
+pub fn Image::translate_img(img : Image, dx : Double, dy : Double) -> Image {
+  img.transform(make_translate(dx, dy))
 }
 
 ///|
 /// Scale an image
 pub fn scale_image(sx : Double, sy : Double, img : Image) -> Image {
-  transform(make_scale(sx, sy), img)
+  img.transform(make_scale(sx, sy))
 }
 
 ///|
 /// Rotate an image
 pub fn rotate_image(angle : Double, img : Image) -> Image {
-  transform(make_rotate(angle), img)
+  img.transform(make_rotate(angle))
 }
 
 ///|
