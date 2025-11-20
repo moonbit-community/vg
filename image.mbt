@@ -89,13 +89,13 @@ pub fn Image::translate_img(img : Image, dx : Double, dy : Double) -> Image {
 
 ///|
 /// Scale an image
-pub fn scale_image(sx : Double, sy : Double, img : Image) -> Image {
+pub fn Image::scale_image(img : Image, sx : Double, sy : Double) -> Image {
   img.transform(make_scale(sx, sy))
 }
 
 ///|
 /// Rotate an image
-pub fn rotate_image(angle : Double, img : Image) -> Image {
+pub fn Image::rotate_image(img : Image, angle : Double) -> Image {
   img.transform(make_rotate(angle))
 }
 
