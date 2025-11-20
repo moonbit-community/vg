@@ -144,10 +144,10 @@ test "transformations examples" {
   let moved = circle_img.translate_img(10.0, 20.0)
 
   // Scale an image
-  let scaled = @vg.scale_image(2.0, 1.5, rect_img)
+  let scaled = rect_img.scale_image(2.0, 1.5)
 
   // Rotate an image
-  let rotated = @vg.rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
+  let rotated = circle_img.rotate_image(3.14159 / 4.0) // 45 degrees
 
   // Use the variables to avoid unused warnings
   ignore(moved)

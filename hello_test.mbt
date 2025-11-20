@@ -108,8 +108,8 @@ test "transformation chain" {
   let original = @vg.circle(@vg.yellow(), 10.0)
 
   // Apply multiple transformations
-  let scaled = @vg.scale_image(2.0, 1.5, original)
-  let rotated = @vg.rotate_image(3.14159 / 4.0, scaled) // 45 degrees
+  let scaled = original.scale_image(2.0, 1.5)
+  let rotated = scaled.rotate_image(3.14159 / 4.0) // 45 degrees
   let transformed = rotated.translate_img(20.0, 10.0)
 
   // Test that transformations work

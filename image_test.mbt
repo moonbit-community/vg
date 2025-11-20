@@ -81,7 +81,7 @@ test "image translation" {
 ///|
 test "image scaling" {
   let circle_img = @vg.circle(@vg.blue(), 2.0)
-  let scaled = @vg.scale_image(2.0, 2.0, circle_img)
+  let scaled = circle_img.scale_image(2.0, 2.0)
   let p = @vg.point(3.0, 0.0) // Would be outside original circle but inside scaled
   let c = scaled(p)
   if c != @vg.blue() {
@@ -326,8 +326,8 @@ test "transform showcase" (it : @test.Test) {
 
   // Apply different transformations
   let translated = base_circle.translate_img(60.0, 0.0)
-  let scaled = @vg.scale_image(1.5, 0.8, base_circle)
-  let rotated = @vg.rotate_image(3.14159 / 4.0, base_circle) // 45 degrees
+  let scaled = base_circle.scale_image(1.5, 0.8)
+  let rotated = base_circle.rotate_image(3.14159 / 4.0) // 45 degrees
 
   // Compose all transformations
   let background = @vg.rectangle(@vg.gray(0.9), 200.0, 100.0)
