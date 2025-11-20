@@ -69,7 +69,7 @@ test "axial gradients" (it : @test.Test) {
     @vg.point(-50.0, 0.0),
     @vg.point(50.0, 0.0),
   )
-  let axial_svg = @vg.render_image_to_svg(axial_img, 100.0, 60.0, 25)
+  let axial_svg = axial_img.render_image_to_svg(100.0, 60.0, 25)
   it.write(axial_svg)
   it.snapshot(filename="axial_gradient.svg")
 }

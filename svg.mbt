@@ -225,3 +225,14 @@ pub fn render_image_to_svg(
   }
   doc.to_string()
 }
+
+///|
+/// Sample an image at regular intervals and render to SVG (method syntax)
+pub fn Image::render_image_to_svg(
+  self : Image,
+  width : Double,
+  height : Double,
+  samples : Int,
+) -> String {
+  render_image_to_svg(self, width, height, samples)
+}
