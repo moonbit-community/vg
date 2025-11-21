@@ -27,7 +27,11 @@ pub fn Image::circle(color : Color, radius : Double) -> Image {
 
 ///|
 /// Create a rectangle image
-pub fn Image::rectangle(color : Color, width : Double, height : Double) -> Image {
+pub fn Image::rectangle(
+  color : Color,
+  width : Double,
+  height : Double,
+) -> Image {
   p => if p.x >= -width / 2.0 &&
     p.x <= width / 2.0 &&
     p.y >= -height / 2.0 &&
@@ -308,7 +312,11 @@ pub fn Image::tile(
 
 ///|
 /// Create a checkerboard pattern
-pub fn Image::checkerboard(color1 : Color, color2 : Color, size : Double) -> Image {
+pub fn Image::checkerboard(
+  color1 : Color,
+  color2 : Color,
+  size : Double,
+) -> Image {
   fn(p : Point) -> Color {
     let x_cell = (p.x / size).floor().to_int()
     let y_cell = (p.y / size).floor().to_int()

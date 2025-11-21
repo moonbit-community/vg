@@ -255,9 +255,9 @@ test "image rendering showcase" (it : @test.Test) {
     .compose(blue_ellipse.translate_img(100.0, 60.0))
     .compose(green_rect.translate_img(150.0, 50.0))
     .compose(
-      @vg.Image::circle(@vg.yellow(), 20.0).with_opacity(0.7).translate_img(
-        75.0, 90.0,
-      ),
+      @vg.Image::circle(@vg.yellow(), 20.0)
+      .with_opacity(0.7)
+      .translate_img(75.0, 90.0),
     )
   let svg_string = composed.render_image_to_svg(200.0, 150.0, 40)
   it.write(svg_string)
