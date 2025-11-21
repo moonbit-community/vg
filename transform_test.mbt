@@ -3,7 +3,7 @@
 ///|
 test "identity transform" {
   let id = @vg.identity()
-  let p = @vg.point(5.0, 7.0)
+  let p = @vg.Point::new(5.0, 7.0)
   let transformed = @vg.apply(id, p)
   if transformed.x != p.x || transformed.y != p.y {
     fail("Identity transform should not change points")
@@ -13,7 +13,7 @@ test "identity transform" {
 ///|
 test "translation transform" {
   let t = @vg.make_translate(3.0, 4.0)
-  let p = @vg.point(1.0, 2.0)
+  let p = @vg.Point::new(1.0, 2.0)
   let transformed = @vg.apply(t, p)
   if transformed.x != 4.0 || transformed.y != 6.0 {
     fail("Translation transform incorrect")
@@ -23,7 +23,7 @@ test "translation transform" {
 ///|
 test "scale transform" {
   let t = @vg.make_scale(2.0, 3.0)
-  let p = @vg.point(4.0, 5.0)
+  let p = @vg.Point::new(4.0, 5.0)
   let transformed = @vg.apply(t, p)
   if transformed.x != 8.0 || transformed.y != 15.0 {
     fail("Scale transform incorrect")
@@ -33,7 +33,7 @@ test "scale transform" {
 ///|
 test "uniform scale transform" {
   let t = @vg.scale_uniform(2.5)
-  let p = @vg.point(2.0, 4.0)
+  let p = @vg.Point::new(2.0, 4.0)
   let transformed = @vg.apply(t, p)
   if transformed.x != 5.0 || transformed.y != 10.0 {
     fail("Uniform scale transform incorrect")
@@ -43,7 +43,7 @@ test "uniform scale transform" {
 ///|
 test "rotation transform" {
   let t = @vg.make_rotate(3.14159265359 / 2.0) // 90 degrees
-  let p = @vg.point(1.0, 0.0)
+  let p = @vg.Point::new(1.0, 0.0)
   let transformed = @vg.apply(t, p)
 
   // Should be approximately (0, 1)
@@ -57,7 +57,7 @@ test "transform composition" {
   let t1 = @vg.make_translate(1.0, 2.0)
   let t2 = @vg.make_scale(2.0, 3.0)
   let composed = @vg.compose_transforms(t1, t2)
-  let p = @vg.point(1.0, 1.0)
+  let p = @vg.Point::new(1.0, 1.0)
   let result1 = @vg.apply(composed, p)
   let result2 = @vg.apply(t2, @vg.apply(t1, p))
   if (result1.x - result2.x).abs() > 0.0001 ||
@@ -71,7 +71,7 @@ test "transform inversion" {
   let t = @vg.make_translate(3.0, 4.0)
   match @vg.invert(t) {
     Some(inv_t) => {
-      let p = @vg.point(5.0, 7.0)
+      let p = @vg.Point::new(5.0, 7.0)
       let transformed = @vg.apply(t, p)
       let back = @vg.apply(inv_t, transformed)
       if (back.x - p.x).abs() > 0.0001 || (back.y - p.y).abs() > 0.0001 {
@@ -120,7 +120,7 @@ test "orientation preservation" {
 test "skew transforms" {
   let skew_x_t = @vg.skew_x(0.5)
   let skew_y_t = @vg.skew_y(0.5)
-  let p = @vg.point(1.0, 1.0)
+  let p = @vg.Point::new(1.0, 1.0)
   let skewed_x = @vg.apply(skew_x_t, p)
   let skewed_y = @vg.apply(skew_y_t, p)
   let skew_results = [
@@ -138,7 +138,7 @@ test "skew transforms" {
 
 ///|
 test "comprehensive transform matrix operations" {
-  let test_point = @vg.point(2.0, 3.0)
+  let test_point = @vg.Point::new(2.0, 3.0)
   let identity_t = @vg.identity()
   let translate_t = @vg.make_translate(5.0, 3.0)
   let scale_t = @vg.make_scale(2.0, 3.0)
@@ -204,7 +204,7 @@ test "transform composition and inversion" {
   let t2 = @vg.make_scale(2.0, 3.0)
   let t3 = @vg.make_rotate(3.14159 / 4.0) // 45 degrees
   let composed = @vg.compose_transforms(@vg.compose_transforms(t1, t2), t3)
-  let test_point = @vg.point(1.0, 1.0)
+  let test_point = @vg.Point::new(1.0, 1.0)
   let composition_results = [
     ("original_point", test_point),
     ("after_translate", @vg.apply(t1, test_point)),

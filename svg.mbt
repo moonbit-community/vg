@@ -216,7 +216,7 @@ pub fn Image::render_image_to_svg(
     for j in 0..<samples {
       let x = i.to_double() * step
       let y = j.to_double() * step
-      let p = point(x - width / 2.0, y - height / 2.0) // Center coordinate system
+      let p = Point::new(x - width / 2.0, y - height / 2.0) // Center coordinate system
       let color = self(p)
       if color.a > 0.0 { // Only render non-transparent pixels
         doc = doc.render_rectangle(x, y, step, step, color)

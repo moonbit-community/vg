@@ -93,10 +93,10 @@ pub fn Path::rect(
   width : Double,
   height : Double,
 ) -> Path {
-  let top_left = point(x, y)
-  let top_right = point(x + width, y)
-  let bottom_right = point(x + width, y + height)
-  let bottom_left = point(x, y + height)
+  let top_left = Point::new(x, y)
+  let top_right = Point::new(x + width, y)
+  let bottom_right = Point::new(x + width, y + height)
+  let bottom_left = Point::new(x, y + height)
   Path::empty()
   .move_to(top_left)
   .line_to(top_right)
@@ -110,30 +110,30 @@ pub fn Path::rect(
 pub fn Path::circle(center : Point, radius : Double) -> Path {
   let kappa = 0.5522847498 // Magic number for circle approximation
   let offset = radius * kappa
-  let top = point(center.x, center.y - radius)
-  let right = point(center.x + radius, center.y)
-  let bottom = point(center.x, center.y + radius)
-  let left = point(center.x - radius, center.y)
+  let top = Point::new(center.x, center.y - radius)
+  let right = Point::new(center.x + radius, center.y)
+  let bottom = Point::new(center.x, center.y + radius)
+  let left = Point::new(center.x - radius, center.y)
   Path::empty()
   .move_to(top)
   .curve_to(
-    point(center.x + offset, center.y - radius),
-    point(center.x + radius, center.y - offset),
+    Point::new(center.x + offset, center.y - radius),
+    Point::new(center.x + radius, center.y - offset),
     right,
   )
   .curve_to(
-    point(center.x + radius, center.y + offset),
-    point(center.x + offset, center.y + radius),
+    Point::new(center.x + radius, center.y + offset),
+    Point::new(center.x + offset, center.y + radius),
     bottom,
   )
   .curve_to(
-    point(center.x - offset, center.y + radius),
-    point(center.x - radius, center.y + offset),
+    Point::new(center.x - offset, center.y + radius),
+    Point::new(center.x - radius, center.y + offset),
     left,
   )
   .curve_to(
-    point(center.x - radius, center.y - offset),
-    point(center.x - offset, center.y - radius),
+    Point::new(center.x - radius, center.y - offset),
+    Point::new(center.x - offset, center.y - radius),
     top,
   )
   .close_path()
@@ -145,30 +145,30 @@ pub fn Path::ellipse(center : Point, rx : Double, ry : Double) -> Path {
   let kappa = 0.5522847498
   let offset_x = rx * kappa
   let offset_y = ry * kappa
-  let top = point(center.x, center.y - ry)
-  let right = point(center.x + rx, center.y)
-  let bottom = point(center.x, center.y + ry)
-  let left = point(center.x - rx, center.y)
+  let top = Point::new(center.x, center.y - ry)
+  let right = Point::new(center.x + rx, center.y)
+  let bottom = Point::new(center.x, center.y + ry)
+  let left = Point::new(center.x - rx, center.y)
   Path::empty()
   .move_to(top)
   .curve_to(
-    point(center.x + offset_x, center.y - ry),
-    point(center.x + rx, center.y - offset_y),
+    Point::new(center.x + offset_x, center.y - ry),
+    Point::new(center.x + rx, center.y - offset_y),
     right,
   )
   .curve_to(
-    point(center.x + rx, center.y + offset_y),
-    point(center.x + offset_x, center.y + ry),
+    Point::new(center.x + rx, center.y + offset_y),
+    Point::new(center.x + offset_x, center.y + ry),
     bottom,
   )
   .curve_to(
-    point(center.x - offset_x, center.y + ry),
-    point(center.x - rx, center.y + offset_y),
+    Point::new(center.x - offset_x, center.y + ry),
+    Point::new(center.x - rx, center.y + offset_y),
     left,
   )
   .curve_to(
-    point(center.x - rx, center.y - offset_y),
-    point(center.x - offset_x, center.y - ry),
+    Point::new(center.x - rx, center.y - offset_y),
+    Point::new(center.x - offset_x, center.y - ry),
     top,
   )
   .close_path()
@@ -258,7 +258,7 @@ pub fn Path::smooth_ccurve_to(self : Path, cp2 : Point, end : Point) -> Path {
           // Reflect the previous control point
           let reflected_x = 2.0 * prev_end.x - prev_cp2.x
           let reflected_y = 2.0 * prev_end.y - prev_cp2.y
-          point(reflected_x, reflected_y)
+          Point::new(reflected_x, reflected_y)
         }
         _ => cp2 // Not a curve, use cp2
       }
@@ -284,7 +284,7 @@ pub fn Path::smooth_qcurve_to(self : Path, end : Point) -> Path {
           // Reflect the previous control point
           let reflected_x = 2.0 * prev_end.x - prev_cp.x
           let reflected_y = 2.0 * prev_end.y - prev_cp.y
-          point(reflected_x, reflected_y)
+          Point::new(reflected_x, reflected_y)
         }
         _ => end // Not a quadratic curve, use end point
       }

@@ -2,9 +2,9 @@
 
 ///|
 test "Point creation and equality" {
-  let p1 = @vg.point(1.0, 2.0)
-  let p2 = @vg.point(1.0, 2.0)
-  let p3 = @vg.point(2.0, 1.0)
+  let p1 = @vg.Point::new(1.0, 2.0)
+  let p2 = @vg.Point::new(1.0, 2.0)
+  let p3 = @vg.Point::new(2.0, 1.0)
   if p1 != p2 {
     fail("Points with same coordinates should be equal")
   }
@@ -42,9 +42,13 @@ test "Transform creation and equality" {
 ///|
 test "Path construction" {
   let path = @vg.Path::empty()
-    .move_to(@vg.point(1.0, 2.0))
-    .line_to(@vg.point(3.0, 4.0))
-    .curve_to(@vg.point(1.0, 1.0), @vg.point(2.0, 2.0), @vg.point(3.0, 3.0))
+    .move_to(@vg.Point::new(1.0, 2.0))
+    .line_to(@vg.Point::new(3.0, 4.0))
+    .curve_to(
+      @vg.Point::new(1.0, 1.0),
+      @vg.Point::new(2.0, 2.0),
+      @vg.Point::new(3.0, 3.0),
+    )
     .close_path()
   if path.0.length() != 4 {
     fail("Path should have 4 segments")
@@ -55,9 +59,13 @@ test "Path construction" {
 test "PathSegment variants" {
   // Test using path construction functions instead of direct enum construction
   let path = @vg.Path::empty()
-    .move_to(@vg.point(1.0, 2.0))
-    .line_to(@vg.point(3.0, 4.0))
-    .curve_to(@vg.point(1.0, 1.0), @vg.point(2.0, 2.0), @vg.point(3.0, 3.0))
+    .move_to(@vg.Point::new(1.0, 2.0))
+    .line_to(@vg.Point::new(3.0, 4.0))
+    .curve_to(
+      @vg.Point::new(1.0, 1.0),
+      @vg.Point::new(2.0, 2.0),
+      @vg.Point::new(3.0, 3.0),
+    )
     .close_path()
   if path.0.length() != 4 {
     fail("Path should have 4 segments")
@@ -88,7 +96,7 @@ test "PathSegment variants" {
 
 ///|
 test "Primitive constructors and equality" {
-  let center = @vg.point(5.0, 5.0)
+  let center = @vg.Point::new(5.0, 5.0)
   let circle = @vg.primitive_circle(center, 10.0)
 
   // Test circle primitive
@@ -105,8 +113,8 @@ test "Primitive constructors and equality" {
   }
 
   // Test rectangle primitive
-  let top_left = @vg.point(0.0, 0.0)
-  let bottom_right = @vg.point(10.0, 10.0)
+  let top_left = @vg.Point::new(0.0, 0.0)
+  let bottom_right = @vg.Point::new(10.0, 10.0)
   let rect = @vg.primitive_rectangle(top_left, bottom_right)
   match rect {
     Rectangle(tl, br) => {
@@ -122,8 +130,8 @@ test "Primitive constructors and equality" {
 
   // Test path primitive
   let path = @vg.Path::empty()
-    .move_to(@vg.point(1.0, 1.0))
-    .line_to(@vg.point(2.0, 2.0))
+    .move_to(@vg.Point::new(1.0, 1.0))
+    .line_to(@vg.Point::new(2.0, 2.0))
   let path_prim = @vg.primitive_path(path)
   match path_prim {
     Path(p) => if p.0.length() != 2 { fail("Path should have 2 segments") }
@@ -131,7 +139,7 @@ test "Primitive constructors and equality" {
   }
 
   // Test text primitive
-  let text_pos = @vg.point(100.0, 200.0)
+  let text_pos = @vg.Point::new(100.0, 200.0)
   let text_prim = @vg.primitive_text("Hello World", text_pos, 14.0)
   match text_prim {
     Text(text, pos, size) => {
@@ -225,12 +233,12 @@ test "Primitive and ImageOp integration" {
   let blue_color = @vg.blue()
 
   // Create primitives
-  let circle = @vg.primitive_circle(@vg.point(50.0, 50.0), 25.0)
+  let circle = @vg.primitive_circle(@vg.Point::new(50.0, 50.0), 25.0)
   let rect = @vg.primitive_rectangle(
-    @vg.point(0.0, 0.0),
-    @vg.point(100.0, 20.0),
+    @vg.Point::new(0.0, 0.0),
+    @vg.Point::new(100.0, 20.0),
   )
-  let text = @vg.primitive_text("Test", @vg.point(10.0, 80.0), 12.0)
+  let text = @vg.primitive_text("Test", @vg.Point::new(10.0, 80.0), 12.0)
 
   // Create image operations
   let circle_op = @vg.imageop_primitive(circle, red_color)
