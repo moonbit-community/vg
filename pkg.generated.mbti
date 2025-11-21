@@ -243,6 +243,17 @@ pub struct Point {
   x : Double
   y : Double
 }
+fn Point::add(Self, Self) -> Self
+fn Point::distance(Self, Self) -> Double
+fn Point::dot(Self, Self) -> Double
+fn Point::length(Self) -> Double
+fn Point::lerp(Self, Self, Double) -> Self
+fn Point::new(Double, Double) -> Self
+fn Point::normalize(Self) -> Self
+fn Point::origin() -> Self
+fn Point::rotate(Self, Double) -> Self
+fn Point::scale(Self, Double) -> Self
+fn Point::sub(Self, Self) -> Self
 impl Eq for Point
 impl Show for Point
 
