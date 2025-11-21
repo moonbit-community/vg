@@ -63,7 +63,7 @@ test "smooth curve stitching" (it : @test.Test) {
 
 ///|
 test "axial gradients" (it : @test.Test) {
-  let axial_img = @vg.axial_gradient(
+  let axial_img = @vg.Image::axial_gradient(
     @vg.red(),
     @vg.yellow(),
     @vg.point(-50.0, 0.0),
@@ -76,7 +76,7 @@ test "axial gradients" (it : @test.Test) {
 
 ///|
 test "conic gradients" (it : @test.Test) {
-  let conic_img = @vg.conic_gradient(
+  let conic_img = @vg.Image::conic_gradient(
     @vg.red(),
     @vg.blue(),
     @vg.point(0.0, 0.0),
@@ -109,8 +109,8 @@ test "advanced blend modes" {
 
 ///|
 test "tiled images" (it : @test.Test) {
-  let base_pattern = @vg.circle(@vg.red(), 8.0)
-  let tiled = @vg.tile_image(base_pattern, 20.0, 20.0)
+  let base_pattern = @vg.Image::circle(@vg.red(), 8.0)
+  let tiled = @vg.Image::tile(base_pattern, 20.0, 20.0)
   let tiled_svg = tiled.render_image_to_svg(100.0, 80.0, 25)
   it.write(tiled_svg)
   it.snapshot(filename="tiled_pattern.svg")
@@ -118,7 +118,7 @@ test "tiled images" (it : @test.Test) {
 
 ///|
 test "checkerboard pattern" (it : @test.Test) {
-  let checker = @vg.checkerboard(@vg.black(), @vg.white(), 10.0)
+  let checker = @vg.Image::checkerboard(@vg.black(), @vg.white(), 10.0)
   let checker_svg = checker.render_image_to_svg(80.0, 80.0, 20)
   it.write(checker_svg)
   it.snapshot(filename="checkerboard.svg")

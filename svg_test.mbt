@@ -148,7 +148,7 @@ test "complex SVG document" {
 
 ///|
 test "image to SVG rendering" {
-  let img = @vg.circle(@vg.red(), 25.0)
+  let img = @vg.Image::circle(@vg.red(), 25.0)
   let svg_string = img.render_image_to_svg(100.0, 100.0, 20)
   if not(svg_string.contains("svg")) {
     fail("Image rendering should produce valid SVG")
@@ -252,14 +252,14 @@ test "path rendering to svg" (it : @test.Test) {
 ///|
 test "gradient showcase" (it : @test.Test) {
   // Create a simple SVG to test gradient rendering
-  let gradient_img = @vg.linear_gradient(
+  let gradient_img = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
     @vg.point(-50.0, 0.0),
     @vg.point(50.0, 0.0),
   )
   let gradient_svg = gradient_img.render_image_to_svg(100.0, 50.0, 20)
-  let radial_img = @vg.radial_gradient(
+  let radial_img = @vg.Image::radial_gradient(
     @vg.yellow(),
     @vg.purple(),
     @vg.point(0.0, 0.0),

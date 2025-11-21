@@ -6,29 +6,15 @@ fn add(Point, Point) -> Point
 
 fn apply(Transform, Point) -> Point
 
-fn axial_gradient(Color, Color, Point, Point) -> Image
-
 fn black() -> Color
 
 fn blend(Color, Color) -> Color
 
 fn blue() -> Color
 
-fn checkerboard(Color, Color, Double) -> Image
-
-fn circle(Color, Double) -> Image
-
 fn clamp(Color) -> Color
 
-fn compose_imgs(Image, Image) -> Image
-
 fn compose_transforms(Transform, Transform) -> Transform
-
-fn conic_gradient(Color, Color, Point, Double) -> Image
-
-fn const_color(Color) -> Image
-
-fn cut(Image, Image) -> Image
 
 fn cyan() -> Color
 
@@ -37,10 +23,6 @@ fn determinant(Transform) -> Double
 fn distance(Point, Point) -> Double
 
 fn dot(Point, Point) -> Double
-
-fn ellipse(Color, Double, Double) -> Image
-
-fn empty() -> Image
 
 fn example() -> Image
 
@@ -74,10 +56,6 @@ fn lerp(Point, Point, Double) -> Point
 
 fn lerp_color(Color, Color, Double) -> Color
 
-fn line(Color, Point, Point, Double) -> Image
-
-fn linear_gradient(Color, Color, Point, Point) -> Image
-
 fn magenta() -> Color
 
 fn make_rotate(Double) -> Transform
@@ -102,8 +80,6 @@ fn overlay_blend(Color, Color) -> Color
 
 fn point(Double, Double) -> Point
 
-fn polygon(Color, Array[Point]) -> Image
-
 fn preserves_orientation(Transform) -> Bool
 
 fn primitive_circle(Point, Double) -> Primitive
@@ -116,23 +92,15 @@ fn primitive_text(String, Point, Double) -> Primitive
 
 fn purple() -> Color
 
-fn radial_gradient(Color, Color, Point, Double) -> Image
-
-fn rectangle(Color, Double, Double) -> Image
-
 fn red() -> Color
 
 fn rgb(Double, Double, Double) -> Color
 
 fn rgba(Double, Double, Double, Double) -> Color
 
-fn rotate_image(Double, Image) -> Image
-
 fn rotate_point(Point, Double) -> Point
 
 fn scale(Color, Double) -> Color
-
-fn scale_image(Double, Double, Image) -> Image
 
 fn scale_point(Point, Double) -> Point
 
@@ -148,15 +116,11 @@ fn soft_light_blend(Color, Color) -> Color
 
 fn sub(Point, Point) -> Point
 
-fn tile_image(Image, Double, Double) -> Image
-
 fn to_hex(Color) -> String
 
 fn transparent() -> Color
 
 fn white() -> Color
-
-fn with_opacity(Image, Double) -> Image
 
 fn yellow() -> Color
 
@@ -197,11 +161,29 @@ impl Eq for Color
 impl Show for Color
 
 pub(all) struct Image((Point) -> Color)
+fn Image::axial_gradient(Color, Color, Point, Point) -> Self
+fn Image::checkerboard(Color, Color, Double) -> Self
+fn Image::circle(Color, Double) -> Self
+fn Image::compose(Self, Self) -> Self
+fn Image::conic_gradient(Color, Color, Point, Double) -> Self
+fn Image::const_color(Color) -> Self
+fn Image::cut(Self, Self) -> Self
+fn Image::ellipse(Color, Double, Double) -> Self
+fn Image::empty() -> Self
 #deprecated
 fn Image::inner(Self) -> (Point) -> Color
+fn Image::line(Color, Point, Point, Double) -> Self
+fn Image::linear_gradient(Color, Color, Point, Point) -> Self
+fn Image::polygon(Color, Array[Point]) -> Self
+fn Image::radial_gradient(Color, Color, Point, Double) -> Self
+fn Image::rectangle(Color, Double, Double) -> Self
 fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
+fn Image::rotate(Self, Double) -> Self
+fn Image::scale(Self, Double, Double) -> Self
+fn Image::tile(Self, Double, Double) -> Self
 fn Image::transform(Self, Transform) -> Self
 fn Image::translate_img(Self, Double, Double) -> Self
+fn Image::with_opacity(Self, Double) -> Self
 
 pub enum ImageOp {
   Const(Color)
