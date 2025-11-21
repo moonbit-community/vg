@@ -49,20 +49,20 @@ moon info
 ///|
 test "basic_shapes" (it : @test.Test) {
   // Create basic shapes
-  let red_circle = @vg.circle(@vg.red(), 50.0)
-  let blue_ellipse = @vg.ellipse(@vg.blue(), 60.0, 40.0)
-  let _triangle = @vg.polygon(@vg.green(), [
+  let red_circle = @vg.Image::circle(@vg.red(), 50.0)
+  let blue_ellipse = @vg.Image::ellipse(@vg.blue(), 60.0, 40.0)
+  let _triangle = @vg.Image::polygon(@vg.green(), [
     @vg.point(0.0, -30.0),
     @vg.point(-30.0, 30.0),
     @vg.point(30.0, 30.0),
   ])
 
   // Apply transformations and effects
-  let semi_transparent = @vg.with_opacity(red_circle, 0.7)
+  let semi_transparent = red_circle.with_opacity(0.7)
   let translated_ellipse = blue_ellipse.translate_img(50.0, 0.0)
 
   // Compose images
-  let _composed = @vg.compose_imgs(semi_transparent, translated_ellipse)
+  let _composed = semi_transparent.compose(translated_ellipse)
 
   // Create paths with object-oriented API
   let custom_path = @vg.Path::empty()
@@ -110,16 +110,16 @@ The library is organized into several modules:
 ///|
 test "basic shapes examples" {
   // Create a red circle
-  let circle_img = @vg.circle(@vg.red(), 25.0)
+  let circle_img = @vg.Image::circle(@vg.red(), 25.0)
 
   // Create a blue rectangle
-  let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
+  let rect_img = @vg.Image::rectangle(@vg.blue(), 50.0, 30.0)
 
   // Create an ellipse
-  let ellipse_img = @vg.ellipse(@vg.green(), 40.0, 20.0)
+  let ellipse_img = @vg.Image::ellipse(@vg.green(), 40.0, 20.0)
 
   // Create a polygon (triangle)
-  let triangle = @vg.polygon(@vg.yellow(), [
+  let triangle = @vg.Image::polygon(@vg.yellow(), [
     @vg.point(0.0, -20.0),
     @vg.point(-20.0, 20.0),
     @vg.point(20.0, 20.0),
@@ -137,17 +137,17 @@ test "basic shapes examples" {
 ```moonbit
 ///|
 test "transformations examples" {
-  let circle_img = @vg.circle(@vg.red(), 25.0)
-  let rect_img = @vg.rectangle(@vg.blue(), 50.0, 30.0)
+  let circle_img = @vg.Image::circle(@vg.red(), 25.0)
+  let rect_img = @vg.Image::rectangle(@vg.blue(), 50.0, 30.0)
 
   // Translate an image
   let moved = circle_img.translate_img(10.0, 20.0)
 
   // Scale an image
-  let scaled = @vg.scale_image(2.0, 1.5, rect_img)
+  let scaled = rect_img.scale(2.0, 1.5)
 
   // Rotate an image
-  let rotated = @vg.rotate_image(3.14159 / 4.0, circle_img) // 45 degrees
+  let rotated = circle_img.rotate(3.14159 / 4.0) // 45 degrees
 
   // Use the variables to avoid unused warnings
   ignore(moved)
@@ -167,10 +167,10 @@ test "colors and effects examples" {
   let purple_to_cyan = @vg.lerp_color(@vg.purple(), @vg.cyan(), 0.5)
 
   // Apply opacity
-  let semi_transparent = @vg.with_opacity(@vg.circle(@vg.red(), 30.0), 0.6)
+  let semi_transparent = @vg.Image::circle(@vg.red(), 30.0).with_opacity(0.6)
 
   // Linear gradient
-  let gradient = @vg.linear_gradient(
+  let gradient = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
     @vg.point(-50.0, 0.0),
@@ -178,7 +178,7 @@ test "colors and effects examples" {
   )
 
   // Radial gradient
-  let radial = @vg.radial_gradient(
+  let radial = @vg.Image::radial_gradient(
     @vg.white(),
     @vg.black(),
     @vg.point(0.0, 0.0),

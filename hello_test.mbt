@@ -31,16 +31,16 @@ test "example image creation" {
 ///|
 test "complete workflow - create and render image" {
   // Create a complex image
-  let background = @vg.rectangle(@vg.gray(0.9), 200.0, 200.0)
-  let red_circle = @vg.circle(@vg.red(), 40.0)
-  let blue_circle = @vg.circle(@vg.blue(), 30.0).translate_img(60.0, 0.0)
-  let green_rect = @vg.rectangle(@vg.green(), 30.0, 20.0).translate_img(
+  let background = @vg.Image::rectangle(@vg.gray(0.9), 200.0, 200.0)
+  let red_circle = @vg.Image::circle(@vg.red(), 40.0)
+  let blue_circle = @vg.Image::circle(@vg.blue(), 30.0).translate_img(60.0, 0.0)
+  let green_rect = @vg.Image::rectangle(@vg.green(), 30.0, 20.0).translate_img(
     -50.0, 50.0,
   )
   let complex_image = background
-    |> @vg.compose_imgs(red_circle)
-    |> @vg.compose_imgs(blue_circle)
-    |> @vg.compose_imgs(green_rect)
+    .compose(red_circle)
+    .compose(blue_circle)
+    .compose(green_rect)
 
   // Render to SVG
   let svg = complex_image.render_image_to_svg(200.0, 200.0, 50)
@@ -79,7 +79,7 @@ test "path to SVG integration" {
 
 ///|
 test "gradient rendering" {
-  let gradient_img = @vg.linear_gradient(
+  let gradient_img = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
     @vg.point(-50.0, 0.0),
@@ -105,11 +105,11 @@ test "gradient rendering" {
 
 ///|
 test "transformation chain" {
-  let original = @vg.circle(@vg.yellow(), 10.0)
+  let original = @vg.Image::circle(@vg.yellow(), 10.0)
 
   // Apply multiple transformations
-  let scaled = @vg.scale_image(2.0, 1.5, original)
-  let rotated = @vg.rotate_image(3.14159 / 4.0, scaled) // 45 degrees
+  let scaled = original.scale(2.0, 1.5)
+  let rotated = scaled.rotate(3.14159 / 4.0) // 45 degrees
   let transformed = rotated.translate_img(20.0, 10.0)
 
   // Test that transformations work

@@ -2,7 +2,7 @@
 
 ///|
 test "constant image" {
-  let red_img = @vg.const_color(@vg.red())
+  let red_img = @vg.Image::const_color(@vg.red())
   let p1 = @vg.point(0.0, 0.0)
   let p2 = @vg.point(100.0, -50.0)
   let c1 = red_img(p1)
@@ -14,7 +14,7 @@ test "constant image" {
 
 ///|
 test "empty image" {
-  let empty_img = @vg.empty()
+  let empty_img = @vg.Image::empty()
   let p = @vg.point(5.0, 10.0)
   let c = empty_img(p)
   if c != @vg.transparent() {
@@ -24,7 +24,7 @@ test "empty image" {
 
 ///|
 test "circle image" {
-  let circle_img = @vg.circle(@vg.blue(), 5.0)
+  let circle_img = @vg.Image::circle(@vg.blue(), 5.0)
   let inside = @vg.point(3.0, 0.0) // Distance 3 < radius 5
   let outside = @vg.point(10.0, 0.0) // Distance 10 > radius 5
   let on_edge = @vg.point(5.0, 0.0) // Distance 5 = radius 5
@@ -44,7 +44,7 @@ test "circle image" {
 
 ///|
 test "rectangle image" {
-  let rect_img = @vg.rectangle(@vg.green(), 10.0, 6.0)
+  let rect_img = @vg.Image::rectangle(@vg.green(), 10.0, 6.0)
   let inside = @vg.point(2.0, 1.0) // Within [-5,5] x [-3,3]
   let outside = @vg.point(8.0, 1.0) // Outside width bounds
   let on_edge = @vg.point(5.0, 0.0) // On width edge
@@ -64,7 +64,7 @@ test "rectangle image" {
 
 ///|
 test "image translation" {
-  let circle_img = @vg.circle(@vg.red(), 3.0)
+  let circle_img = @vg.Image::circle(@vg.red(), 3.0)
   let translated = circle_img.translate_img(5.0, 0.0)
   let original_center = @vg.point(0.0, 0.0)
   let new_center = @vg.point(5.0, 0.0)
@@ -80,8 +80,8 @@ test "image translation" {
 
 ///|
 test "image scaling" {
-  let circle_img = @vg.circle(@vg.blue(), 2.0)
-  let scaled = @vg.scale_image(2.0, 2.0, circle_img)
+  let circle_img = @vg.Image::circle(@vg.blue(), 2.0)
+  let scaled = circle_img.scale(2.0, 2.0)
   let p = @vg.point(3.0, 0.0) // Would be outside original circle but inside scaled
   let c = scaled(p)
   if c != @vg.blue() {
@@ -91,9 +91,9 @@ test "image scaling" {
 
 ///|
 test "image composition" {
-  let red_circle = @vg.circle(@vg.red(), 3.0)
-  let blue_circle = @vg.circle(@vg.blue(), 3.0).translate_img(2.0, 0.0)
-  let composed = @vg.compose_imgs(red_circle, blue_circle)
+  let red_circle = @vg.Image::circle(@vg.red(), 3.0)
+  let blue_circle = @vg.Image::circle(@vg.blue(), 3.0).translate_img(2.0, 0.0)
+  let composed = red_circle.compose(blue_circle)
   let red_only = @vg.point(-2.0, 0.0) // Only in red circle
   let blue_only = @vg.point(4.0, 0.0) // Only in blue circle
   let overlap = @vg.point(1.0, 0.0) // In both circles
@@ -117,9 +117,9 @@ test "image composition" {
 
 ///|
 test "image cutting" {
-  let red_rect = @vg.rectangle(@vg.red(), 10.0, 10.0)
-  let circle_mask = @vg.circle(@vg.white(), 3.0) // White mask
-  let cut_img = @vg.cut(red_rect, circle_mask)
+  let red_rect = @vg.Image::rectangle(@vg.red(), 10.0, 10.0)
+  let circle_mask = @vg.Image::circle(@vg.white(), 3.0) // White mask
+  let cut_img = red_rect.cut(circle_mask)
   let inside_mask = @vg.point(2.0, 0.0) // Inside circle mask
   let outside_mask = @vg.point(8.0, 0.0) // Outside circle mask
   let c_inside = cut_img(inside_mask)
@@ -134,7 +134,7 @@ test "image cutting" {
 
 ///|
 test "linear gradient" {
-  let gradient = @vg.linear_gradient(
+  let gradient = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
     @vg.point(-5.0, 0.0),
@@ -161,7 +161,7 @@ test "linear gradient" {
 
 ///|
 test "radial gradient" {
-  let gradient = @vg.radial_gradient(
+  let gradient = @vg.Image::radial_gradient(
     @vg.white(),
     @vg.black(),
     @vg.point(0.0, 0.0),
@@ -188,7 +188,7 @@ test "radial gradient" {
 
 ///|
 test "ellipse image" {
-  let ellipse_img = @vg.ellipse(@vg.green(), 4.0, 2.0)
+  let ellipse_img = @vg.Image::ellipse(@vg.green(), 4.0, 2.0)
   let inside = @vg.point(2.0, 1.0) // Inside ellipse
   let outside = @vg.point(5.0, 0.0) // Outside ellipse
   let edge = @vg.point(4.0, 0.0) // On edge
@@ -216,7 +216,7 @@ test "polygon image" {
     @vg.point(-2.0, 2.0),
     @vg.point(2.0, 2.0),
   ]
-  let triangle_img = @vg.polygon(@vg.blue(), triangle_points)
+  let triangle_img = @vg.Image::polygon(@vg.blue(), triangle_points)
   let inside = @vg.point(0.0, 0.0) // Inside triangle
   let outside = @vg.point(0.0, -3.0) // Outside triangle
   let c_inside = triangle_img(inside)
@@ -231,8 +231,8 @@ test "polygon image" {
 
 ///|
 test "opacity application" {
-  let red_img = @vg.circle(@vg.red(), 5.0)
-  let semi_transparent = @vg.with_opacity(red_img, 0.5)
+  let red_img = @vg.Image::circle(@vg.red(), 5.0)
+  let semi_transparent = red_img.with_opacity(0.5)
   let center = @vg.point(0.0, 0.0)
   let color = semi_transparent(center)
   if color.r != 1.0 || color.g != 0.0 || color.b != 0.0 {
@@ -246,16 +246,16 @@ test "opacity application" {
 ///|
 test "image rendering showcase" (it : @test.Test) {
   // Create a complex composed image
-  let background = @vg.rectangle(@vg.gray(0.95), 200.0, 150.0)
-  let red_circle = @vg.circle(@vg.red(), 25.0)
-  let blue_ellipse = @vg.ellipse(@vg.blue(), 30.0, 20.0)
-  let green_rect = @vg.rectangle(@vg.green(), 40.0, 30.0)
+  let background = @vg.Image::rectangle(@vg.gray(0.95), 200.0, 150.0)
+  let red_circle = @vg.Image::circle(@vg.red(), 25.0)
+  let blue_ellipse = @vg.Image::ellipse(@vg.blue(), 30.0, 20.0)
+  let green_rect = @vg.Image::rectangle(@vg.green(), 40.0, 30.0)
   let composed = background
-    |> @vg.compose_imgs(red_circle.translate_img(50.0, 40.0))
-    |> @vg.compose_imgs(blue_ellipse.translate_img(100.0, 60.0))
-    |> @vg.compose_imgs(green_rect.translate_img(150.0, 50.0))
-    |> @vg.compose_imgs(
-      @vg.with_opacity(@vg.circle(@vg.yellow(), 20.0), 0.7).translate_img(
+    .compose(red_circle.translate_img(50.0, 40.0))
+    .compose(blue_ellipse.translate_img(100.0, 60.0))
+    .compose(green_rect.translate_img(150.0, 50.0))
+    .compose(
+      @vg.Image::circle(@vg.yellow(), 20.0).with_opacity(0.7).translate_img(
         75.0, 90.0,
       ),
     )
@@ -267,19 +267,19 @@ test "image rendering showcase" (it : @test.Test) {
 ///|
 test "gradient images showcase" (it : @test.Test) {
   // Linear gradients
-  let horizontal_gradient = @vg.linear_gradient(
+  let horizontal_gradient = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
     @vg.point(-50.0, 0.0),
     @vg.point(50.0, 0.0),
   )
-  let vertical_gradient = @vg.linear_gradient(
+  let vertical_gradient = @vg.Image::linear_gradient(
     @vg.green(),
     @vg.yellow(),
     @vg.point(0.0, -40.0),
     @vg.point(0.0, 40.0),
   )
-  let diagonal_gradient = @vg.linear_gradient(
+  let diagonal_gradient = @vg.Image::linear_gradient(
     @vg.purple(),
     @vg.cyan(),
     @vg.point(-35.0, -35.0),
@@ -287,13 +287,13 @@ test "gradient images showcase" (it : @test.Test) {
   )
 
   // Radial gradients
-  let radial1 = @vg.radial_gradient(
+  let radial1 = @vg.Image::radial_gradient(
     @vg.white(),
     @vg.red(),
     @vg.point(0.0, 0.0),
     30.0,
   )
-  let radial2 = @vg.radial_gradient(
+  let radial2 = @vg.Image::radial_gradient(
     @vg.yellow(),
     @vg.purple(),
     @vg.point(0.0, 0.0),
@@ -322,20 +322,20 @@ test "gradient images showcase" (it : @test.Test) {
 
 ///|
 test "transform showcase" (it : @test.Test) {
-  let base_circle = @vg.circle(@vg.red(), 20.0)
+  let base_circle = @vg.Image::circle(@vg.red(), 20.0)
 
   // Apply different transformations
   let translated = base_circle.translate_img(60.0, 0.0)
-  let scaled = @vg.scale_image(1.5, 0.8, base_circle)
-  let rotated = @vg.rotate_image(3.14159 / 4.0, base_circle) // 45 degrees
+  let scaled = base_circle.scale(1.5, 0.8)
+  let rotated = base_circle.rotate(3.14159 / 4.0) // 45 degrees
 
   // Compose all transformations
-  let background = @vg.rectangle(@vg.gray(0.9), 200.0, 100.0)
+  let background = @vg.Image::rectangle(@vg.gray(0.9), 200.0, 100.0)
   let showcase = background
-    |> @vg.compose_imgs(base_circle.translate_img(40.0, 50.0))
-    |> @vg.compose_imgs(translated.translate_img(100.0, 50.0))
-    |> @vg.compose_imgs(scaled.translate_img(40.0, 30.0))
-    |> @vg.compose_imgs(rotated.translate_img(140.0, 30.0))
+    .compose(base_circle.translate_img(40.0, 50.0))
+    .compose(translated.translate_img(100.0, 50.0))
+    .compose(scaled.translate_img(40.0, 30.0))
+    .compose(rotated.translate_img(140.0, 30.0))
   let svg_string = showcase.render_image_to_svg(200.0, 100.0, 30)
   it.write(svg_string)
   it.snapshot(filename="transform_showcase.svg")

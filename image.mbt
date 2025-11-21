@@ -2,19 +2,19 @@
 
 ///|
 /// Create a constant color image
-pub fn const_color(color : Color) -> Image {
+pub fn Image::const_color(color : Color) -> Image {
   fn(_p : Point) -> Color { color }
 }
 
 ///|
 /// Create an empty (transparent) image
-pub fn empty() -> Image {
-  const_color(transparent())
+pub fn Image::empty() -> Image {
+  Image::const_color(transparent())
 }
 
 ///|
 /// Create a circle image
-pub fn circle(color : Color, radius : Double) -> Image {
+pub fn Image::circle(color : Color, radius : Double) -> Image {
   p => {
     let dist = length(p)
     if dist <= radius {
@@ -27,7 +27,7 @@ pub fn circle(color : Color, radius : Double) -> Image {
 
 ///|
 /// Create a rectangle image
-pub fn rectangle(color : Color, width : Double, height : Double) -> Image {
+pub fn Image::rectangle(color : Color, width : Double, height : Double) -> Image {
   p => if p.x >= -width / 2.0 &&
     p.x <= width / 2.0 &&
     p.y >= -height / 2.0 &&
@@ -40,7 +40,7 @@ pub fn rectangle(color : Color, width : Double, height : Double) -> Image {
 
 ///|
 /// Create a line image (with thickness)
-pub fn line(
+pub fn Image::line(
   color : Color,
   start : Point,
   end : Point,
@@ -89,22 +89,22 @@ pub fn Image::translate_img(img : Image, dx : Double, dy : Double) -> Image {
 
 ///|
 /// Scale an image
-pub fn scale_image(sx : Double, sy : Double, img : Image) -> Image {
-  img.transform(make_scale(sx, sy))
+pub fn Image::scale(self : Image, sx : Double, sy : Double) -> Image {
+  self.transform(make_scale(sx, sy))
 }
 
 ///|
 /// Rotate an image
-pub fn rotate_image(angle : Double, img : Image) -> Image {
-  img.transform(make_rotate(angle))
+pub fn Image::rotate(self : Image, angle : Double) -> Image {
+  self.transform(make_rotate(angle))
 }
 
 ///|
 /// Compose two images using alpha blending
-pub fn compose_imgs(img1 : Image, img2 : Image) -> Image {
+pub fn Image::compose(self : Image, other : Image) -> Image {
   fn(p : Point) -> Color {
-    let c1 = img1(p)
-    let c2 = img2(p)
+    let c1 = self(p)
+    let c2 = other(p)
     // If both colors are non-transparent, blend them
     if c1.a > 0.0 && c2.a > 0.0 {
       // Use additive blending for overlapping opaque areas
@@ -122,9 +122,9 @@ pub fn compose_imgs(img1 : Image, img2 : Image) -> Image {
 
 ///|
 /// Cut an image using another as a mask
-pub fn cut(img : Image, mask : Image) -> Image {
+pub fn Image::cut(self : Image, mask : Image) -> Image {
   fn(p : Point) -> Color {
-    let c = img(p)
+    let c = self(p)
     let m = mask(p)
     { r: c.r, g: c.g, b: c.b, a: c.a * m.a }
   }
@@ -132,7 +132,7 @@ pub fn cut(img : Image, mask : Image) -> Image {
 
 ///|
 /// Create a gradient between two colors
-pub fn linear_gradient(
+pub fn Image::linear_gradient(
   color1 : Color,
   color2 : Color,
   start : Point,
@@ -161,7 +161,7 @@ pub fn linear_gradient(
 
 ///|
 /// Create a radial gradient
-pub fn radial_gradient(
+pub fn Image::radial_gradient(
   color1 : Color,
   color2 : Color,
   center : Point,
@@ -182,7 +182,7 @@ pub fn radial_gradient(
 
 ///|
 /// Create an ellipse image
-pub fn ellipse(color : Color, rx : Double, ry : Double) -> Image {
+pub fn Image::ellipse(color : Color, rx : Double, ry : Double) -> Image {
   fn(p : Point) -> Color {
     let normalized_x = p.x / rx
     let normalized_y = p.y / ry
@@ -197,7 +197,7 @@ pub fn ellipse(color : Color, rx : Double, ry : Double) -> Image {
 
 ///|
 /// Create a polygon image from a list of points
-pub fn polygon(color : Color, points : Array[Point]) -> Image {
+pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
   fn(p : Point) -> Color {
     // Point-in-polygon test using ray casting algorithm
     if points.length() < 3 {
@@ -225,27 +225,27 @@ pub fn polygon(color : Color, points : Array[Point]) -> Image {
 
 ///|
 /// Apply opacity to an image
-pub fn with_opacity(img : Image, opacity : Double) -> Image {
+pub fn Image::with_opacity(self : Image, opacity : Double) -> Image {
   fn(p : Point) -> Color {
-    let c = img(p)
+    let c = self(p)
     { r: c.r, g: c.g, b: c.b, a: c.a * opacity }
   }
 }
 
 ///|
 /// Create an axial gradient (alternative name for linear gradient)
-pub fn axial_gradient(
+pub fn Image::axial_gradient(
   color1 : Color,
   color2 : Color,
   start : Point,
   end : Point,
 ) -> Image {
-  linear_gradient(color1, color2, start, end)
+  Image::linear_gradient(color1, color2, start, end)
 }
 
 ///|
 /// Create a conic gradient (angular gradient around a center point)
-pub fn conic_gradient(
+pub fn Image::conic_gradient(
   color1 : Color,
   color2 : Color,
   center : Point,
@@ -282,8 +282,8 @@ pub fn conic_gradient(
 
 ///|
 /// Create a repeated/tiled image
-pub fn tile_image(
-  img : Image,
+pub fn Image::tile(
+  self : Image,
   tile_width : Double,
   tile_height : Double,
 ) -> Image {
@@ -300,7 +300,7 @@ pub fn tile_image(
     } else {
       tiled_y
     }
-    img(
+    self(
       point(normalized_x - tile_width / 2.0, normalized_y - tile_height / 2.0),
     )
   }
@@ -308,7 +308,7 @@ pub fn tile_image(
 
 ///|
 /// Create a checkerboard pattern
-pub fn checkerboard(color1 : Color, color2 : Color, size : Double) -> Image {
+pub fn Image::checkerboard(color1 : Color, color2 : Color, size : Double) -> Image {
   fn(p : Point) -> Color {
     let x_cell = (p.x / size).floor().to_int()
     let y_cell = (p.y / size).floor().to_int()
