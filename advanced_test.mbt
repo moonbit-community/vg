@@ -12,8 +12,8 @@ test "quadratic bezier curves" (it : @test.Test) {
     content="Path([MoveTo({x: 10, y: 50}), QCurveTo({x: 50, y: 10}, {x: 90, y: 50}), QCurveTo({x: 50, y: 90}, {x: 10, y: 50}), Close])",
   )
   let doc = @vg.new_svg(100.0, 100.0)
-    .render_rectangle(0.0, 0.0, 100.0, 100.0, @vg.gray(0.95))
-    .render_path(qcurve_path, @vg.blue())
+    .render_rectangle(0.0, 0.0, 100.0, 100.0, @color.gray(0.95))
+    .render_path(qcurve_path, @color.blue())
   let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="quadratic_curves.svg")
@@ -31,8 +31,8 @@ test "elliptical arcs" (it : @test.Test) {
     content="Path([MoveTo({x: 20, y: 50}), EArcTo(30, 20, 0, false, true, {x: 80, y: 50}), EArcTo(30, 20, 0, false, true, {x: 20, y: 50}), Close])",
   )
   let doc = @vg.new_svg(100.0, 100.0)
-    .render_rectangle(0.0, 0.0, 100.0, 100.0, @vg.gray(0.95))
-    .render_path(arc_path, @vg.green())
+    .render_rectangle(0.0, 0.0, 100.0, 100.0, @color.gray(0.95))
+    .render_path(arc_path, @color.green())
   let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="elliptical_arcs.svg")
@@ -54,8 +54,8 @@ test "smooth curve stitching" (it : @test.Test) {
     content="Path([MoveTo({x: 10, y: 50}), CurveTo({x: 30, y: 10}, {x: 50, y: 10}, {x: 70, y: 50}), CurveTo({x: 90, y: 90}, {x: 110, y: 90}, {x: 130, y: 50}), CurveTo({x: 150, y: 10}, {x: 150, y: 10}, {x: 170, y: 50})])",
   )
   let doc = @vg.new_svg(180.0, 100.0)
-    .render_rectangle(0.0, 0.0, 180.0, 100.0, @vg.gray(0.95))
-    .render_path(smooth_path, @vg.purple())
+    .render_rectangle(0.0, 0.0, 180.0, 100.0, @color.gray(0.95))
+    .render_path(smooth_path, @color.purple())
   let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="smooth_curves.svg")
@@ -64,8 +64,8 @@ test "smooth curve stitching" (it : @test.Test) {
 ///|
 test "axial gradients" (it : @test.Test) {
   let axial_img = @vg.Image::axial_gradient(
-    @vg.red(),
-    @vg.yellow(),
+    @color.red(),
+    @color.yellow(),
     @vg.Point::new(-50.0, 0.0),
     @vg.Point::new(50.0, 0.0),
   )
@@ -77,8 +77,8 @@ test "axial gradients" (it : @test.Test) {
 ///|
 test "conic gradients" (it : @test.Test) {
   let conic_img = @vg.Image::conic_gradient(
-    @vg.red(),
-    @vg.blue(),
+    @color.red(),
+    @color.blue(),
     @vg.Point::new(0.0, 0.0),
     0.0,
   )
@@ -89,15 +89,15 @@ test "conic gradients" (it : @test.Test) {
 
 ///|
 test "advanced blend modes" {
-  let red = @vg.rgba(1.0, 0.0, 0.0, 0.8)
-  let blue = @vg.rgba(0.0, 0.0, 1.0, 0.8)
+  let red = @color.rgba(1.0, 0.0, 0.0, 0.8)
+  let blue = @color.rgba(0.0, 0.0, 1.0, 0.8)
   let blend_results = [
-    ("normal_blend", @vg.blend(red, blue)),
-    ("multiply_blend", @vg.multiply_blend(red, blue)),
-    ("screen_blend", @vg.screen_blend(red, blue)),
-    ("overlay_blend", @vg.overlay_blend(red, blue)),
-    ("hard_light_blend", @vg.hard_light_blend(red, blue)),
-    ("soft_light_blend", @vg.soft_light_blend(red, blue)),
+    ("normal_blend", @color.blend(red, blue)),
+    ("multiply_blend", @color.multiply_blend(red, blue)),
+    ("screen_blend", @color.screen_blend(red, blue)),
+    ("overlay_blend", @color.overlay_blend(red, blue)),
+    ("hard_light_blend", @color.hard_light_blend(red, blue)),
+    ("soft_light_blend", @color.soft_light_blend(red, blue)),
   ]
   inspect(
     blend_results,
@@ -109,7 +109,7 @@ test "advanced blend modes" {
 
 ///|
 test "tiled images" (it : @test.Test) {
-  let base_pattern = @vg.Image::circle(@vg.red(), 8.0)
+  let base_pattern = @vg.Image::circle(@color.red(), 8.0)
   let tiled = @vg.Image::tile(base_pattern, 20.0, 20.0)
   let tiled_svg = tiled.render_image_to_svg(100.0, 80.0, 25)
   it.write(tiled_svg)
@@ -118,7 +118,7 @@ test "tiled images" (it : @test.Test) {
 
 ///|
 test "checkerboard pattern" (it : @test.Test) {
-  let checker = @vg.Image::checkerboard(@vg.black(), @vg.white(), 10.0)
+  let checker = @vg.Image::checkerboard(@color.black(), @color.white(), 10.0)
   let checker_svg = checker.render_image_to_svg(80.0, 80.0, 20)
   it.write(checker_svg)
   it.snapshot(filename="checkerboard.svg")
@@ -127,12 +127,12 @@ test "checkerboard pattern" (it : @test.Test) {
 ///|
 test "advanced path showcase" (it : @test.Test) {
   let doc = @vg.new_svg(400.0, 300.0)
-    .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.gray(0.98))
+    .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.gray(0.98))
     .render_text(
       "Advanced Path Features",
       @vg.Point::new(200.0, 30.0),
       18.0,
-      @vg.black(),
+      @color.black(),
     )
 
   // Quadratic curve example
@@ -166,17 +166,17 @@ test "advanced path showcase" (it : @test.Test) {
       @vg.Point::new(250.0, 150.0),
     )
   let final_doc = doc
-    .render_path(q_path, @vg.blue())
-    .render_path(arc_path, @vg.green())
-    .render_path(smooth_path, @vg.red())
-    .render_text("Quadratic", @vg.Point::new(100.0, 130.0), 12.0, @vg.blue())
+    .render_path(q_path, @color.blue())
+    .render_path(arc_path, @color.green())
+    .render_path(smooth_path, @color.red())
+    .render_text("Quadratic", @vg.Point::new(100.0, 130.0), 12.0, @color.blue())
     .render_text(
       "Elliptical Arc",
       @vg.Point::new(240.0, 130.0),
       12.0,
-      @vg.green(),
+      @color.green(),
     )
-    .render_text("Smooth Curves", @vg.Point::new(150.0, 200.0), 12.0, @vg.red())
+    .render_text("Smooth Curves", @vg.Point::new(150.0, 200.0), 12.0, @color.red())
   let svg_string = final_doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="advanced_paths.svg")
