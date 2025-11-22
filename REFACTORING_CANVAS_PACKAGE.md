@@ -48,20 +48,17 @@ Created `canvas/` package with:
 
 ### Public Field Requirement
 
-The `CanvasDocument` struct fields (`width`, `height`, `commands`) are marked as `pub` in the canvas package to allow external access:
+The `CanvasDocument` struct fields (`width`, `height`, `commands`) follow MoonBit's default behavior where struct fields are public within the package. External access to these fields is not required as all operations on CanvasDocument are done through methods:
 
 ```moonbit
 pub struct CanvasDocument {
-  pub width : Double
-  pub height : Double
-  pub commands : Array[String]
+  width : Double
+  height : Double
+  commands : Array[String]
 } derive(Show)
 ```
 
-This is necessary because:
-- The CanvasDocument type is re-exported as a type alias in the main package
-- External packages may need to inspect the document state
-- Tests need access to verify the generated commands
+This is similar to the geometry package pattern. The color package uses explicit `pub` modifiers for a different reason (direct field access for color components is a common use case), but for CanvasDocument, all interactions are through methods like `render_circle`, `to_js`, etc.
 
 ### Code Updates Required
 
@@ -173,8 +170,8 @@ vg/
 - The canvas package depends on both geometry and color packages
 - Type aliases ensure CanvasDocument type is available through `@vg.CanvasDocument`
 - All CanvasDocument methods work through the type alias
-- CanvasDocument struct fields are marked `pub` to allow external access when using type aliases
-- This matches the geometry and color package patterns exactly
+- CanvasDocument struct fields follow MoonBit's default public-within-package behavior
+- This matches the geometry package pattern exactly (color package uses explicit pub for different reasons)
 - The refactoring is fully backward compatible - no API changes required for consumers
 
 ## Future Work
