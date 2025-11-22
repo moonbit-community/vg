@@ -215,7 +215,7 @@ test "paths examples" {
   let ellipse = @vg.Path::ellipse(@vg.Point::new(0.0, 0.0), 30.0, 15.0)
 
   // Transform paths
-  let transform = @vg.make_translate(10.0, 20.0)
+  let transform = @geometry.make_translate(10.0, 20.0)
   let moved_path = path.transform(transform)
 
   // Get path bounds
@@ -333,7 +333,7 @@ test "object oriented style example" {
     .close_path()
   let rect = @vg.Path::rect(0.0, 0.0, 10.0, 5.0)
   let bounds = path.bounds()
-  let transform = @vg.make_translate(5.0, 5.0)
+  let transform = @geometry.make_translate(5.0, 5.0)
   let transformed = path.transform(transform)
 
   // Use the variables to avoid unused warnings

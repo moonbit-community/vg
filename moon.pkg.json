@@ -1,1 +1,6 @@
-{}
+{
+  "is-main": false,
+  "import": [
+    "bobzhang/vg/geometry"
+  ]
+}

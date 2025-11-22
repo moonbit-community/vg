@@ -1,0 +1,104 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bobzhang/vg/geometry"
+
+// Values
+fn apply(Transform, Point) -> Point
+
+fn compose_transforms(Transform, Transform) -> Transform
+
+fn determinant(Transform) -> Double
+
+fn identity() -> Transform
+
+fn invert(Transform) -> Transform?
+
+fn make_rotate(Double) -> Transform
+
+fn make_scale(Double, Double) -> Transform
+
+fn make_translate(Double, Double) -> Transform
+
+fn preserves_orientation(Transform) -> Bool
+
+fn scale_uniform(Double) -> Transform
+
+fn skew_x(Double) -> Transform
+
+fn skew_y(Double) -> Transform
+
+// Errors
+
+// Types and methods
+pub struct Box {
+  min_x : Double
+  min_y : Double
+  max_x : Double
+  max_y : Double
+}
+impl Eq for Box
+impl Show for Box
+
+pub struct Path(Array[PathSegment])
+fn Path::bounds(Self) -> Box?
+fn Path::circle(Point, Double) -> Self
+fn Path::close_path(Self) -> Self
+fn Path::curve_to(Self, Point, Point, Point) -> Self
+fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
+fn Path::ellipse(Point, Double, Double) -> Self
+fn Path::empty() -> Self
+#deprecated
+fn Path::inner(Self) -> Array[PathSegment]
+fn Path::line_to(Self, Point) -> Self
+fn Path::move_to(Self, Point) -> Self
+fn Path::qcurve_to(Self, Point, Point) -> Self
+fn Path::rect(Double, Double, Double, Double) -> Self
+fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
+fn Path::smooth_qcurve_to(Self, Point) -> Self
+fn Path::transform(Self, Transform) -> Self
+impl Eq for Path
+impl Show for Path
+
+pub enum PathSegment {
+  MoveTo(Point)
+  LineTo(Point)
+  CurveTo(Point, Point, Point)
+  QCurveTo(Point, Point)
+  EArcTo(Double, Double, Double, Bool, Bool, Point)
+  Close
+}
+impl Eq for PathSegment
+impl Show for PathSegment
+
+pub struct Point {
+  x : Double
+  y : Double
+}
+fn Point::add(Self, Self) -> Self
+fn Point::distance(Self, Self) -> Double
+fn Point::dot(Self, Self) -> Double
+fn Point::length(Self) -> Double
+fn Point::lerp(Self, Self, Double) -> Self
+fn Point::new(Double, Double) -> Self
+fn Point::normalize(Self) -> Self
+fn Point::origin() -> Self
+fn Point::rotate(Self, Double) -> Self
+fn Point::scale(Self, Double) -> Self
+fn Point::sub(Self, Self) -> Self
+impl Eq for Point
+impl Show for Point
+
+pub struct Transform {
+  m11 : Double
+  m12 : Double
+  m21 : Double
+  m22 : Double
+  m31 : Double
+  m32 : Double
+}
+impl Eq for Transform
+impl Show for Transform
+
+// Type aliases
+
+// Traits
+

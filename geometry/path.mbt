@@ -175,26 +175,6 @@ pub fn Path::ellipse(center : Point, rx : Double, ry : Double) -> Path {
 }
 
 ///|
-/// Transform a path
-pub fn Path::transform(self : Path, t : Transform) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    let transformed_segment = match segment {
-      MoveTo(p) => MoveTo(apply(t, p))
-      LineTo(p) => LineTo(apply(t, p))
-      CurveTo(cp1, cp2, end) =>
-        CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
-      QCurveTo(cp, end) => QCurveTo(apply(t, cp), apply(t, end))
-      EArcTo(rx, ry, rotation, large_arc, sweep, end) =>
-        EArcTo(rx, ry, rotation, large_arc, sweep, apply(t, end))
-      Close => Close
-    }
-    new_path.push(transformed_segment)
-  }
-  Path(new_path)
-}
-
-///|
 /// Get the bounding box of a path (approximate)
 pub fn Path::bounds(self : Path) -> Box? {
   let mut min_x = 1000000.0
@@ -290,5 +270,25 @@ pub fn Path::smooth_qcurve_to(self : Path, end : Point) -> Path {
       }
   }
   new_path.push(QCurveTo(cp, end))
+  Path(new_path)
+}
+
+///|
+/// Transform a path using a transformation matrix
+pub fn Path::transform(self : Path, t : Transform) -> Path {
+  let new_path = Array::new()
+  for segment in self.0 {
+    let transformed_segment = match segment {
+      MoveTo(p) => MoveTo(apply(t, p))
+      LineTo(p) => LineTo(apply(t, p))
+      CurveTo(cp1, cp2, end) =>
+        CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
+      QCurveTo(cp, end) => QCurveTo(apply(t, cp), apply(t, end))
+      EArcTo(rx, ry, rotation, large_arc, sweep, end) =>
+        EArcTo(rx, ry, rotation, large_arc, sweep, apply(t, end))
+      Close => Close
+    }
+    new_path.push(transformed_segment)
+  }
   Path(new_path)
 }

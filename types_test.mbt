@@ -28,9 +28,9 @@ test "Color creation and equality" {
 
 ///|
 test "Transform creation and equality" {
-  let t1 = @vg.identity()
-  let t2 = @vg.identity()
-  let t3 = @vg.make_scale(2.0, 2.0)
+  let t1 = @geometry.identity()
+  let t2 = @geometry.identity()
+  let t3 = @geometry.make_scale(2.0, 2.0)
   if t1 != t2 {
     fail("Transforms with same components should be equal")
   }
@@ -199,7 +199,7 @@ test "ImageOp constructors and variants" {
   }
 
   // Test transform operation
-  let identity_transform = @vg.identity()
+  let identity_transform = @geometry.identity()
   let dummy_image = fn(_p) { red }
   let transform_op = @vg.imageop_transform(identity_transform, dummy_image)
   match transform_op {

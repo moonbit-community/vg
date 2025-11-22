@@ -79,8 +79,8 @@ pub fn Image::line(
 ///|
 /// Transform an image
 pub fn Image::transform(img : Image, t : Transform) -> Image {
-  p => match invert(t) {
-    Some(inv_t) => img(apply(inv_t, p))
+  p => match @geometry.invert(t) {
+    Some(inv_t) => img(@geometry.apply(inv_t, p))
     None => transparent()
   }
 }
@@ -88,19 +88,19 @@ pub fn Image::transform(img : Image, t : Transform) -> Image {
 ///|
 /// Translate an image
 pub fn Image::translate_img(img : Image, dx : Double, dy : Double) -> Image {
-  img.transform(make_translate(dx, dy))
+  img.transform(@geometry.make_translate(dx, dy))
 }
 
 ///|
 /// Scale an image
 pub fn Image::scale(self : Image, sx : Double, sy : Double) -> Image {
-  self.transform(make_scale(sx, sy))
+  self.transform(@geometry.make_scale(sx, sy))
 }
 
 ///|
 /// Rotate an image
 pub fn Image::rotate(self : Image, angle : Double) -> Image {
-  self.transform(make_rotate(angle))
+  self.transform(@geometry.make_rotate(angle))
 }
 
 ///|
