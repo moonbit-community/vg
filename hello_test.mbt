@@ -69,7 +69,7 @@ test "path to SVG integration" {
     .close_path()
 
   // Render to SVG
-  let doc = @vg.new_svg(150.0, 100.0).render_path(path, @color.magenta())
+  let doc = @svg.new_svg(150.0, 100.0).render_path(path, @color.magenta())
   let svg_string = doc.to_string()
   if not(svg_string.contains("path")) {
     fail("Should contain path element")
@@ -154,7 +154,7 @@ test "color operations" {
 ///|
 test "complete vg library showcase" (it : @test.Test) {
   // Create a comprehensive demo showcasing all VG features
-  let doc = @vg.new_svg(600.0, 500.0)
+  let doc = @svg.new_svg(600.0, 500.0)
     .render_rectangle(0.0, 0.0, 600.0, 500.0, @color.gray(0.97)) // Light background
     .render_text(
       "MoonBit VG Library - Complete Showcase",

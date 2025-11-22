@@ -22,6 +22,11 @@ pub type Transform = @geometry.Transform
 ///|
 pub type Color = @color.Color
 
+// Re-export svg type
+
+///|
+pub type SvgDocument = @svg.SvgDocument
+
 ///|
 /// An image is a function from points to colors
 pub(all) struct Image((Point) -> Color)

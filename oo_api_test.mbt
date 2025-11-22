@@ -3,7 +3,7 @@
 ///|
 test "svg oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for SVG
-  let doc = @vg.new_svg(300.0, 200.0)
+  let doc = @svg.new_svg(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
     .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
@@ -83,7 +83,7 @@ test "oo-style path with document integration" (it : @test.Test) {
     .close_path()
 
   // Use the same path across all OO-style renderers
-  let svg_doc = @vg.new_svg(250.0, 150.0)
+  let svg_doc = @svg.new_svg(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.white())
     .render_path(custom_path, @color.purple())
     .render_text(
@@ -125,7 +125,7 @@ test "oo-style api comparison" (it : @test.Test) {
   // Compare functional vs OO-style APIs
 
   // Functional style (original)
-  let svg_functional = @vg.new_svg(200.0, 100.0)
+  let svg_functional = @svg.new_svg(200.0, 100.0)
     .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @color.red())
     .render_text(
       "Functional Style",
@@ -135,7 +135,7 @@ test "oo-style api comparison" (it : @test.Test) {
     )
 
   // OO style (new)  
-  let svg_oo = @vg.new_svg(200.0, 100.0)
+  let svg_oo = @svg.new_svg(200.0, 100.0)
     .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @color.red())
     .render_text("OO Style", @vg.Point::new(100.0, 80.0), 12.0, @color.black())
 
@@ -175,7 +175,7 @@ test "complete oo-style showcase" (it : @test.Test) {
     .smooth_ccurve_to(@vg.Point::new(225.0, 125.0), @vg.Point::new(275.0, 75.0))
     .earc_to(25.0, 15.0, 0.0, false, true, @vg.Point::new(225.0, 100.0))
     .close_path()
-  let svg_showcase = @vg.new_svg(350.0, 200.0)
+  let svg_showcase = @svg.new_svg(350.0, 200.0)
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @color.gray(0.98))
     .render_text(
       "Complete OO-Style API Showcase",
