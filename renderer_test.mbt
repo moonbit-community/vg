@@ -4,15 +4,20 @@
 test "canvas renderer basic shapes" (it : @test.Test) {
   let doc = @vg.new_canvas(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95)) // Background
-    .render_circle(@vg.point(80.0, 100.0), 30.0, @vg.red()) // Red circle
+    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @vg.red()) // Red circle
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @vg.green()) // Green rectangle
     .render_line(
-      @vg.point(50.0, 160.0),
-      @vg.point(250.0, 160.0),
+      @vg.Point::new(50.0, 160.0),
+      @vg.Point::new(250.0, 160.0),
       @vg.blue(),
       3.0,
     ) // Blue line
-    .render_text("Canvas Rendering", @vg.point(150.0, 40.0), 16.0, @vg.black()) // Title
+    .render_text(
+      "Canvas Rendering",
+      @vg.Point::new(150.0, 40.0),
+      16.0,
+      @vg.black(),
+    ) // Title
   inspect(
     doc,
     content=(
@@ -28,19 +33,23 @@ test "canvas renderer basic shapes" (it : @test.Test) {
 test "canvas renderer complete html" (it : @test.Test) {
   let doc = @vg.new_canvas(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @vg.white()) // Background
-    .render_circle(@vg.point(100.0, 100.0), 40.0, @vg.red()) // Red circle
-    .render_circle(@vg.point(200.0, 100.0), 35.0, @vg.rgba(0.0, 1.0, 0.0, 0.7)) // Semi-transparent green
-    .render_circle(@vg.point(300.0, 100.0), 30.0, @vg.blue()) // Blue circle
+    .render_circle(@vg.Point::new(100.0, 100.0), 40.0, @vg.red()) // Red circle
+    .render_circle(
+      @vg.Point::new(200.0, 100.0),
+      35.0,
+      @vg.rgba(0.0, 1.0, 0.0, 0.7),
+    ) // Semi-transparent green
+    .render_circle(@vg.Point::new(300.0, 100.0), 30.0, @vg.blue()) // Blue circle
     .render_rectangle(50.0, 180.0, 300.0, 80.0, @vg.rgba(1.0, 1.0, 0.0, 0.5)) // Semi-transparent yellow
     .render_text(
       "HTML5 Canvas VG Demo",
-      @vg.point(200.0, 50.0),
+      @vg.Point::new(200.0, 50.0),
       20.0,
       @vg.black(),
     )
     .render_text(
       "Interactive Graphics",
-      @vg.point(200.0, 220.0),
+      @vg.Point::new(200.0, 220.0),
       14.0,
       @vg.purple(),
     )
@@ -52,15 +61,20 @@ test "canvas renderer complete html" (it : @test.Test) {
 ///|
 test "canvas path rendering" (it : @test.Test) {
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.point(50.0, 50.0))
-    .line_to(@vg.point(150.0, 50.0))
-    .qcurve_to(@vg.point(200.0, 75.0), @vg.point(150.0, 100.0)) // Quadratic curve
-    .line_to(@vg.point(50.0, 100.0))
+    .move_to(@vg.Point::new(50.0, 50.0))
+    .line_to(@vg.Point::new(150.0, 50.0))
+    .qcurve_to(@vg.Point::new(200.0, 75.0), @vg.Point::new(150.0, 100.0)) // Quadratic curve
+    .line_to(@vg.Point::new(50.0, 100.0))
     .close_path()
   let doc = @vg.new_canvas(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.gray(0.95))
     .render_path(custom_path, @vg.magenta())
-    .render_text("Canvas Path Demo", @vg.point(125.0, 30.0), 14.0, @vg.black())
+    .render_text(
+      "Canvas Path Demo",
+      @vg.Point::new(125.0, 30.0),
+      14.0,
+      @vg.black(),
+    )
   let js_code = doc.to_js()
   it.write(js_code)
   it.snapshot(filename="canvas_path_demo.js")
@@ -70,15 +84,20 @@ test "canvas path rendering" (it : @test.Test) {
 test "pdf renderer basic shapes" (it : @test.Test) {
   let doc = @vg.PdfDocument::new(300.0, 200.0)
     .render_rectangle(10.0, 10.0, 280.0, 180.0, @vg.gray(0.9)) // Background
-    .render_circle(@vg.point(80.0, 100.0), 30.0, @vg.red()) // Red circle
+    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @vg.red()) // Red circle
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @vg.green()) // Green rectangle
     .render_line(
-      @vg.point(50.0, 160.0),
-      @vg.point(250.0, 160.0),
+      @vg.Point::new(50.0, 160.0),
+      @vg.Point::new(250.0, 160.0),
       @vg.blue(),
       2.0,
     ) // Blue line
-    .render_text("PDF Rendering", @vg.point(150.0, 40.0), 16.0, @vg.black()) // Title
+    .render_text(
+      "PDF Rendering",
+      @vg.Point::new(150.0, 40.0),
+      16.0,
+      @vg.black(),
+    ) // Title
   inspect(
     doc,
     content=(
@@ -93,21 +112,21 @@ test "pdf renderer basic shapes" (it : @test.Test) {
 ///|
 test "pdf path rendering" (it : @test.Test) {
   let star_path = @vg.Path::empty()
-    .move_to(@vg.point(100.0, 30.0))
-    .line_to(@vg.point(110.0, 60.0))
-    .line_to(@vg.point(140.0, 60.0))
-    .line_to(@vg.point(118.0, 78.0))
-    .line_to(@vg.point(128.0, 108.0))
-    .line_to(@vg.point(100.0, 90.0))
-    .line_to(@vg.point(72.0, 108.0))
-    .line_to(@vg.point(82.0, 78.0))
-    .line_to(@vg.point(60.0, 60.0))
-    .line_to(@vg.point(90.0, 60.0))
+    .move_to(@vg.Point::new(100.0, 30.0))
+    .line_to(@vg.Point::new(110.0, 60.0))
+    .line_to(@vg.Point::new(140.0, 60.0))
+    .line_to(@vg.Point::new(118.0, 78.0))
+    .line_to(@vg.Point::new(128.0, 108.0))
+    .line_to(@vg.Point::new(100.0, 90.0))
+    .line_to(@vg.Point::new(72.0, 108.0))
+    .line_to(@vg.Point::new(82.0, 78.0))
+    .line_to(@vg.Point::new(60.0, 60.0))
+    .line_to(@vg.Point::new(90.0, 60.0))
     .close_path()
   let doc = @vg.PdfDocument::new(200.0, 150.0)
     .render_rectangle(0.0, 0.0, 200.0, 150.0, @vg.white())
     .render_path(star_path, @vg.gold())
-    .render_text("PDF Star", @vg.point(100.0, 130.0), 12.0, @vg.black())
+    .render_text("PDF Star", @vg.Point::new(100.0, 130.0), 12.0, @vg.black())
   let pdf_content = doc.to_string()
   it.write(pdf_content)
   it.snapshot(filename="pdf_star_demo.pdf")
@@ -120,22 +139,22 @@ test "renderer comparison showcase" (it : @test.Test) {
   // SVG version
   let svg_doc = @vg.new_svg(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.gray(0.95))
-    .render_circle(@vg.point(125.0, 75.0), 40.0, @vg.red())
-    .render_text("VG Demo", @vg.point(125.0, 30.0), 16.0, @vg.black())
+    .render_circle(@vg.Point::new(125.0, 75.0), 40.0, @vg.red())
+    .render_text("VG Demo", @vg.Point::new(125.0, 30.0), 16.0, @vg.black())
   let svg_string = svg_doc.to_string()
 
   // Canvas version  
   let canvas_doc = @vg.new_canvas(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.gray(0.95))
-    .render_circle(@vg.point(125.0, 75.0), 40.0, @vg.red())
-    .render_text("VG Demo", @vg.point(125.0, 30.0), 16.0, @vg.black())
+    .render_circle(@vg.Point::new(125.0, 75.0), 40.0, @vg.red())
+    .render_text("VG Demo", @vg.Point::new(125.0, 30.0), 16.0, @vg.black())
   let canvas_html = canvas_doc.to_html("Canvas Demo")
 
   // PDF version
   let pdf_doc = @vg.PdfDocument::new(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.gray(0.95))
-    .render_circle(@vg.point(125.0, 75.0), 40.0, @vg.red())
-    .render_text("VG Demo", @vg.point(125.0, 30.0), 16.0, @vg.black())
+    .render_circle(@vg.Point::new(125.0, 75.0), 40.0, @vg.red())
+    .render_text("VG Demo", @vg.Point::new(125.0, 30.0), 16.0, @vg.black())
   let pdf_string = pdf_doc.to_string()
 
   // Write all three formats
@@ -163,16 +182,16 @@ test "complete feature showcase all renderers" (it : @test.Test) {
 
   // Advanced path with all curve types
   let advanced_path = @vg.Path::empty()
-    .move_to(@vg.point(50.0, 100.0))
-    .line_to(@vg.point(100.0, 80.0))
-    .qcurve_to(@vg.point(125.0, 60.0), @vg.point(150.0, 80.0)) // Quadratic
+    .move_to(@vg.Point::new(50.0, 100.0))
+    .line_to(@vg.Point::new(100.0, 80.0))
+    .qcurve_to(@vg.Point::new(125.0, 60.0), @vg.Point::new(150.0, 80.0)) // Quadratic
     .curve_to(
-      @vg.point(175.0, 60.0),
-      @vg.point(200.0, 120.0),
-      @vg.point(225.0, 100.0),
+      @vg.Point::new(175.0, 60.0),
+      @vg.Point::new(200.0, 120.0),
+      @vg.Point::new(225.0, 100.0),
     ) // Cubic
-    .smooth_ccurve_to(@vg.point(275.0, 60.0), @vg.point(300.0, 100.0)) // Smooth
-    .earc_to(25.0, 15.0, 0.0, false, true, @vg.point(250.0, 120.0)) // Elliptical arc
+    .smooth_ccurve_to(@vg.Point::new(275.0, 60.0), @vg.Point::new(300.0, 100.0)) // Smooth
+    .earc_to(25.0, 15.0, 0.0, false, true, @vg.Point::new(250.0, 120.0)) // Elliptical arc
     .close_path()
 
   // SVG with all advanced features
@@ -180,25 +199,25 @@ test "complete feature showcase all renderers" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @vg.white())
     .render_text(
       "Complete VG Feature Showcase",
-      @vg.point(175.0, 30.0),
+      @vg.Point::new(175.0, 30.0),
       16.0,
       @vg.black(),
     )
     .render_path(advanced_path, @vg.blue())
-    .render_circle(@vg.point(100.0, 150.0), 20.0, @vg.red())
+    .render_circle(@vg.Point::new(100.0, 150.0), 20.0, @vg.red())
     .render_polygon(
       [
-        @vg.point(200.0, 130.0),
-        @vg.point(220.0, 140.0),
-        @vg.point(215.0, 160.0),
-        @vg.point(185.0, 160.0),
-        @vg.point(180.0, 140.0),
+        @vg.Point::new(200.0, 130.0),
+        @vg.Point::new(220.0, 140.0),
+        @vg.Point::new(215.0, 160.0),
+        @vg.Point::new(185.0, 160.0),
+        @vg.Point::new(180.0, 140.0),
       ],
       @vg.green(),
     )
     .render_text(
       "All Features: Paths, Curves, Arcs",
-      @vg.point(175.0, 180.0),
+      @vg.Point::new(175.0, 180.0),
       12.0,
       @vg.purple(),
     )
@@ -208,15 +227,15 @@ test "complete feature showcase all renderers" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @vg.white())
     .render_text(
       "Canvas: Complete VG Features",
-      @vg.point(175.0, 30.0),
+      @vg.Point::new(175.0, 30.0),
       16.0,
       @vg.black(),
     )
     .render_path(advanced_path, @vg.blue())
-    .render_circle(@vg.point(100.0, 150.0), 20.0, @vg.red())
+    .render_circle(@vg.Point::new(100.0, 150.0), 20.0, @vg.red())
     .render_text(
       "Interactive Graphics Ready",
-      @vg.point(175.0, 180.0),
+      @vg.Point::new(175.0, 180.0),
       12.0,
       @vg.purple(),
     )
@@ -226,15 +245,15 @@ test "complete feature showcase all renderers" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @vg.white())
     .render_text(
       "PDF: Complete VG Features",
-      @vg.point(175.0, 30.0),
+      @vg.Point::new(175.0, 30.0),
       16.0,
       @vg.black(),
     )
     .render_path(advanced_path, @vg.blue())
-    .render_circle(@vg.point(100.0, 150.0), 20.0, @vg.red())
+    .render_circle(@vg.Point::new(100.0, 150.0), 20.0, @vg.red())
     .render_text(
       "Document Ready Graphics",
-      @vg.point(175.0, 180.0),
+      @vg.Point::new(175.0, 180.0),
       12.0,
       @vg.purple(),
     )

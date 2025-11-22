@@ -88,26 +88,26 @@ pub fn PdfDocument::render_circle(
   let offset = radius * kappa
   let content = "q\n" + // Save graphics state
     "\{color_to_pdf(color)}\n" +
-    "\{point_to_pdf(point(center.x, center.y - radius), self.height)} m\n" + // Move to top
+    "\{point_to_pdf(Point::new(center.x, center.y - radius), self.height)} m\n" + // Move to top
     // Four cubic curves to approximate circle
-    "\{point_to_pdf(point(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(point(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(point(center.x + radius, center.y), self.height)} c\n" +
-    point_to_pdf(point(center.x + radius, center.y + offset), self.height) +
+    "\{point_to_pdf(Point::new(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(Point::new(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(Point::new(center.x + radius, center.y), self.height)} c\n" +
+    point_to_pdf(Point::new(center.x + radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(point(center.x + offset, center.y + radius), self.height) +
+    point_to_pdf(Point::new(center.x + offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(point(center.x, center.y + radius), self.height) +
+    point_to_pdf(Point::new(center.x, center.y + radius), self.height) +
     " c\n" +
-    point_to_pdf(point(center.x - offset, center.y + radius), self.height) +
+    point_to_pdf(Point::new(center.x - offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(point(center.x - radius, center.y + offset), self.height) +
+    point_to_pdf(Point::new(center.x - radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(point(center.x - radius, center.y), self.height) +
+    point_to_pdf(Point::new(center.x - radius, center.y), self.height) +
     " c\n" +
-    point_to_pdf(point(center.x - radius, center.y - offset), self.height) +
+    point_to_pdf(Point::new(center.x - radius, center.y - offset), self.height) +
     " " +
-    point_to_pdf(point(center.x - offset, center.y - radius), self.height) +
+    point_to_pdf(Point::new(center.x - offset, center.y - radius), self.height) +
     " " +
-    point_to_pdf(point(center.x, center.y - radius), self.height) +
+    point_to_pdf(Point::new(center.x, center.y - radius), self.height) +
     " c\n" +
     "f\n" + // Fill
     "Q" // Restore graphics state

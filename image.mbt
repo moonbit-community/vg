@@ -16,7 +16,7 @@ pub fn Image::empty() -> Image {
 /// Create a circle image
 pub fn Image::circle(color : Color, radius : Double) -> Image {
   p => {
-    let dist = length(p)
+    let dist = p.length()
     if dist <= radius {
       color
     } else {
@@ -52,21 +52,21 @@ pub fn Image::line(
 ) -> Image {
   fn(p : Point) -> Color {
     // Distance from point to line segment
-    let line_vec = sub(end, start)
-    let point_vec = sub(p, start)
-    let line_len_sq = dot(line_vec, line_vec)
+    let line_vec = end.sub(start)
+    let point_vec = p.sub(start)
+    let line_len_sq = line_vec.dot(line_vec)
     if line_len_sq == 0.0 {
       // Degenerate line (point)
-      if distance(p, start) <= thickness / 2.0 {
+      if p.distance(start) <= thickness / 2.0 {
         color
       } else {
         transparent()
       }
     } else {
-      let t = dot(point_vec, line_vec) / line_len_sq
+      let t = point_vec.dot(line_vec) / line_len_sq
       let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
-      let closest = add(start, scale_point(line_vec, t_clamped))
-      let dist = distance(p, closest)
+      let closest = start.add(line_vec.scale(t_clamped))
+      let dist = p.distance(closest)
       if dist <= thickness / 2.0 {
         color
       } else {
@@ -143,13 +143,13 @@ pub fn Image::linear_gradient(
   end : Point,
 ) -> Image {
   fn(p : Point) -> Color {
-    let grad_vec = sub(end, start)
-    let point_vec = sub(p, start)
-    let grad_len_sq = dot(grad_vec, grad_vec)
+    let grad_vec = end.sub(start)
+    let point_vec = p.sub(start)
+    let grad_len_sq = grad_vec.dot(grad_vec)
     if grad_len_sq == 0.0 {
       color1
     } else {
-      let t = dot(point_vec, grad_vec) / grad_len_sq
+      let t = point_vec.dot(grad_vec) / grad_len_sq
       let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
 
       // Linear interpolation between colors
@@ -172,7 +172,7 @@ pub fn Image::radial_gradient(
   radius : Double,
 ) -> Image {
   fn(p : Point) -> Color {
-    let dist = distance(p, center)
+    let dist = p.distance(center)
     let t = if radius == 0.0 { 1.0 } else { dist / radius }
     let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
     {
@@ -256,7 +256,7 @@ pub fn Image::conic_gradient(
   start_angle : Double,
 ) -> Image {
   fn(p : Point) -> Color {
-    let vec = sub(p, center)
+    let vec = p.sub(center)
     // Simple angle calculation without atan2
     let angle = if vec.x == 0.0 {
       if vec.y >= 0.0 {
@@ -305,7 +305,10 @@ pub fn Image::tile(
       tiled_y
     }
     self(
-      point(normalized_x - tile_width / 2.0, normalized_y - tile_height / 2.0),
+      Point::new(
+        normalized_x - tile_width / 2.0,
+        normalized_y - tile_height / 2.0,
+      ),
     )
   }
 }

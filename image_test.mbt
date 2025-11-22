@@ -3,8 +3,8 @@
 ///|
 test "constant image" {
   let red_img = @vg.Image::const_color(@vg.red())
-  let p1 = @vg.point(0.0, 0.0)
-  let p2 = @vg.point(100.0, -50.0)
+  let p1 = @vg.Point::new(0.0, 0.0)
+  let p2 = @vg.Point::new(100.0, -50.0)
   let c1 = red_img(p1)
   let c2 = red_img(p2)
   if c1 != @vg.red() || c2 != @vg.red() {
@@ -15,7 +15,7 @@ test "constant image" {
 ///|
 test "empty image" {
   let empty_img = @vg.Image::empty()
-  let p = @vg.point(5.0, 10.0)
+  let p = @vg.Point::new(5.0, 10.0)
   let c = empty_img(p)
   if c != @vg.transparent() {
     fail("Empty image should be transparent everywhere")
@@ -25,9 +25,9 @@ test "empty image" {
 ///|
 test "circle image" {
   let circle_img = @vg.Image::circle(@vg.blue(), 5.0)
-  let inside = @vg.point(3.0, 0.0) // Distance 3 < radius 5
-  let outside = @vg.point(10.0, 0.0) // Distance 10 > radius 5
-  let on_edge = @vg.point(5.0, 0.0) // Distance 5 = radius 5
+  let inside = @vg.Point::new(3.0, 0.0) // Distance 3 < radius 5
+  let outside = @vg.Point::new(10.0, 0.0) // Distance 10 > radius 5
+  let on_edge = @vg.Point::new(5.0, 0.0) // Distance 5 = radius 5
   let c_inside = circle_img(inside)
   let c_outside = circle_img(outside)
   let c_edge = circle_img(on_edge)
@@ -45,9 +45,9 @@ test "circle image" {
 ///|
 test "rectangle image" {
   let rect_img = @vg.Image::rectangle(@vg.green(), 10.0, 6.0)
-  let inside = @vg.point(2.0, 1.0) // Within [-5,5] x [-3,3]
-  let outside = @vg.point(8.0, 1.0) // Outside width bounds
-  let on_edge = @vg.point(5.0, 0.0) // On width edge
+  let inside = @vg.Point::new(2.0, 1.0) // Within [-5,5] x [-3,3]
+  let outside = @vg.Point::new(8.0, 1.0) // Outside width bounds
+  let on_edge = @vg.Point::new(5.0, 0.0) // On width edge
   let c_inside = rect_img(inside)
   let c_outside = rect_img(outside)
   let c_edge = rect_img(on_edge)
@@ -66,8 +66,8 @@ test "rectangle image" {
 test "image translation" {
   let circle_img = @vg.Image::circle(@vg.red(), 3.0)
   let translated = circle_img.translate_img(5.0, 0.0)
-  let original_center = @vg.point(0.0, 0.0)
-  let new_center = @vg.point(5.0, 0.0)
+  let original_center = @vg.Point::new(0.0, 0.0)
+  let new_center = @vg.Point::new(5.0, 0.0)
   let c_original = translated(original_center)
   let c_new = translated(new_center)
   if c_original != @vg.transparent() {
@@ -82,7 +82,7 @@ test "image translation" {
 test "image scaling" {
   let circle_img = @vg.Image::circle(@vg.blue(), 2.0)
   let scaled = circle_img.scale(2.0, 2.0)
-  let p = @vg.point(3.0, 0.0) // Would be outside original circle but inside scaled
+  let p = @vg.Point::new(3.0, 0.0) // Would be outside original circle but inside scaled
   let c = scaled(p)
   if c != @vg.blue() {
     fail("Scaled image should be larger")
@@ -94,9 +94,9 @@ test "image composition" {
   let red_circle = @vg.Image::circle(@vg.red(), 3.0)
   let blue_circle = @vg.Image::circle(@vg.blue(), 3.0).translate_img(2.0, 0.0)
   let composed = red_circle.compose(blue_circle)
-  let red_only = @vg.point(-2.0, 0.0) // Only in red circle
-  let blue_only = @vg.point(4.0, 0.0) // Only in blue circle
-  let overlap = @vg.point(1.0, 0.0) // In both circles
+  let red_only = @vg.Point::new(-2.0, 0.0) // Only in red circle
+  let blue_only = @vg.Point::new(4.0, 0.0) // Only in blue circle
+  let overlap = @vg.Point::new(1.0, 0.0) // In both circles
   let c_red = composed(red_only)
   let c_blue = composed(blue_only)
   let c_overlap = composed(overlap)
@@ -120,8 +120,8 @@ test "image cutting" {
   let red_rect = @vg.Image::rectangle(@vg.red(), 10.0, 10.0)
   let circle_mask = @vg.Image::circle(@vg.white(), 3.0) // White mask
   let cut_img = red_rect.cut(circle_mask)
-  let inside_mask = @vg.point(2.0, 0.0) // Inside circle mask
-  let outside_mask = @vg.point(8.0, 0.0) // Outside circle mask
+  let inside_mask = @vg.Point::new(2.0, 0.0) // Inside circle mask
+  let outside_mask = @vg.Point::new(8.0, 0.0) // Outside circle mask
   let c_inside = cut_img(inside_mask)
   let c_outside = cut_img(outside_mask)
   if c_inside != @vg.red() {
@@ -137,12 +137,12 @@ test "linear gradient" {
   let gradient = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
-    @vg.point(-5.0, 0.0),
-    @vg.point(5.0, 0.0),
+    @vg.Point::new(-5.0, 0.0),
+    @vg.Point::new(5.0, 0.0),
   )
-  let left = @vg.point(-5.0, 0.0) // Should be red
-  let right = @vg.point(5.0, 0.0) // Should be blue
-  let center = @vg.point(0.0, 0.0) // Should be mix
+  let left = @vg.Point::new(-5.0, 0.0) // Should be red
+  let right = @vg.Point::new(5.0, 0.0) // Should be blue
+  let center = @vg.Point::new(0.0, 0.0) // Should be mix
   let c_left = gradient(left)
   let c_right = gradient(right)
   let c_center = gradient(center)
@@ -164,12 +164,12 @@ test "radial gradient" {
   let gradient = @vg.Image::radial_gradient(
     @vg.white(),
     @vg.black(),
-    @vg.point(0.0, 0.0),
+    @vg.Point::new(0.0, 0.0),
     5.0,
   )
-  let center = @vg.point(0.0, 0.0) // Should be white
-  let edge = @vg.point(5.0, 0.0) // Should be black
-  let middle = @vg.point(2.5, 0.0) // Should be gray
+  let center = @vg.Point::new(0.0, 0.0) // Should be white
+  let edge = @vg.Point::new(5.0, 0.0) // Should be black
+  let middle = @vg.Point::new(2.5, 0.0) // Should be gray
   let c_center = gradient(center)
   let c_edge = gradient(edge)
   let c_middle = gradient(middle)
@@ -189,9 +189,9 @@ test "radial gradient" {
 ///|
 test "ellipse image" {
   let ellipse_img = @vg.Image::ellipse(@vg.green(), 4.0, 2.0)
-  let inside = @vg.point(2.0, 1.0) // Inside ellipse
-  let outside = @vg.point(5.0, 0.0) // Outside ellipse
-  let edge = @vg.point(4.0, 0.0) // On edge
+  let inside = @vg.Point::new(2.0, 1.0) // Inside ellipse
+  let outside = @vg.Point::new(5.0, 0.0) // Outside ellipse
+  let edge = @vg.Point::new(4.0, 0.0) // On edge
   let c_inside = ellipse_img(inside)
   let c_outside = ellipse_img(outside)
   let c_edge = ellipse_img(edge)
@@ -212,13 +212,13 @@ test "ellipse image" {
 ///|
 test "polygon image" {
   let triangle_points = [
-    @vg.point(0.0, -2.0),
-    @vg.point(-2.0, 2.0),
-    @vg.point(2.0, 2.0),
+    @vg.Point::new(0.0, -2.0),
+    @vg.Point::new(-2.0, 2.0),
+    @vg.Point::new(2.0, 2.0),
   ]
   let triangle_img = @vg.Image::polygon(@vg.blue(), triangle_points)
-  let inside = @vg.point(0.0, 0.0) // Inside triangle
-  let outside = @vg.point(0.0, -3.0) // Outside triangle
+  let inside = @vg.Point::new(0.0, 0.0) // Inside triangle
+  let outside = @vg.Point::new(0.0, -3.0) // Outside triangle
   let c_inside = triangle_img(inside)
   let c_outside = triangle_img(outside)
   if c_inside != @vg.blue() {
@@ -233,7 +233,7 @@ test "polygon image" {
 test "opacity application" {
   let red_img = @vg.Image::circle(@vg.red(), 5.0)
   let semi_transparent = red_img.with_opacity(0.5)
-  let center = @vg.point(0.0, 0.0)
+  let center = @vg.Point::new(0.0, 0.0)
   let color = semi_transparent(center)
   if color.r != 1.0 || color.g != 0.0 || color.b != 0.0 {
     fail("Color components should remain unchanged")
@@ -270,33 +270,33 @@ test "gradient images showcase" (it : @test.Test) {
   let horizontal_gradient = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
-    @vg.point(-50.0, 0.0),
-    @vg.point(50.0, 0.0),
+    @vg.Point::new(-50.0, 0.0),
+    @vg.Point::new(50.0, 0.0),
   )
   let vertical_gradient = @vg.Image::linear_gradient(
     @vg.green(),
     @vg.yellow(),
-    @vg.point(0.0, -40.0),
-    @vg.point(0.0, 40.0),
+    @vg.Point::new(0.0, -40.0),
+    @vg.Point::new(0.0, 40.0),
   )
   let diagonal_gradient = @vg.Image::linear_gradient(
     @vg.purple(),
     @vg.cyan(),
-    @vg.point(-35.0, -35.0),
-    @vg.point(35.0, 35.0),
+    @vg.Point::new(-35.0, -35.0),
+    @vg.Point::new(35.0, 35.0),
   )
 
   // Radial gradients
   let radial1 = @vg.Image::radial_gradient(
     @vg.white(),
     @vg.red(),
-    @vg.point(0.0, 0.0),
+    @vg.Point::new(0.0, 0.0),
     30.0,
   )
   let radial2 = @vg.Image::radial_gradient(
     @vg.yellow(),
     @vg.purple(),
-    @vg.point(0.0, 0.0),
+    @vg.Point::new(0.0, 0.0),
     25.0,
   )
 
