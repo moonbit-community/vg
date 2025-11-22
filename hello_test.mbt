@@ -33,7 +33,9 @@ test "complete workflow - create and render image" {
   // Create a complex image
   let background = @vg.Image::rectangle(@color.gray(0.9), 200.0, 200.0)
   let red_circle = @vg.Image::circle(@color.red(), 40.0)
-  let blue_circle = @vg.Image::circle(@color.blue(), 30.0).translate_img(60.0, 0.0)
+  let blue_circle = @vg.Image::circle(@color.blue(), 30.0).translate_img(
+    60.0, 0.0,
+  )
   let green_rect = @vg.Image::rectangle(@color.green(), 30.0, 20.0).translate_img(
     -50.0, 50.0,
   )
@@ -162,7 +164,12 @@ test "complete vg library showcase" (it : @test.Test) {
     )
 
     // Section 1: Basic Shapes
-    .render_text("Basic Shapes", @vg.Point::new(100.0, 70.0), 16.0, @color.black())
+    .render_text(
+      "Basic Shapes",
+      @vg.Point::new(100.0, 70.0),
+      16.0,
+      @color.black(),
+    )
     .render_circle(@vg.Point::new(80.0, 110.0), 25.0, @color.red())
     .render_rectangle(130.0, 85.0, 50.0, 50.0, @color.green())
     .render_ellipse(@vg.Point::new(230.0, 110.0), 35.0, 20.0, @color.blue())
@@ -291,8 +298,18 @@ test "complete vg library showcase" (it : @test.Test) {
       12.0,
       @color.black(),
     )
-    .render_text("Colored Text", @vg.Point::new(200.0, 350.0), 12.0, @color.blue())
-    .render_text("Large Text", @vg.Point::new(100.0, 380.0), 18.0, @color.green())
+    .render_text(
+      "Colored Text",
+      @vg.Point::new(200.0, 350.0),
+      12.0,
+      @color.blue(),
+    )
+    .render_text(
+      "Large Text",
+      @vg.Point::new(100.0, 380.0),
+      18.0,
+      @color.green(),
+    )
     .render_text(
       "Purple Text",
       @vg.Point::new(250.0, 380.0),

@@ -176,7 +176,12 @@ test "advanced path showcase" (it : @test.Test) {
       12.0,
       @color.green(),
     )
-    .render_text("Smooth Curves", @vg.Point::new(150.0, 200.0), 12.0, @color.red())
+    .render_text(
+      "Smooth Curves",
+      @vg.Point::new(150.0, 200.0),
+      12.0,
+      @color.red(),
+    )
   let svg_string = final_doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="advanced_paths.svg")

@@ -2,55 +2,26 @@
 package "bobzhang/vg"
 
 import(
+  "bobzhang/vg/color"
   "bobzhang/vg/geometry"
 )
 
 // Values
-fn black() -> Color
-
-fn blend(Color, Color) -> Color
-
-fn blue() -> Color
-
-fn clamp(Color) -> Color
-
-fn cyan() -> Color
-
 fn example() -> Image
-
-fn gold() -> Color
-
-fn gray(Double) -> Color
-
-fn green() -> Color
-
-fn hard_light_blend(Color, Color) -> Color
-
-fn hsv(Double, Double, Double) -> Color
 
 fn imageop_compose(Image, Image) -> ImageOp
 
-fn imageop_const(Color) -> ImageOp
+fn imageop_const(@color.Color) -> ImageOp
 
 fn imageop_cut(Image, Image) -> ImageOp
 
-fn imageop_primitive(Primitive, Color) -> ImageOp
+fn imageop_primitive(Primitive, @color.Color) -> ImageOp
 
 fn imageop_transform(@geometry.Transform, Image) -> ImageOp
-
-fn lerp_color(Color, Color, Double) -> Color
-
-fn magenta() -> Color
-
-fn multiply_blend(Color, Color) -> Color
 
 fn new_canvas(Double, Double) -> CanvasDocument
 
 fn new_svg(Double, Double) -> SvgDocument
-
-fn orange() -> Color
-
-fn overlay_blend(Color, Color) -> Color
 
 fn primitive_circle(@geometry.Point, Double) -> Primitive
 
@@ -59,28 +30,6 @@ fn primitive_path(@geometry.Path) -> Primitive
 fn primitive_rectangle(@geometry.Point, @geometry.Point) -> Primitive
 
 fn primitive_text(String, @geometry.Point, Double) -> Primitive
-
-fn purple() -> Color
-
-fn red() -> Color
-
-fn rgb(Double, Double, Double) -> Color
-
-fn rgba(Double, Double, Double, Double) -> Color
-
-fn scale(Color, Double) -> Color
-
-fn screen_blend(Color, Color) -> Color
-
-fn soft_light_blend(Color, Color) -> Color
-
-fn to_hex(Color) -> String
-
-fn transparent() -> Color
-
-fn white() -> Color
-
-fn yellow() -> Color
 
 // Errors
 
@@ -91,41 +40,32 @@ pub struct CanvasDocument {
   commands : Array[String]
 }
 fn CanvasDocument::add_command(Self, String) -> Self
-fn CanvasDocument::render_circle(Self, @geometry.Point, Double, Color) -> Self
-fn CanvasDocument::render_line(Self, @geometry.Point, @geometry.Point, Color, Double) -> Self
-fn CanvasDocument::render_path(Self, @geometry.Path, Color) -> Self
-fn CanvasDocument::render_rectangle(Self, Double, Double, Double, Double, Color) -> Self
-fn CanvasDocument::render_text(Self, String, @geometry.Point, Double, Color) -> Self
+fn CanvasDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
+fn CanvasDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
+fn CanvasDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
+fn CanvasDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
+fn CanvasDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
 fn CanvasDocument::to_html(Self, String) -> String
 fn CanvasDocument::to_js(Self) -> String
 impl Show for CanvasDocument
 
-pub struct Color {
-  r : Double
-  g : Double
-  b : Double
-  a : Double
-}
-impl Eq for Color
-impl Show for Color
-
-pub(all) struct Image((@geometry.Point) -> Color)
-fn Image::axial_gradient(Color, Color, @geometry.Point, @geometry.Point) -> Self
-fn Image::checkerboard(Color, Color, Double) -> Self
-fn Image::circle(Color, Double) -> Self
+pub(all) struct Image((@geometry.Point) -> @color.Color)
+fn Image::axial_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
+fn Image::checkerboard(@color.Color, @color.Color, Double) -> Self
+fn Image::circle(@color.Color, Double) -> Self
 fn Image::compose(Self, Self) -> Self
-fn Image::conic_gradient(Color, Color, @geometry.Point, Double) -> Self
-fn Image::const_color(Color) -> Self
+fn Image::conic_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
+fn Image::const_color(@color.Color) -> Self
 fn Image::cut(Self, Self) -> Self
-fn Image::ellipse(Color, Double, Double) -> Self
+fn Image::ellipse(@color.Color, Double, Double) -> Self
 fn Image::empty() -> Self
 #deprecated
-fn Image::inner(Self) -> (@geometry.Point) -> Color
-fn Image::line(Color, @geometry.Point, @geometry.Point, Double) -> Self
-fn Image::linear_gradient(Color, Color, @geometry.Point, @geometry.Point) -> Self
-fn Image::polygon(Color, Array[@geometry.Point]) -> Self
-fn Image::radial_gradient(Color, Color, @geometry.Point, Double) -> Self
-fn Image::rectangle(Color, Double, Double) -> Self
+fn Image::inner(Self) -> (@geometry.Point) -> @color.Color
+fn Image::line(@color.Color, @geometry.Point, @geometry.Point, Double) -> Self
+fn Image::linear_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
+fn Image::polygon(@color.Color, Array[@geometry.Point]) -> Self
+fn Image::radial_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
+fn Image::rectangle(@color.Color, Double, Double) -> Self
 fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
 fn Image::rotate(Self, Double) -> Self
 fn Image::scale(Self, Double, Double) -> Self
@@ -135,8 +75,8 @@ fn Image::translate_img(Self, Double, Double) -> Self
 fn Image::with_opacity(Self, Double) -> Self
 
 pub enum ImageOp {
-  Const(Color)
-  Primitive(Primitive, Color)
+  Const(@color.Color)
+  Primitive(Primitive, @color.Color)
   Transform(@geometry.Transform, Image)
   Compose(Image, Image)
   Cut(Image, Image)
@@ -149,11 +89,11 @@ pub struct PdfDocument {
   object_count : Int
 }
 fn PdfDocument::new(Double, Double) -> Self
-fn PdfDocument::render_circle(Self, @geometry.Point, Double, Color) -> Self
-fn PdfDocument::render_line(Self, @geometry.Point, @geometry.Point, Color, Double) -> Self
-fn PdfDocument::render_path(Self, @geometry.Path, Color) -> Self
-fn PdfDocument::render_rectangle(Self, Double, Double, Double, Double, Color) -> Self
-fn PdfDocument::render_text(Self, String, @geometry.Point, Double, Color) -> Self
+fn PdfDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
+fn PdfDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
+fn PdfDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
+fn PdfDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
+fn PdfDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
 fn PdfDocument::to_string(Self) -> String
 impl Show for PdfDocument
 
@@ -172,19 +112,21 @@ pub struct SvgDocument {
   elements : Array[String]
 }
 fn SvgDocument::add_element(Self, String) -> Self
-fn SvgDocument::render_circle(Self, @geometry.Point, Double, Color) -> Self
-fn SvgDocument::render_ellipse(Self, @geometry.Point, Double, Double, Color) -> Self
-fn SvgDocument::render_line(Self, @geometry.Point, @geometry.Point, Color, Double) -> Self
-fn SvgDocument::render_linear_gradient(Self, String, @geometry.Point, @geometry.Point, Color, Color) -> Self
-fn SvgDocument::render_path(Self, @geometry.Path, Color) -> Self
-fn SvgDocument::render_polygon(Self, Array[@geometry.Point], Color) -> Self
-fn SvgDocument::render_rectangle(Self, Double, Double, Double, Double, Color) -> Self
-fn SvgDocument::render_text(Self, String, @geometry.Point, Double, Color) -> Self
+fn SvgDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
+fn SvgDocument::render_ellipse(Self, @geometry.Point, Double, Double, @color.Color) -> Self
+fn SvgDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
+fn SvgDocument::render_linear_gradient(Self, String, @geometry.Point, @geometry.Point, @color.Color, @color.Color) -> Self
+fn SvgDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
+fn SvgDocument::render_polygon(Self, Array[@geometry.Point], @color.Color) -> Self
+fn SvgDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
+fn SvgDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
 fn SvgDocument::to_string(Self) -> String
 impl Show for SvgDocument
 
 // Type aliases
 pub using @geometry {type Box}
+
+pub using @color {type Color}
 
 pub using @geometry {type Path}
 

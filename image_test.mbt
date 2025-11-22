@@ -92,7 +92,9 @@ test "image scaling" {
 ///|
 test "image composition" {
   let red_circle = @vg.Image::circle(@color.red(), 3.0)
-  let blue_circle = @vg.Image::circle(@color.blue(), 3.0).translate_img(2.0, 0.0)
+  let blue_circle = @vg.Image::circle(@color.blue(), 3.0).translate_img(
+    2.0, 0.0,
+  )
   let composed = red_circle.compose(blue_circle)
   let red_only = @vg.Point::new(-2.0, 0.0) // Only in red circle
   let blue_only = @vg.Point::new(4.0, 0.0) // Only in blue circle

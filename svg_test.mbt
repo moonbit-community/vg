@@ -70,7 +70,12 @@ test "path rendering" {
 test "line rendering" {
   let start = @vg.Point::new(0.0, 0.0)
   let end = @vg.Point::new(100.0, 50.0)
-  let doc = @vg.new_svg(150.0, 100.0).render_line(start, end, @color.black(), 2.0)
+  let doc = @vg.new_svg(150.0, 100.0).render_line(
+    start,
+    end,
+    @color.black(),
+    2.0,
+  )
   if doc.elements.length() != 1 {
     fail("Should have one line element")
   }
@@ -333,7 +338,12 @@ test "shape gallery" (it : @test.Test) {
 
     // Labels
     .render_text("Circle", @vg.Point::new(80.0, 150.0), 12.0, @color.black())
-    .render_text("Rectangle", @vg.Point::new(160.0, 150.0), 12.0, @color.black())
+    .render_text(
+      "Rectangle",
+      @vg.Point::new(160.0, 150.0),
+      12.0,
+      @color.black(),
+    )
     .render_text("Ellipse", @vg.Point::new(250.0, 150.0), 12.0, @color.black())
     .render_text("Pentagon", @vg.Point::new(350.0, 150.0), 12.0, @color.black())
     .render_text("Triangle", @vg.Point::new(420.0, 150.0), 12.0, @color.black())
@@ -431,7 +441,12 @@ test "path showcase" (it : @test.Test) {
     .render_path(curved_path, @color.blue())
     .render_path(heart_path, @color.red())
     .render_path(star_path, @color.gold())
-    .render_text("Curved Path", @vg.Point::new(200.0, 150.0), 12.0, @color.blue())
+    .render_text(
+      "Curved Path",
+      @vg.Point::new(200.0, 150.0),
+      12.0,
+      @color.blue(),
+    )
     .render_text("Heart", @vg.Point::new(100.0, 160.0), 12.0, @color.red())
     .render_text("Star", @vg.Point::new(300.0, 160.0), 12.0, @color.gold())
   let svg_string = final_doc.to_string()
@@ -478,7 +493,12 @@ test "minimal svg rendering test" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.white()) // White background
     .render_circle(@vg.Point::new(150.0, 100.0), 50.0, @color.red()) // Red circle in center
     .render_rectangle(50.0, 50.0, 200.0, 100.0, @color.rgba(0.0, 0.0, 1.0, 0.5)) // Semi-transparent blue rect
-    .render_text("Hello SVG", @vg.Point::new(150.0, 100.0), 16.0, @color.black()) // Centered text
+    .render_text(
+      "Hello SVG",
+      @vg.Point::new(150.0, 100.0),
+      16.0,
+      @color.black(),
+    ) // Centered text
   let svg_string = doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="minimal_svg_test.svg")
@@ -503,7 +523,13 @@ test "html wrapped svg test" (it : @test.Test) {
   let doc = @vg.new_svg(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.white())
     .render_circle(@vg.Point::new(200.0, 150.0), 50.0, @color.red())
-    .render_rectangle(100.0, 100.0, 200.0, 100.0, @color.rgba(0.0, 1.0, 0.0, 0.5))
+    .render_rectangle(
+      100.0,
+      100.0,
+      200.0,
+      100.0,
+      @color.rgba(0.0, 1.0, 0.0, 0.5),
+    )
     .render_text(
       "VG Library Test",
       @vg.Point::new(200.0, 50.0),

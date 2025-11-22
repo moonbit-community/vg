@@ -1,0 +1,72 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bobzhang/vg/color"
+
+// Values
+fn black() -> Color
+
+fn blend(Color, Color) -> Color
+
+fn blue() -> Color
+
+fn clamp(Color) -> Color
+
+fn cyan() -> Color
+
+fn gold() -> Color
+
+fn gray(Double) -> Color
+
+fn green() -> Color
+
+fn hard_light_blend(Color, Color) -> Color
+
+fn hsv(Double, Double, Double) -> Color
+
+fn lerp_color(Color, Color, Double) -> Color
+
+fn magenta() -> Color
+
+fn multiply_blend(Color, Color) -> Color
+
+fn orange() -> Color
+
+fn overlay_blend(Color, Color) -> Color
+
+fn purple() -> Color
+
+fn red() -> Color
+
+fn rgb(Double, Double, Double) -> Color
+
+fn rgba(Double, Double, Double, Double) -> Color
+
+fn scale(Color, Double) -> Color
+
+fn screen_blend(Color, Color) -> Color
+
+fn soft_light_blend(Color, Color) -> Color
+
+fn to_hex(Color) -> String
+
+fn transparent() -> Color
+
+fn white() -> Color
+
+fn yellow() -> Color
+
+// Errors
+
+// Types and methods
+pub struct Color {
+  r : Double
+  g : Double
+  b : Double
+  a : Double
+}
+impl Eq for Color
+impl Show for Color
+
+// Type aliases
+
+// Traits
+

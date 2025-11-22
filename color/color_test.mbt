@@ -83,7 +83,11 @@ test "color to hex conversion" {
     ("red", @color.red(), @color.to_hex(@color.red())),
     ("green", @color.green(), @color.to_hex(@color.green())),
     ("blue", @color.blue(), @color.to_hex(@color.blue())),
-    ("orange", @color.rgb(1.0, 0.5, 0.0), @color.to_hex(@color.rgb(1.0, 0.5, 0.0))),
+    (
+      "orange",
+      @color.rgb(1.0, 0.5, 0.0),
+      @color.to_hex(@color.rgb(1.0, 0.5, 0.0)),
+    ),
     ("gray", @color.gray(0.5), @color.to_hex(@color.gray(0.5))),
   ]
   inspect(
@@ -122,8 +126,14 @@ test "color interpolation" {
     ("red_to_blue_50", @color.lerp_color(@color.red(), @color.blue(), 0.5)),
     ("red_to_blue_75", @color.lerp_color(@color.red(), @color.blue(), 0.75)),
     ("red_to_blue_100", @color.lerp_color(@color.red(), @color.blue(), 1.0)),
-    ("white_to_black_50", @color.lerp_color(@color.white(), @color.black(), 0.5)),
-    ("transparent_to_opaque", @color.lerp_color(@color.transparent(), @color.red(), 0.5)),
+    (
+      "white_to_black_50",
+      @color.lerp_color(@color.white(), @color.black(), 0.5),
+    ),
+    (
+      "transparent_to_opaque",
+      @color.lerp_color(@color.transparent(), @color.red(), 0.5),
+    ),
   ]
   inspect(
     interpolations,
