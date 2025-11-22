@@ -179,7 +179,7 @@ test "ImageOp constructors and variants" {
   }
 
   // Test primitive operation
-  let circle = @vg.primitive_circle(@vg.origin(), 5.0)
+  let circle = @vg.primitive_circle(@vg.Point::origin(), 5.0)
   let blue = @vg.blue()
   let prim_op = @vg.imageop_primitive(circle, blue)
   match prim_op {

@@ -219,7 +219,7 @@ test "transform composition and inversion" {
       let round_trip = @vg.apply(inv_t1, @vg.apply(t1, test_point))
       ("has_inverse", true, round_trip)
     }
-    None => ("has_inverse", false, @vg.origin())
+    None => ("has_inverse", false, @vg.Point::origin())
   }
   inspect(
     (composition_results, inversion_results),

@@ -2,8 +2,6 @@
 package "bobzhang/vg"
 
 // Values
-fn add(Point, Point) -> Point
-
 fn apply(Transform, Point) -> Point
 
 fn black() -> Color
@@ -19,10 +17,6 @@ fn compose_transforms(Transform, Transform) -> Transform
 fn cyan() -> Color
 
 fn determinant(Transform) -> Double
-
-fn distance(Point, Point) -> Double
-
-fn dot(Point, Point) -> Double
 
 fn example() -> Image
 
@@ -50,10 +44,6 @@ fn imageop_transform(Transform, Image) -> ImageOp
 
 fn invert(Transform) -> Transform?
 
-fn length(Point) -> Double
-
-fn lerp(Point, Point, Double) -> Point
-
 fn lerp_color(Color, Color, Double) -> Color
 
 fn magenta() -> Color
@@ -70,15 +60,9 @@ fn new_canvas(Double, Double) -> CanvasDocument
 
 fn new_svg(Double, Double) -> SvgDocument
 
-fn normalize(Point) -> Point
-
 fn orange() -> Color
 
-fn origin() -> Point
-
 fn overlay_blend(Color, Color) -> Color
-
-fn point(Double, Double) -> Point
 
 fn preserves_orientation(Transform) -> Bool
 
@@ -98,11 +82,7 @@ fn rgb(Double, Double, Double) -> Color
 
 fn rgba(Double, Double, Double, Double) -> Color
 
-fn rotate_point(Point, Double) -> Point
-
 fn scale(Color, Double) -> Color
-
-fn scale_point(Point, Double) -> Point
 
 fn scale_uniform(Double) -> Transform
 
@@ -113,8 +93,6 @@ fn skew_x(Double) -> Transform
 fn skew_y(Double) -> Transform
 
 fn soft_light_blend(Color, Color) -> Color
-
-fn sub(Point, Point) -> Point
 
 fn to_hex(Color) -> String
 

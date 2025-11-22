@@ -52,9 +52,9 @@ test "basic_shapes" (it : @test.Test) {
   let red_circle = @vg.Image::circle(@vg.red(), 50.0)
   let blue_ellipse = @vg.Image::ellipse(@vg.blue(), 60.0, 40.0)
   let _triangle = @vg.Image::polygon(@vg.green(), [
-    @vg.point(0.0, -30.0),
-    @vg.point(-30.0, 30.0),
-    @vg.point(30.0, 30.0),
+    @vg.Point::new(0.0, -30.0),
+    @vg.Point::new(-30.0, 30.0),
+    @vg.Point::new(30.0, 30.0),
   ])
 
   // Apply transformations and effects
@@ -66,19 +66,19 @@ test "basic_shapes" (it : @test.Test) {
 
   // Create paths with object-oriented API
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.point(10.0, 10.0))
-    .line_to(@vg.point(90.0, 10.0))
+    .move_to(@vg.Point::new(10.0, 10.0))
+    .line_to(@vg.Point::new(90.0, 10.0))
     .curve_to(
-      @vg.point(110.0, 10.0),
-      @vg.point(110.0, 30.0),
-      @vg.point(90.0, 30.0),
+      @vg.Point::new(110.0, 10.0),
+      @vg.Point::new(110.0, 30.0),
+      @vg.Point::new(90.0, 30.0),
     )
     .close_path()
 
   // Create SVG output with advanced shapes
   let svg_doc = @vg.new_svg(200.0, 200.0)
-    .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
-    .render_ellipse(@vg.point(150.0, 100.0), 30.0, 20.0, @vg.blue())
+    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @vg.red())
+    .render_ellipse(@vg.Point::new(150.0, 100.0), 30.0, 20.0, @vg.blue())
     .render_path(custom_path, @vg.green())
   it.write(svg_doc.to_string())
   it.snapshot(filename="basic_shapes.svg")
@@ -120,9 +120,9 @@ test "basic shapes examples" {
 
   // Create a polygon (triangle)
   let triangle = @vg.Image::polygon(@vg.yellow(), [
-    @vg.point(0.0, -20.0),
-    @vg.point(-20.0, 20.0),
-    @vg.point(20.0, 20.0),
+    @vg.Point::new(0.0, -20.0),
+    @vg.Point::new(-20.0, 20.0),
+    @vg.Point::new(20.0, 20.0),
   ])
 
   // Use the variables to avoid unused warnings
@@ -173,15 +173,15 @@ test "colors and effects examples" {
   let gradient = @vg.Image::linear_gradient(
     @vg.red(),
     @vg.blue(),
-    @vg.point(-50.0, 0.0),
-    @vg.point(50.0, 0.0),
+    @vg.Point::new(-50.0, 0.0),
+    @vg.Point::new(50.0, 0.0),
   )
 
   // Radial gradient
   let radial = @vg.Image::radial_gradient(
     @vg.white(),
     @vg.black(),
-    @vg.point(0.0, 0.0),
+    @vg.Point::new(0.0, 0.0),
     50.0,
   )
 
@@ -200,19 +200,19 @@ test "colors and effects examples" {
 test "paths examples" {
   // Create a custom path with method chaining
   let path = @vg.Path::empty()
-    .move_to(@vg.point(10.0, 10.0))
-    .line_to(@vg.point(90.0, 10.0))
+    .move_to(@vg.Point::new(10.0, 10.0))
+    .line_to(@vg.Point::new(90.0, 10.0))
     .curve_to(
-      @vg.point(110.0, 10.0),
-      @vg.point(110.0, 30.0),
-      @vg.point(90.0, 30.0),
+      @vg.Point::new(110.0, 10.0),
+      @vg.Point::new(110.0, 30.0),
+      @vg.Point::new(90.0, 30.0),
     )
     .close_path()
 
   // Create predefined shapes
   let rectangle = @vg.Path::rect(0.0, 0.0, 50.0, 30.0)
-  let circle = @vg.Path::circle(@vg.point(25.0, 25.0), 20.0)
-  let ellipse = @vg.Path::ellipse(@vg.point(0.0, 0.0), 30.0, 15.0)
+  let circle = @vg.Path::circle(@vg.Point::new(25.0, 25.0), 20.0)
+  let ellipse = @vg.Path::ellipse(@vg.Point::new(0.0, 0.0), 30.0, 15.0)
 
   // Transform paths
   let transform = @vg.make_translate(10.0, 20.0)
@@ -241,16 +241,21 @@ test "paths examples" {
 ///|
 test "canvas rendering examples" {
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.point(10.0, 10.0))
-    .line_to(@vg.point(50.0, 10.0))
+    .move_to(@vg.Point::new(10.0, 10.0))
+    .line_to(@vg.Point::new(50.0, 10.0))
     .close_path()
 
   // Create an HTML5 Canvas document with fluent method chaining
   let canvas_doc = @vg.new_canvas(400.0, 300.0)
-    .render_circle(@vg.point(100.0, 100.0), 50.0, @vg.red())
+    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @vg.red())
     .render_rectangle(150.0, 50.0, 80.0, 60.0, @vg.blue())
     .render_path(custom_path, @vg.green())
-    .render_text("Hello Canvas!", @vg.point(200.0, 200.0), 16.0, @vg.black())
+    .render_text(
+      "Hello Canvas!",
+      @vg.Point::new(200.0, 200.0),
+      16.0,
+      @vg.black(),
+    )
 
   // Generate JavaScript code
   let js_code = canvas_doc.to_js()
@@ -269,17 +274,22 @@ test "canvas rendering examples" {
 ///|
 test "pdf generation examples" {
   let star_path = @vg.Path::empty()
-    .move_to(@vg.point(0.0, -20.0))
-    .line_to(@vg.point(5.0, -5.0))
-    .line_to(@vg.point(20.0, -5.0))
+    .move_to(@vg.Point::new(0.0, -20.0))
+    .line_to(@vg.Point::new(5.0, -5.0))
+    .line_to(@vg.Point::new(20.0, -5.0))
     .close_path()
 
   // Create a PDF document with fluent method chaining
   let pdf_doc = @vg.PdfDocument::new(210.0, 297.0) // A4 size
-    .render_circle(@vg.point(105.0, 100.0), 30.0, @vg.red())
+    .render_circle(@vg.Point::new(105.0, 100.0), 30.0, @vg.red())
     .render_rectangle(50.0, 150.0, 110.0, 50.0, @vg.blue())
     .render_path(star_path, @vg.gold())
-    .render_text("PDF Graphics Demo", @vg.point(50.0, 250.0), 14.0, @vg.black())
+    .render_text(
+      "PDF Graphics Demo",
+      @vg.Point::new(50.0, 250.0),
+      14.0,
+      @vg.black(),
+    )
 
   // Generate PDF string
   let pdf_content = pdf_doc.to_string()
@@ -318,8 +328,8 @@ test "functional style example" {
 ///|
 test "object oriented style example" {
   let path = @vg.Path::empty()
-    .move_to(@vg.point(0.0, 0.0))
-    .line_to(@vg.point(10.0, 0.0))
+    .move_to(@vg.Point::new(0.0, 0.0))
+    .line_to(@vg.Point::new(10.0, 0.0))
     .close_path()
   let rect = @vg.Path::rect(0.0, 0.0, 10.0, 5.0)
   let bounds = path.bounds()
