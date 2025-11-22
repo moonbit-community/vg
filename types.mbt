@@ -1,6 +1,7 @@
 // Core types for the Vg vector graphics library
 
 // Re-export geometry types
+
 ///|
 pub type Point = @geometry.Point
 
