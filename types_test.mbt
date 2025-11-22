@@ -15,9 +15,9 @@ test "Point creation and equality" {
 
 ///|
 test "Color creation and equality" {
-  let c1 = @vg.rgba(1.0, 0.5, 0.0, 1.0)
-  let c2 = @vg.rgba(1.0, 0.5, 0.0, 1.0)
-  let c3 = @vg.rgba(0.0, 0.5, 1.0, 1.0)
+  let c1 = @color.rgba(1.0, 0.5, 0.0, 1.0)
+  let c2 = @color.rgba(1.0, 0.5, 0.0, 1.0)
+  let c3 = @color.rgba(0.0, 0.5, 1.0, 1.0)
   if c1 != c2 {
     fail("Colors with same components should be equal")
   }
@@ -171,7 +171,7 @@ test "Primitive constructors and equality" {
 ///|
 test "ImageOp constructors and variants" {
   // Test constant color operation
-  let red = @vg.red()
+  let red = @color.red()
   let const_op = @vg.imageop_const(red)
   match const_op {
     Const(_color) => () // Successfully created const operation
@@ -180,7 +180,7 @@ test "ImageOp constructors and variants" {
 
   // Test primitive operation
   let circle = @vg.primitive_circle(@vg.Point::origin(), 5.0)
-  let blue = @vg.blue()
+  let blue = @color.blue()
   let prim_op = @vg.imageop_primitive(circle, blue)
   match prim_op {
     Primitive(prim, _color) =>
@@ -217,7 +217,7 @@ test "ImageOp constructors and variants" {
   }
 
   // Test cut operation
-  let mask_image = fn(_p) { @vg.gray(0.5) }
+  let mask_image = fn(_p) { @color.gray(0.5) }
   let cut_op = @vg.imageop_cut(image1, mask_image)
   match cut_op {
     Cut(_img, _mask) => () // Successfully created cut operation
@@ -228,9 +228,9 @@ test "ImageOp constructors and variants" {
 ///|
 test "Primitive and ImageOp integration" {
   // Test creating a complex scene using primitives and image operations
-  let red_color = @vg.red()
-  let green_color = @vg.green()
-  let blue_color = @vg.blue()
+  let red_color = @color.red()
+  let green_color = @color.green()
+  let blue_color = @color.blue()
 
   // Create primitives
   let circle = @vg.primitive_circle(@vg.Point::new(50.0, 50.0), 25.0)

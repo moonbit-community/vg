@@ -49,9 +49,9 @@ moon info
 ///|
 test "basic_shapes" (it : @test.Test) {
   // Create basic shapes
-  let red_circle = @vg.Image::circle(@vg.red(), 50.0)
-  let blue_ellipse = @vg.Image::ellipse(@vg.blue(), 60.0, 40.0)
-  let _triangle = @vg.Image::polygon(@vg.green(), [
+  let red_circle = @vg.Image::circle(@color.red(), 50.0)
+  let blue_ellipse = @vg.Image::ellipse(@color.blue(), 60.0, 40.0)
+  let _triangle = @vg.Image::polygon(@color.green(), [
     @vg.Point::new(0.0, -30.0),
     @vg.Point::new(-30.0, 30.0),
     @vg.Point::new(30.0, 30.0),
@@ -77,9 +77,9 @@ test "basic_shapes" (it : @test.Test) {
 
   // Create SVG output with advanced shapes
   let svg_doc = @vg.new_svg(200.0, 200.0)
-    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @vg.red())
-    .render_ellipse(@vg.Point::new(150.0, 100.0), 30.0, 20.0, @vg.blue())
-    .render_path(custom_path, @vg.green())
+    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
+    .render_ellipse(@vg.Point::new(150.0, 100.0), 30.0, 20.0, @color.blue())
+    .render_path(custom_path, @color.green())
   it.write(svg_doc.to_string())
   it.snapshot(filename="basic_shapes.svg")
 }
@@ -110,16 +110,16 @@ The library is organized into several modules:
 ///|
 test "basic shapes examples" {
   // Create a red circle
-  let circle_img = @vg.Image::circle(@vg.red(), 25.0)
+  let circle_img = @vg.Image::circle(@color.red(), 25.0)
 
   // Create a blue rectangle
-  let rect_img = @vg.Image::rectangle(@vg.blue(), 50.0, 30.0)
+  let rect_img = @vg.Image::rectangle(@color.blue(), 50.0, 30.0)
 
   // Create an ellipse
-  let ellipse_img = @vg.Image::ellipse(@vg.green(), 40.0, 20.0)
+  let ellipse_img = @vg.Image::ellipse(@color.green(), 40.0, 20.0)
 
   // Create a polygon (triangle)
-  let triangle = @vg.Image::polygon(@vg.yellow(), [
+  let triangle = @vg.Image::polygon(@color.yellow(), [
     @vg.Point::new(0.0, -20.0),
     @vg.Point::new(-20.0, 20.0),
     @vg.Point::new(20.0, 20.0),
@@ -137,8 +137,8 @@ test "basic shapes examples" {
 ```moonbit
 ///|
 test "transformations examples" {
-  let circle_img = @vg.Image::circle(@vg.red(), 25.0)
-  let rect_img = @vg.Image::rectangle(@vg.blue(), 50.0, 30.0)
+  let circle_img = @vg.Image::circle(@color.red(), 25.0)
+  let rect_img = @vg.Image::rectangle(@color.blue(), 50.0, 30.0)
 
   // Translate an image
   let moved = circle_img.translate_img(10.0, 20.0)
@@ -161,26 +161,26 @@ test "transformations examples" {
 ///|
 test "colors and effects examples" {
   // HSV color creation
-  let bright_orange = @vg.hsv(30.0, 1.0, 1.0) // Hue, Saturation, Value
+  let bright_orange = @color.hsv(30.0, 1.0, 1.0) // Hue, Saturation, Value
 
   // Color interpolation
-  let purple_to_cyan = @vg.lerp_color(@vg.purple(), @vg.cyan(), 0.5)
+  let purple_to_cyan = @color.lerp_color(@color.purple(), @color.cyan(), 0.5)
 
   // Apply opacity
-  let semi_transparent = @vg.Image::circle(@vg.red(), 30.0).with_opacity(0.6)
+  let semi_transparent = @vg.Image::circle(@color.red(), 30.0).with_opacity(0.6)
 
   // Linear gradient
   let gradient = @vg.Image::linear_gradient(
-    @vg.red(),
-    @vg.blue(),
+    @color.red(),
+    @color.blue(),
     @vg.Point::new(-50.0, 0.0),
     @vg.Point::new(50.0, 0.0),
   )
 
   // Radial gradient
   let radial = @vg.Image::radial_gradient(
-    @vg.white(),
-    @vg.black(),
+    @color.white(),
+    @color.black(),
     @vg.Point::new(0.0, 0.0),
     50.0,
   )
@@ -225,7 +225,7 @@ test "paths examples" {
   }
 
   // Render path to SVG
-  let svg = @vg.new_svg(100.0, 100.0).render_path(path, @vg.green())
+  let svg = @vg.new_svg(100.0, 100.0).render_path(path, @color.green())
 
   // Use the variables to avoid unused warnings
   ignore(rectangle)
@@ -247,14 +247,14 @@ test "canvas rendering examples" {
 
   // Create an HTML5 Canvas document with fluent method chaining
   let canvas_doc = @vg.new_canvas(400.0, 300.0)
-    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @vg.red())
-    .render_rectangle(150.0, 50.0, 80.0, 60.0, @vg.blue())
-    .render_path(custom_path, @vg.green())
+    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
+    .render_rectangle(150.0, 50.0, 80.0, 60.0, @color.blue())
+    .render_path(custom_path, @color.green())
     .render_text(
       "Hello Canvas!",
       @vg.Point::new(200.0, 200.0),
       16.0,
-      @vg.black(),
+      @color.black(),
     )
 
   // Generate JavaScript code
@@ -281,14 +281,14 @@ test "pdf generation examples" {
 
   // Create a PDF document with fluent method chaining
   let pdf_doc = @vg.PdfDocument::new(210.0, 297.0) // A4 size
-    .render_circle(@vg.Point::new(105.0, 100.0), 30.0, @vg.red())
-    .render_rectangle(50.0, 150.0, 110.0, 50.0, @vg.blue())
-    .render_path(star_path, @vg.gold())
+    .render_circle(@vg.Point::new(105.0, 100.0), 30.0, @color.red())
+    .render_rectangle(50.0, 150.0, 110.0, 50.0, @color.blue())
+    .render_path(star_path, @color.gold())
     .render_text(
       "PDF Graphics Demo",
       @vg.Point::new(50.0, 250.0),
       14.0,
-      @vg.black(),
+      @color.black(),
     )
 
   // Generate PDF string

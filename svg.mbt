@@ -32,7 +32,7 @@ fn color_to_svg(c : Color) -> String {
     let b = (c.b * 255.0).to_int()
     "rgba(\{r},\{g},\{b},\{c.a})"
   } else {
-    to_hex(c)
+    @color.to_hex(c)
   }
 }
 

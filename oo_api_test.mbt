@@ -4,14 +4,19 @@
 test "svg oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for SVG
   let doc = @vg.new_svg(300.0, 200.0)
-    .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95))
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @vg.red())
-    .render_rectangle(150.0, 70.0, 60.0, 60.0, @vg.green())
-    .render_text("OO-Style SVG", @vg.Point::new(150.0, 40.0), 16.0, @vg.black())
+    .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
+    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
+    .render_text(
+      "OO-Style SVG",
+      @vg.Point::new(150.0, 40.0),
+      16.0,
+      @color.black(),
+    )
     .render_line(
       @vg.Point::new(50.0, 160.0),
       @vg.Point::new(250.0, 160.0),
-      @vg.blue(),
+      @color.blue(),
       2.0,
     )
   let svg_string = doc.to_string()
@@ -23,19 +28,19 @@ test "svg oo-style api" (it : @test.Test) {
 test "canvas oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for Canvas
   let doc = @vg.new_canvas(300.0, 200.0)
-    .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95))
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @vg.red())
-    .render_rectangle(150.0, 70.0, 60.0, 60.0, @vg.green())
+    .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
+    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
     .render_text(
       "OO-Style Canvas",
       @vg.Point::new(150.0, 40.0),
       16.0,
-      @vg.black(),
+      @color.black(),
     )
     .render_line(
       @vg.Point::new(50.0, 160.0),
       @vg.Point::new(250.0, 160.0),
-      @vg.blue(),
+      @color.blue(),
       2.0,
     )
   let canvas_html = doc.to_html("OO-Style Canvas Demo")
@@ -47,14 +52,19 @@ test "canvas oo-style api" (it : @test.Test) {
 test "pdf oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for PDF
   let doc = @vg.PdfDocument::new(300.0, 200.0)
-    .render_rectangle(0.0, 0.0, 300.0, 200.0, @vg.gray(0.95))
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @vg.red())
-    .render_rectangle(150.0, 70.0, 60.0, 60.0, @vg.green())
-    .render_text("OO-Style PDF", @vg.Point::new(150.0, 40.0), 16.0, @vg.black())
+    .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
+    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
+    .render_text(
+      "OO-Style PDF",
+      @vg.Point::new(150.0, 40.0),
+      16.0,
+      @color.black(),
+    )
     .render_line(
       @vg.Point::new(50.0, 160.0),
       @vg.Point::new(250.0, 160.0),
-      @vg.blue(),
+      @color.blue(),
       2.0,
     )
   let pdf_string = doc.to_string()
@@ -74,31 +84,31 @@ test "oo-style path with document integration" (it : @test.Test) {
 
   // Use the same path across all OO-style renderers
   let svg_doc = @vg.new_svg(250.0, 150.0)
-    .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.white())
-    .render_path(custom_path, @vg.purple())
+    .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.white())
+    .render_path(custom_path, @color.purple())
     .render_text(
       "OO Path + SVG",
       @vg.Point::new(125.0, 30.0),
       14.0,
-      @vg.black(),
+      @color.black(),
     )
   let canvas_doc = @vg.new_canvas(250.0, 150.0)
-    .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.white())
-    .render_path(custom_path, @vg.purple())
+    .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.white())
+    .render_path(custom_path, @color.purple())
     .render_text(
       "OO Path + Canvas",
       @vg.Point::new(125.0, 30.0),
       14.0,
-      @vg.black(),
+      @color.black(),
     )
   let pdf_doc = @vg.PdfDocument::new(250.0, 150.0)
-    .render_rectangle(0.0, 0.0, 250.0, 150.0, @vg.white())
-    .render_path(custom_path, @vg.purple())
+    .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.white())
+    .render_path(custom_path, @color.purple())
     .render_text(
       "OO Path + PDF",
       @vg.Point::new(125.0, 30.0),
       14.0,
-      @vg.black(),
+      @color.black(),
     )
 
   // Generate outputs using OO-style methods
@@ -116,18 +126,18 @@ test "oo-style api comparison" (it : @test.Test) {
 
   // Functional style (original)
   let svg_functional = @vg.new_svg(200.0, 100.0)
-    .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @vg.red())
+    .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @color.red())
     .render_text(
       "Functional Style",
       @vg.Point::new(100.0, 80.0),
       12.0,
-      @vg.black(),
+      @color.black(),
     )
 
   // OO style (new)  
   let svg_oo = @vg.new_svg(200.0, 100.0)
-    .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @vg.red())
-    .render_text("OO Style", @vg.Point::new(100.0, 80.0), 12.0, @vg.black())
+    .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @color.red())
+    .render_text("OO Style", @vg.Point::new(100.0, 80.0), 12.0, @color.black())
 
   // Get outputs for comparison
   let functional_output = svg_functional.to_string()
@@ -166,15 +176,15 @@ test "complete oo-style showcase" (it : @test.Test) {
     .earc_to(25.0, 15.0, 0.0, false, true, @vg.Point::new(225.0, 100.0))
     .close_path()
   let svg_showcase = @vg.new_svg(350.0, 200.0)
-    .render_rectangle(0.0, 0.0, 350.0, 200.0, @vg.gray(0.98))
+    .render_rectangle(0.0, 0.0, 350.0, 200.0, @color.gray(0.98))
     .render_text(
       "Complete OO-Style API Showcase",
       @vg.Point::new(175.0, 30.0),
       18.0,
-      @vg.black(),
+      @color.black(),
     )
-    .render_path(advanced_path, @vg.blue())
-    .render_circle(@vg.Point::new(100.0, 150.0), 20.0, @vg.red())
+    .render_path(advanced_path, @color.blue())
+    .render_circle(@vg.Point::new(100.0, 150.0), 20.0, @color.red())
     .render_polygon(
       [
         @vg.Point::new(250.0, 130.0),
@@ -183,19 +193,19 @@ test "complete oo-style showcase" (it : @test.Test) {
         @vg.Point::new(235.0, 160.0),
         @vg.Point::new(230.0, 140.0),
       ],
-      @vg.green(),
+      @color.green(),
     )
     .render_line(
       @vg.Point::new(50.0, 180.0),
       @vg.Point::new(300.0, 180.0),
-      @vg.purple(),
+      @color.purple(),
       2.0,
     )
     .render_text(
       "Fluent • Modern • Type-Safe",
       @vg.Point::new(175.0, 170.0),
       12.0,
-      @vg.gray(0.6),
+      @color.gray(0.6),
     )
   it.write(svg_showcase.to_string())
   it.snapshot(filename="complete_oo_showcase.svg")

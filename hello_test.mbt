@@ -31,10 +31,12 @@ test "example image creation" {
 ///|
 test "complete workflow - create and render image" {
   // Create a complex image
-  let background = @vg.Image::rectangle(@vg.gray(0.9), 200.0, 200.0)
-  let red_circle = @vg.Image::circle(@vg.red(), 40.0)
-  let blue_circle = @vg.Image::circle(@vg.blue(), 30.0).translate_img(60.0, 0.0)
-  let green_rect = @vg.Image::rectangle(@vg.green(), 30.0, 20.0).translate_img(
+  let background = @vg.Image::rectangle(@color.gray(0.9), 200.0, 200.0)
+  let red_circle = @vg.Image::circle(@color.red(), 40.0)
+  let blue_circle = @vg.Image::circle(@color.blue(), 30.0).translate_img(
+    60.0, 0.0,
+  )
+  let green_rect = @vg.Image::rectangle(@color.green(), 30.0, 20.0).translate_img(
     -50.0, 50.0,
   )
   let complex_image = background
@@ -67,7 +69,7 @@ test "path to SVG integration" {
     .close_path()
 
   // Render to SVG
-  let doc = @vg.new_svg(150.0, 100.0).render_path(path, @vg.magenta())
+  let doc = @vg.new_svg(150.0, 100.0).render_path(path, @color.magenta())
   let svg_string = doc.to_string()
   if not(svg_string.contains("path")) {
     fail("Should contain path element")
@@ -80,8 +82,8 @@ test "path to SVG integration" {
 ///|
 test "gradient rendering" {
   let gradient_img = @vg.Image::linear_gradient(
-    @vg.red(),
-    @vg.blue(),
+    @color.red(),
+    @color.blue(),
     @vg.Point::new(-50.0, 0.0),
     @vg.Point::new(50.0, 0.0),
   )
@@ -90,22 +92,22 @@ test "gradient rendering" {
   let left = gradient_img(@vg.Point::new(-50.0, 0.0))
   let center = gradient_img(@vg.Point::new(0.0, 0.0))
   let right = gradient_img(@vg.Point::new(50.0, 0.0))
-  if left != @vg.red() {
+  if left != @color.red() {
     fail("Gradient left should be red")
   }
-  if right != @vg.blue() {
+  if right != @color.blue() {
     fail("Gradient right should be blue")
   }
 
   // Center should be a mix
-  if center == @vg.red() || center == @vg.blue() {
+  if center == @color.red() || center == @color.blue() {
     fail("Gradient center should be interpolated")
   }
 }
 
 ///|
 test "transformation chain" {
-  let original = @vg.Image::circle(@vg.yellow(), 10.0)
+  let original = @vg.Image::circle(@color.yellow(), 10.0)
 
   // Apply multiple transformations
   let scaled = original.scale(2.0, 1.5)
@@ -127,11 +129,11 @@ test "transformation chain" {
 
 ///|
 test "color operations" {
-  let c1 = @vg.rgba(1.0, 0.5, 0.0, 0.8)
-  let c2 = @vg.rgba(0.0, 0.5, 1.0, 0.6)
-  let blended = @vg.blend(c1, c2)
-  let scaled = @vg.scale(c1, 0.5)
-  let clamped = @vg.clamp(@vg.rgba(1.5, -0.2, 0.5, 2.0))
+  let c1 = @color.rgba(1.0, 0.5, 0.0, 0.8)
+  let c2 = @color.rgba(0.0, 0.5, 1.0, 0.6)
+  let blended = @color.blend(c1, c2)
+  let scaled = @color.scale(c1, 0.5)
+  let clamped = @color.clamp(@color.rgba(1.5, -0.2, 0.5, 2.0))
 
   // Blended should have higher alpha than individual colors
   if blended.a <= c1.a && blended.a <= c2.a {
@@ -153,22 +155,27 @@ test "color operations" {
 test "complete vg library showcase" (it : @test.Test) {
   // Create a comprehensive demo showcasing all VG features
   let doc = @vg.new_svg(600.0, 500.0)
-    .render_rectangle(0.0, 0.0, 600.0, 500.0, @vg.gray(0.97)) // Light background
+    .render_rectangle(0.0, 0.0, 600.0, 500.0, @color.gray(0.97)) // Light background
     .render_text(
       "MoonBit VG Library - Complete Showcase",
       @vg.Point::new(300.0, 40.0),
       20.0,
-      @vg.black(),
+      @color.black(),
     )
 
     // Section 1: Basic Shapes
-    .render_text("Basic Shapes", @vg.Point::new(100.0, 70.0), 16.0, @vg.black())
-    .render_circle(@vg.Point::new(80.0, 110.0), 25.0, @vg.red())
-    .render_rectangle(130.0, 85.0, 50.0, 50.0, @vg.green())
-    .render_ellipse(@vg.Point::new(230.0, 110.0), 35.0, 20.0, @vg.blue())
+    .render_text(
+      "Basic Shapes",
+      @vg.Point::new(100.0, 70.0),
+      16.0,
+      @color.black(),
+    )
+    .render_circle(@vg.Point::new(80.0, 110.0), 25.0, @color.red())
+    .render_rectangle(130.0, 85.0, 50.0, 50.0, @color.green())
+    .render_ellipse(@vg.Point::new(230.0, 110.0), 35.0, 20.0, @color.blue())
 
     // Section 2: Complex Shapes (Polygons)
-    .render_text("Polygons", @vg.Point::new(350.0, 70.0), 16.0, @vg.black())
+    .render_text("Polygons", @vg.Point::new(350.0, 70.0), 16.0, @color.black())
     .render_polygon(
       [ // Pentagon
         @vg.Point::new(330.0, 95.0),
@@ -177,7 +184,7 @@ test "complete vg library showcase" (it : @test.Test) {
         @vg.Point::new(350.0, 130.0),
         @vg.Point::new(325.0, 118.0),
       ],
-      @vg.orange(),
+      @color.orange(),
     )
     .render_polygon(
       [ // Triangle
@@ -185,7 +192,7 @@ test "complete vg library showcase" (it : @test.Test) {
         @vg.Point::new(400.0, 130.0),
         @vg.Point::new(440.0, 130.0),
       ],
-      @vg.purple(),
+      @color.purple(),
     )
     .render_polygon(
       [ // Diamond
@@ -194,7 +201,7 @@ test "complete vg library showcase" (it : @test.Test) {
         @vg.Point::new(490.0, 130.0),
         @vg.Point::new(475.0, 110.0),
       ],
-      @vg.cyan(),
+      @color.cyan(),
     )
 
     // Section 3: Lines and Strokes
@@ -202,24 +209,24 @@ test "complete vg library showcase" (it : @test.Test) {
       "Lines & Strokes",
       @vg.Point::new(100.0, 180.0),
       16.0,
-      @vg.black(),
+      @color.black(),
     )
     .render_line(
       @vg.Point::new(50.0, 210.0),
       @vg.Point::new(250.0, 210.0),
-      @vg.black(),
+      @color.black(),
       3.0,
     )
     .render_line(
       @vg.Point::new(50.0, 230.0),
       @vg.Point::new(200.0, 250.0),
-      @vg.red(),
+      @color.red(),
       2.0,
     )
     .render_line(
       @vg.Point::new(50.0, 270.0),
       @vg.Point::new(150.0, 230.0),
-      @vg.blue(),
+      @color.blue(),
       4.0,
     )
 
@@ -228,7 +235,7 @@ test "complete vg library showcase" (it : @test.Test) {
       "Custom Paths",
       @vg.Point::new(350.0, 180.0),
       16.0,
-      @vg.black(),
+      @color.black(),
     )
 
   // Create complex paths
@@ -275,49 +282,59 @@ test "complete vg library showcase" (it : @test.Test) {
     )
     .close_path()
   let final_doc = doc
-    .render_path(wave_path, @vg.magenta())
-    .render_path(heart_path, @vg.red())
+    .render_path(wave_path, @color.magenta())
+    .render_path(heart_path, @color.red())
 
     // Section 5: Text and Typography
     .render_text(
       "Typography Examples",
       @vg.Point::new(100.0, 320.0),
       16.0,
-      @vg.black(),
+      @color.black(),
     )
     .render_text(
       "Regular Text",
       @vg.Point::new(100.0, 350.0),
       12.0,
-      @vg.black(),
+      @color.black(),
     )
-    .render_text("Colored Text", @vg.Point::new(200.0, 350.0), 12.0, @vg.blue())
-    .render_text("Large Text", @vg.Point::new(100.0, 380.0), 18.0, @vg.green())
+    .render_text(
+      "Colored Text",
+      @vg.Point::new(200.0, 350.0),
+      12.0,
+      @color.blue(),
+    )
+    .render_text(
+      "Large Text",
+      @vg.Point::new(100.0, 380.0),
+      18.0,
+      @color.green(),
+    )
     .render_text(
       "Purple Text",
       @vg.Point::new(250.0, 380.0),
       14.0,
-      @vg.purple(),
+      @color.purple(),
     )
 
     // Footer
     .render_line(
       @vg.Point::new(50.0, 420.0),
       @vg.Point::new(550.0, 420.0),
-      @vg.gray(0.7),
+      @color.gray(0.7),
       1.0,
     )
     .render_text(
       "Generated by MoonBit VG - Declarative 2D Vector Graphics",
       @vg.Point::new(300.0, 450.0),
       12.0,
-      @vg.gray(0.5),
+      @color.gray(0.5),
     )
     .render_text(
       "Snapshot Testing Showcase",
       @vg.Point::new(300.0, 470.0),
       10.0,
-      @vg.gray(0.6),
+      @color.gray(0.6),
     )
   let svg_string = final_doc.to_string()
   it.write(svg_string)
