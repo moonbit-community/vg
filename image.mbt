@@ -112,12 +112,12 @@ pub fn Image::compose(self : Image, other : Image) -> Image {
     // If both colors are non-transparent, blend them
     if c1.a > 0.0 && c2.a > 0.0 {
       // Use additive blending for overlapping opaque areas
-      {
-        r: (c1.r + c2.r) / 2.0,
-        g: (c1.g + c2.g) / 2.0,
-        b: (c1.b + c2.b) / 2.0,
-        a: (c1.a + c2.a) / 2.0,
-      }
+      rgba(
+        (c1.r + c2.r) / 2.0,
+        (c1.g + c2.g) / 2.0,
+        (c1.b + c2.b) / 2.0,
+        (c1.a + c2.a) / 2.0,
+      )
     } else {
       blend(c1, c2)
     }
@@ -130,7 +130,7 @@ pub fn Image::cut(self : Image, mask : Image) -> Image {
   fn(p : Point) -> Color {
     let c = self(p)
     let m = mask(p)
-    { r: c.r, g: c.g, b: c.b, a: c.a * m.a }
+    rgba(c.r, c.g, c.b, c.a * m.a)
   }
 }
 
@@ -153,12 +153,12 @@ pub fn Image::linear_gradient(
       let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
 
       // Linear interpolation between colors
-      {
-        r: color1.r + (color2.r - color1.r) * t_clamped,
-        g: color1.g + (color2.g - color1.g) * t_clamped,
-        b: color1.b + (color2.b - color1.b) * t_clamped,
-        a: color1.a + (color2.a - color1.a) * t_clamped,
-      }
+      rgba(
+        color1.r + (color2.r - color1.r) * t_clamped,
+        color1.g + (color2.g - color1.g) * t_clamped,
+        color1.b + (color2.b - color1.b) * t_clamped,
+        color1.a + (color2.a - color1.a) * t_clamped,
+      )
     }
   }
 }
@@ -175,12 +175,12 @@ pub fn Image::radial_gradient(
     let dist = p.distance(center)
     let t = if radius == 0.0 { 1.0 } else { dist / radius }
     let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
-    {
-      r: color1.r + (color2.r - color1.r) * t_clamped,
-      g: color1.g + (color2.g - color1.g) * t_clamped,
-      b: color1.b + (color2.b - color1.b) * t_clamped,
-      a: color1.a + (color2.a - color1.a) * t_clamped,
-    }
+    rgba(
+      color1.r + (color2.r - color1.r) * t_clamped,
+      color1.g + (color2.g - color1.g) * t_clamped,
+      color1.b + (color2.b - color1.b) * t_clamped,
+      color1.a + (color2.a - color1.a) * t_clamped,
+    )
   }
 }
 
@@ -232,7 +232,7 @@ pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
 pub fn Image::with_opacity(self : Image, opacity : Double) -> Image {
   fn(p : Point) -> Color {
     let c = self(p)
-    { r: c.r, g: c.g, b: c.b, a: c.a * opacity }
+    rgba(c.r, c.g, c.b, c.a * opacity)
   }
 }
 
@@ -275,12 +275,12 @@ pub fn Image::conic_gradient(
     let normalized_angle = (angle - start_angle + 2.0 * 3.14159265359) %
       (2.0 * 3.14159265359)
     let t = normalized_angle / (2.0 * 3.14159265359)
-    {
-      r: color1.r + (color2.r - color1.r) * t,
-      g: color1.g + (color2.g - color1.g) * t,
-      b: color1.b + (color2.b - color1.b) * t,
-      a: color1.a + (color2.a - color1.a) * t,
-    }
+    rgba(
+      color1.r + (color2.r - color1.r) * t,
+      color1.g + (color2.g - color1.g) * t,
+      color1.b + (color2.b - color1.b) * t,
+      color1.a + (color2.a - color1.a) * t,
+    )
   }
 }
 
