@@ -35,14 +35,9 @@ Created `color/` package with:
   ```moonbit
   pub type Color = @color.Color
   ```
-- Updated `color.mbt` to re-export all color functions as wrappers:
-  ```moonbit
-  pub fn rgba(r : Double, g : Double, b : Double, a : Double) -> Color {
-    @color.rgba(r, g, b, a)
-  }
-  // ... etc for all color functions
-  ```
+- Removed `color.mbt` wrapper file entirely (following geometry package pattern)
 - Removed original Color struct definition from `types.mbt`
+- Updated all color function calls to use `@color` namespace directly
 
 ### Public Field Requirement
 
@@ -64,18 +59,26 @@ This is necessary because:
 
 ### Code Updates Required
 
-**In `image.mbt`:**
-- Replaced direct Color struct constructions (e.g., `{ r: ..., g: ..., b: ..., a: ... }`) with calls to `rgba()` function
+**In `image.mbt` and other files:**
+- Replaced direct Color struct constructions (e.g., `{ r: ..., g: ..., b: ..., a: ... }`) with calls to `@color.rgba()` function
+- Updated all unqualified color function calls to use `@color` namespace
 - This was necessary because type aliases don't allow direct struct construction from outside the defining package
 
 **Examples:**
 ```moonbit
 // Before:
 { r: c.r, g: c.g, b: c.b, a: c.a * opacity }
+transparent()
 
 // After:
-rgba(c.r, c.g, c.b, c.a * opacity)
+@color.rgba(c.r, c.g, c.b, c.a * opacity)
+@color.transparent()
 ```
+
+**Files updated:**
+- All test files (types_test.mbt, color_test.mbt, hello_test.mbt, etc.)
+- README.mbt.md
+- image.mbt, canvas.mbt, svg.mbt, hello.mbt
 
 ### Backward Compatibility
 
@@ -96,26 +99,58 @@ For most consumers, the change is completely transparent:
 
 If you're using the VG library and upgrading:
 
-### No Changes Needed
+### Using Color Functions
 
-The refactoring maintains 100% backward compatibility:
-- Creating colors: `@vg.rgb(r, g, b)`, `@vg.rgba(r, g, b, a)`, `@vg.red()`, etc.
-- Using predefined colors: `@vg.red()`, `@vg.blue()`, etc.
-- Color operations: `@vg.blend()`, `@vg.lerp_color()`, etc.
-- Accessing color fields: `color.r`, `color.g`, `color.b`, `color.a`
-- All existing code continues to work without any modifications
-
-### Direct Usage of Color Package (Optional)
-
-If you want to use the color package directly without going through the main VG package:
+Color functions must now be accessed through the `@color` namespace:
 
 ```moonbit
-// Import the color package
-import { Color, rgba, rgb, red, blue } from "bobzhang/vg/color"
+// Creating colors
+let my_red = @color.red()
+let custom = @color.rgb(1.0, 0.5, 0.0)
+let with_alpha = @color.rgba(1.0, 0.5, 0.0, 0.8)
 
-// Use color functions directly
+// Color operations
+let blended = @color.blend(@color.red(), @color.blue())
+let interpolated = @color.lerp_color(@color.white(), @color.black(), 0.5)
+let hex = @color.to_hex(@color.green())
+
+// Accessing color fields (still works through type alias)
+let r_component = my_red.r
+```
+
+### Using the Color Type
+
+The Color type is still available through the main package via type alias:
+
+```moonbit
+// Type references work as before
+let c : Color = @color.rgb(1.0, 0.0, 0.0)
+let c2 : @vg.Color = @color.blue()
+```
+
+### Direct Usage of Color Package
+
+Color functions are accessed through the `@color` namespace:
+
+```moonbit
+// All color functions use @color namespace
 let my_color = @color.rgb(1.0, 0.5, 0.0)
 let blended = @color.blend(@color.red(), @color.blue())
+let hex_string = @color.to_hex(@color.green())
+```
+
+### Migration from Previous Version
+
+If you have existing code that used `@vg.red()`, `@vg.rgba()`, etc., update to use `@color`:
+
+```moonbit
+// Before:
+let c = @vg.rgb(1.0, 0.5, 0.0)
+let r = @vg.red()
+
+// After:
+let c = @color.rgb(1.0, 0.5, 0.0)
+let r = @color.red()
 ```
 
 ## Benefits
@@ -131,10 +166,12 @@ let blended = @color.blend(@color.red(), @color.blue())
 
 - `color/` - New package directory with types, utilities, and tests
 - `types.mbt` - Added Color type re-export
-- `color.mbt` - Converted to re-export wrapper functions
-- `image.mbt` - Updated Color struct constructions to use rgba() function
+- `color.mbt` - **DELETED** (no re-export wrapper, following geometry pattern)
+- `image.mbt` - Updated Color struct constructions and function calls to use `@color` namespace
+- `canvas.mbt`, `svg.mbt`, `hello.mbt` - Updated color function calls to use `@color` namespace
+- All test files - Updated from `@vg.color_function()` to `@color.color_function()`
+- `README.mbt.md` - Updated all examples to use `@color` namespace
 - `moon.pkg.json` - Added color package import
-- Tests remain backward compatible using `@vg` namespace
 
 ## Files Structure
 
@@ -146,19 +183,19 @@ vg/
 │   ├── color_test.mbt   # Color-specific tests
 │   └── moon.pkg.json    # Color package configuration
 ├── geometry/            # Geometry package (previously refactored)
-├── types.mbt            # Type re-exports (Color, Point, etc.)
-├── color.mbt            # Color function re-exports
-├── color_test.mbt       # Backward compatibility tests
-└── moon.pkg.json        # Main package configuration
+├── types.mbt            # Type re-exports (Color type alias only)
+├── color_test.mbt       # Color tests using @color namespace
+└── moon.pkg.json        # Main package configuration (imports color package)
 ```
 
 ## Notes
 
 - The color package has zero dependencies beyond MoonBit core
-- Type aliases ensure seamless backward compatibility
-- All color tests continue to pass with no changes required
-- The refactoring maintains the same public API surface
+- Type aliases ensure Color type is available through `@vg.Color`
+- All color functions must be accessed via `@color` namespace (no re-export wrappers)
 - Color struct fields are marked `pub` to allow external access when using type aliases
+- This matches the geometry package pattern exactly (no function re-exports)
+- The refactoring changes the public API - color functions moved from `@vg` to `@color` namespace
 
 ## Future Work
 
