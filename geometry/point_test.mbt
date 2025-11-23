@@ -2,7 +2,7 @@
 
 ///|
 test "point creation" {
-  let p = Point::new(3.0, 4.0)
+  let p = @geometry.Point::new(3.0, 4.0)
   if p.x != 3.0 || p.y != 4.0 {
     fail("Point creation incorrect")
   }
@@ -10,7 +10,7 @@ test "point creation" {
 
 ///|
 test "origin point" {
-  let o = Point::origin()
+  let o = @geometry.Point::origin()
   if o.x != 0.0 || o.y != 0.0 {
     fail("Origin should be (0, 0)")
   }
@@ -18,8 +18,8 @@ test "origin point" {
 
 ///|
 test "point addition" {
-  let p1 = Point::new(1.0, 2.0)
-  let p2 = Point::new(3.0, 4.0)
+  let p1 = @geometry.Point::new(1.0, 2.0)
+  let p2 = @geometry.Point::new(3.0, 4.0)
   let sum = p1.add(p2)
   if sum.x != 4.0 || sum.y != 6.0 {
     fail("Point addition incorrect")
@@ -28,8 +28,8 @@ test "point addition" {
 
 ///|
 test "point subtraction" {
-  let p1 = Point::new(5.0, 7.0)
-  let p2 = Point::new(2.0, 3.0)
+  let p1 = @geometry.Point::new(5.0, 7.0)
+  let p2 = @geometry.Point::new(2.0, 3.0)
   let diff = p1.sub(p2)
   if diff.x != 3.0 || diff.y != 4.0 {
     fail("Point subtraction incorrect")
@@ -38,7 +38,7 @@ test "point subtraction" {
 
 ///|
 test "point scaling" {
-  let p = Point::new(2.0, 3.0)
+  let p = @geometry.Point::new(2.0, 3.0)
   let scaled = p.scale(2.5)
   if scaled.x != 5.0 || scaled.y != 7.5 {
     fail("Point scaling incorrect")
@@ -47,8 +47,8 @@ test "point scaling" {
 
 ///|
 test "distance calculation" {
-  let p1 = Point::new(0.0, 0.0)
-  let p2 = Point::new(3.0, 4.0)
+  let p1 = @geometry.Point::new(0.0, 0.0)
+  let p2 = @geometry.Point::new(3.0, 4.0)
   let dist = p1.distance(p2)
 
   // Distance should be 5.0 (3-4-5 triangle)
@@ -59,8 +59,8 @@ test "distance calculation" {
 
 ///|
 test "dot product" {
-  let p1 = Point::new(2.0, 3.0)
-  let p2 = Point::new(4.0, 5.0)
+  let p1 = @geometry.Point::new(2.0, 3.0)
+  let p2 = @geometry.Point::new(4.0, 5.0)
   let dot_result = p1.dot(p2)
 
   // 2*4 + 3*5 = 8 + 15 = 23
@@ -71,7 +71,7 @@ test "dot product" {
 
 ///|
 test "vector length" {
-  let p = Point::new(3.0, 4.0)
+  let p = @geometry.Point::new(3.0, 4.0)
   let len = p.length()
 
   // Length should be 5.0
@@ -82,7 +82,7 @@ test "vector length" {
 
 ///|
 test "vector normalization" {
-  let p = Point::new(3.0, 4.0)
+  let p = @geometry.Point::new(3.0, 4.0)
   let normalized = p.normalize()
   let norm_length = normalized.length()
 
@@ -99,7 +99,7 @@ test "vector normalization" {
 
 ///|
 test "zero vector normalization" {
-  let zero = Point::origin()
+  let zero = @geometry.Point::origin()
   let normalized = zero.normalize()
   if normalized.x != 0.0 || normalized.y != 0.0 {
     fail("Normalized zero vector should remain zero")
@@ -108,8 +108,8 @@ test "zero vector normalization" {
 
 ///|
 test "linear interpolation" {
-  let p1 = Point::new(0.0, 0.0)
-  let p2 = Point::new(10.0, 20.0)
+  let p1 = @geometry.Point::new(0.0, 0.0)
+  let p2 = @geometry.Point::new(10.0, 20.0)
   let mid = p1.lerp(p2, 0.5)
   if mid.x != 5.0 || mid.y != 10.0 {
     fail("Midpoint interpolation incorrect")
@@ -126,7 +126,7 @@ test "linear interpolation" {
 
 ///|
 test "point rotation" {
-  let p = Point::new(1.0, 0.0)
+  let p = @geometry.Point::new(1.0, 0.0)
   let rotated = p.rotate(3.14159265359 / 2.0) // 90 degrees
 
   // Should be approximately (0, 1)
