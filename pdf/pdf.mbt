@@ -17,19 +17,19 @@ pub fn PdfDocument::new(width : Double, height : Double) -> PdfDocument {
 
 ///|
 /// Convert color to PDF color values (0-1 range)
-fn color_to_pdf(c : Color) -> String {
+fn color_to_pdf(c : @color.Color) -> String {
   "\{c.r} \{c.g} \{c.b} rg"
 }
 
 ///|
 /// Convert point to PDF coordinates (flip Y axis)
-fn point_to_pdf(p : Point, height : Double) -> String {
+fn point_to_pdf(p : @geometry.Point, height : Double) -> String {
   "\{p.x} \{height - p.y}"
 }
 
 ///|
 /// Convert a path to PDF path commands
-fn path_to_pdf_commands(path : Path, height : Double) -> Array[String] {
+fn path_to_pdf_commands(path : @geometry.Path, height : Double) -> Array[String] {
   let commands = Array::new()
   for segment in path.0 {
     match segment {
@@ -80,34 +80,34 @@ fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
 /// Render a circle to PDF (OO-style)
 pub fn PdfDocument::render_circle(
   self : PdfDocument,
-  center : Point,
+  center : @geometry.Point,
   radius : Double,
-  color : Color,
+  color : @color.Color,
 ) -> PdfDocument {
   let kappa = 0.5522847498
   let offset = radius * kappa
   let content = "q\n" + // Save graphics state
     "\{color_to_pdf(color)}\n" +
-    "\{point_to_pdf(Point::new(center.x, center.y - radius), self.height)} m\n" + // Move to top
+    "\{point_to_pdf(@geometry.Point::new(center.x, center.y - radius), self.height)} m\n" + // Move to top
     // Four cubic curves to approximate circle
-    "\{point_to_pdf(Point::new(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(Point::new(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(Point::new(center.x + radius, center.y), self.height)} c\n" +
-    point_to_pdf(Point::new(center.x + radius, center.y + offset), self.height) +
+    "\{point_to_pdf(@geometry.Point::new(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(@geometry.Point::new(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(@geometry.Point::new(center.x + radius, center.y), self.height)} c\n" +
+    point_to_pdf(@geometry.Point::new(center.x + radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(Point::new(center.x + offset, center.y + radius), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x + offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(Point::new(center.x, center.y + radius), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x, center.y + radius), self.height) +
     " c\n" +
-    point_to_pdf(Point::new(center.x - offset, center.y + radius), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x - offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(Point::new(center.x - radius, center.y + offset), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x - radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(Point::new(center.x - radius, center.y), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x - radius, center.y), self.height) +
     " c\n" +
-    point_to_pdf(Point::new(center.x - radius, center.y - offset), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x - radius, center.y - offset), self.height) +
     " " +
-    point_to_pdf(Point::new(center.x - offset, center.y - radius), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x - offset, center.y - radius), self.height) +
     " " +
-    point_to_pdf(Point::new(center.x, center.y - radius), self.height) +
+    point_to_pdf(@geometry.Point::new(center.x, center.y - radius), self.height) +
     " c\n" +
     "f\n" + // Fill
     "Q" // Restore graphics state
@@ -122,7 +122,7 @@ pub fn PdfDocument::render_rectangle(
   y : Double,
   width : Double,
   height : Double,
-  color : Color,
+  color : @color.Color,
 ) -> PdfDocument {
   let content = "q\n" + // Save graphics state
     color_to_pdf(color) +
@@ -137,9 +137,9 @@ pub fn PdfDocument::render_rectangle(
 /// Render a line to PDF (OO-style)
 pub fn PdfDocument::render_line(
   self : PdfDocument,
-  start : Point,
-  end : Point,
-  color : Color,
+  start : @geometry.Point,
+  end : @geometry.Point,
+  color : @color.Color,
   thickness : Double,
 ) -> PdfDocument {
   let content = "q\n" + // Save graphics state
@@ -162,9 +162,9 @@ pub fn PdfDocument::render_line(
 pub fn PdfDocument::render_text(
   self : PdfDocument,
   text : String,
-  pos : Point,
+  pos : @geometry.Point,
   size : Double,
-  color : Color,
+  color : @color.Color,
 ) -> PdfDocument {
   let content = "q\n" + // Save graphics state
     "BT\n" + // Begin text
@@ -187,8 +187,8 @@ pub fn PdfDocument::render_text(
 /// Render a path to PDF (OO-style)
 pub fn PdfDocument::render_path(
   self : PdfDocument,
-  path : Path,
-  color : Color,
+  path : @geometry.Path,
+  color : @color.Color,
 ) -> PdfDocument {
   let path_commands = path_to_pdf_commands(path, self.height)
   let mut content = "q\n" // Save graphics state

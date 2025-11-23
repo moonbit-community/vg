@@ -22,6 +22,11 @@ pub type Transform = @geometry.Transform
 ///|
 pub type Color = @color.Color
 
+// Re-export pdf type
+
+///|
+pub type PdfDocument = @pdf.PdfDocument
+
 ///|
 /// An image is a function from points to colors
 pub(all) struct Image((Point) -> Color)
