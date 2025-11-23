@@ -137,7 +137,7 @@ test "renderer comparison showcase" (it : @test.Test) {
   // Create the same graphics with all three renderers
 
   // SVG version
-  let svg_doc = @vg.new_svg(250.0, 150.0)
+  let svg_doc = @svg.new_svg(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.gray(0.95))
     .render_circle(@vg.Point::new(125.0, 75.0), 40.0, @color.red())
     .render_text("VG Demo", @vg.Point::new(125.0, 30.0), 16.0, @color.black())
@@ -195,7 +195,7 @@ test "complete feature showcase all renderers" (it : @test.Test) {
     .close_path()
 
   // SVG with all advanced features
-  let svg_doc = @vg.new_svg(350.0, 200.0)
+  let svg_doc = @svg.new_svg(350.0, 200.0)
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @color.white())
     .render_text(
       "Complete VG Feature Showcase",
