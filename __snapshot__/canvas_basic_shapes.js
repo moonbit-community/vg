@@ -8,8 +8,8 @@ function drawVgGraphics(canvas) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
   // Drawing commands
-  ctx.fillStyle = '#F2F2F2';
-  ctx.fillRect(0, 0, 300, 200);
+  ctx.fillStyle = '#E5E5E5';
+  ctx.fillRect(10, 10, 280, 180);
   ctx.beginPath();
   ctx.arc(80, 100, 30, 0, 2 * Math.PI);
   ctx.fillStyle = '#FF0000';

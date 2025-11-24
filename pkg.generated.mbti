@@ -19,8 +19,6 @@ fn imageop_primitive(Primitive, @color.Color) -> ImageOp
 
 fn imageop_transform(@geometry.Transform, Image) -> ImageOp
 
-fn new_canvas(Double, Double) -> CanvasDocument
-
 fn new_svg(Double, Double) -> SvgDocument
 
 fn primitive_circle(@geometry.Point, Double) -> Primitive
@@ -34,21 +32,6 @@ fn primitive_text(String, @geometry.Point, Double) -> Primitive
 // Errors
 
 // Types and methods
-pub struct CanvasDocument {
-  width : Double
-  height : Double
-  commands : Array[String]
-}
-fn CanvasDocument::add_command(Self, String) -> Self
-fn CanvasDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
-fn CanvasDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
-fn CanvasDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
-fn CanvasDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
-fn CanvasDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
-fn CanvasDocument::to_html(Self, String) -> String
-fn CanvasDocument::to_js(Self) -> String
-impl Show for CanvasDocument
-
 pub(all) struct Image((@geometry.Point) -> @color.Color)
 fn Image::axial_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
 fn Image::checkerboard(@color.Color, @color.Color, Double) -> Self

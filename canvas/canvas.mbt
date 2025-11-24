@@ -16,7 +16,7 @@ pub fn new_canvas(width : Double, height : Double) -> CanvasDocument {
 
 ///|
 /// Convert a color to Canvas color string
-fn color_to_canvas(c : Color) -> String {
+fn color_to_canvas(c : @color.Color) -> String {
   if c.a < 1.0 {
     let r = (c.r * 255.0).to_int()
     let g = (c.g * 255.0).to_int()
@@ -29,22 +29,22 @@ fn color_to_canvas(c : Color) -> String {
 
 ///|
 /// Convert a path to Canvas commands
-fn path_to_canvas_commands(path : Path) -> Array[String] {
+fn path_to_canvas_commands(path : @geometry.Path) -> Array[String] {
   let commands = Array::new()
   commands.push("ctx.beginPath();")
   for segment in path.0 {
     match segment {
-      MoveTo(p) => commands.push("ctx.moveTo(\{p.x}, \{p.y});")
-      LineTo(p) => commands.push("ctx.lineTo(\{p.x}, \{p.y});")
-      CurveTo(cp1, cp2, end) =>
+      @geometry.MoveTo(p) => commands.push("ctx.moveTo(\{p.x}, \{p.y});")
+      @geometry.LineTo(p) => commands.push("ctx.lineTo(\{p.x}, \{p.y});")
+      @geometry.CurveTo(cp1, cp2, end) =>
         commands.push(
           "ctx.bezierCurveTo(\{cp1.x}, \{cp1.y}, \{cp2.x}, \{cp2.y}, \{end.x}, \{end.y});",
         )
-      QCurveTo(cp, end) =>
+      @geometry.QCurveTo(cp, end) =>
         commands.push(
           "ctx.quadraticCurveTo(\{cp.x}, \{cp.y}, \{end.x}, \{end.y});",
         )
-      EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+      @geometry.EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
         // Canvas doesn't have native elliptical arcs, approximate with arc and transformations
         commands.push(
           "// Elliptical arc: rx=" +
@@ -61,7 +61,7 @@ fn path_to_canvas_commands(path : Path) -> Array[String] {
         )
         commands.push("ctx.restore();")
       }
-      Close => commands.push("ctx.closePath();")
+      @geometry.Close => commands.push("ctx.closePath();")
     }
   }
   commands
@@ -87,9 +87,9 @@ pub fn CanvasDocument::add_command(
 /// Render a circle to Canvas (OO-style)
 pub fn CanvasDocument::render_circle(
   self : CanvasDocument,
-  center : Point,
+  center : @geometry.Point,
   radius : Double,
-  color : Color,
+  color : @color.Color,
 ) -> CanvasDocument {
   let commands = [
     "ctx.beginPath();",
@@ -112,7 +112,7 @@ pub fn CanvasDocument::render_rectangle(
   y : Double,
   width : Double,
   height : Double,
-  color : Color,
+  color : @color.Color,
 ) -> CanvasDocument {
   let commands = [
     "ctx.fillStyle = '\{color_to_canvas(color)}';",
@@ -129,9 +129,9 @@ pub fn CanvasDocument::render_rectangle(
 /// Render a line to Canvas (OO-style)
 pub fn CanvasDocument::render_line(
   self : CanvasDocument,
-  start : Point,
-  end : Point,
-  color : Color,
+  start : @geometry.Point,
+  end : @geometry.Point,
+  color : @color.Color,
   thickness : Double,
 ) -> CanvasDocument {
   let commands = [
@@ -155,9 +155,9 @@ pub fn CanvasDocument::render_line(
 pub fn CanvasDocument::render_text(
   self : CanvasDocument,
   text : String,
-  pos : Point,
+  pos : @geometry.Point,
   size : Double,
-  color : Color,
+  color : @color.Color,
 ) -> CanvasDocument {
   let commands = [
     "ctx.font = '\{size}px Arial, sans-serif';",
@@ -177,8 +177,8 @@ pub fn CanvasDocument::render_text(
 /// Render a path to Canvas (OO-style)
 pub fn CanvasDocument::render_path(
   self : CanvasDocument,
-  path : Path,
-  color : Color,
+  path : @geometry.Path,
+  color : @color.Color,
 ) -> CanvasDocument {
   let path_commands = path_to_canvas_commands(path)
   let fill_commands = [

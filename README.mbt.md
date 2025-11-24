@@ -246,7 +246,7 @@ test "canvas rendering examples" {
     .close_path()
 
   // Create an HTML5 Canvas document with fluent method chaining
-  let canvas_doc = @vg.new_canvas(400.0, 300.0)
+  let canvas_doc = @canvas.new_canvas(400.0, 300.0)
     .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
     .render_rectangle(150.0, 50.0, 80.0, 60.0, @color.blue())
     .render_path(custom_path, @color.green())

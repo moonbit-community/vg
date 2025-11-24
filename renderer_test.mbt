@@ -2,8 +2,8 @@
 
 ///|
 test "canvas renderer basic shapes" (it : @test.Test) {
-  let doc = @vg.new_canvas(300.0, 200.0)
-    .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95)) // Background
+  let doc = @canvas.new_canvas(300.0, 200.0)
+    .render_rectangle(10.0, 10.0, 280.0, 180.0, @color.gray(0.9)) // Background
     .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red()) // Red circle
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green()) // Green rectangle
     .render_line(
@@ -21,7 +21,7 @@ test "canvas renderer basic shapes" (it : @test.Test) {
   inspect(
     doc,
     content=(
-      #|{width: 300, height: 200, commands: ["ctx.fillStyle = '#F2F2F2';", "ctx.fillRect(0, 0, 300, 200);", "ctx.beginPath();", "ctx.arc(80, 100, 30, 0, 2 * Math.PI);", "ctx.fillStyle = '#FF0000';", "ctx.fill();", "ctx.fillStyle = '#00FF00';", "ctx.fillRect(150, 70, 60, 60);", "ctx.beginPath();", "ctx.moveTo(50, 160);", "ctx.lineTo(250, 160);", "ctx.strokeStyle = '#0000FF';", "ctx.lineWidth = 3;", "ctx.lineCap = 'round';", "ctx.stroke();", "ctx.font = '16px Arial, sans-serif';", "ctx.fillStyle = '#000000';", "ctx.textAlign = 'center';", "ctx.textBaseline = 'middle';", "ctx.fillText('Canvas Rendering', 150, 40);"]}
+      #|{width: 300, height: 200, commands: ["ctx.fillStyle = '#E5E5E5';", "ctx.fillRect(10, 10, 280, 180);", "ctx.beginPath();", "ctx.arc(80, 100, 30, 0, 2 * Math.PI);", "ctx.fillStyle = '#FF0000';", "ctx.fill();", "ctx.fillStyle = '#00FF00';", "ctx.fillRect(150, 70, 60, 60);", "ctx.beginPath();", "ctx.moveTo(50, 160);", "ctx.lineTo(250, 160);", "ctx.strokeStyle = '#0000FF';", "ctx.lineWidth = 3;", "ctx.lineCap = 'round';", "ctx.stroke();", "ctx.font = '16px Arial, sans-serif';", "ctx.fillStyle = '#000000';", "ctx.textAlign = 'center';", "ctx.textBaseline = 'middle';", "ctx.fillText('Canvas Rendering', 150, 40);"]}
     ),
   )
   let js_code = doc.to_js()
@@ -31,7 +31,7 @@ test "canvas renderer basic shapes" (it : @test.Test) {
 
 ///|
 test "canvas renderer complete html" (it : @test.Test) {
-  let doc = @vg.new_canvas(400.0, 300.0)
+  let doc = @canvas.new_canvas(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.white()) // Background
     .render_circle(@vg.Point::new(100.0, 100.0), 40.0, @color.red()) // Red circle
     .render_circle(
@@ -66,7 +66,7 @@ test "canvas path rendering" (it : @test.Test) {
     .qcurve_to(@vg.Point::new(200.0, 75.0), @vg.Point::new(150.0, 100.0)) // Quadratic curve
     .line_to(@vg.Point::new(50.0, 100.0))
     .close_path()
-  let doc = @vg.new_canvas(250.0, 150.0)
+  let doc = @canvas.new_canvas(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.gray(0.95))
     .render_path(custom_path, @color.magenta())
     .render_text(
@@ -144,7 +144,7 @@ test "renderer comparison showcase" (it : @test.Test) {
   let svg_string = svg_doc.to_string()
 
   // Canvas version  
-  let canvas_doc = @vg.new_canvas(250.0, 150.0)
+  let canvas_doc = @canvas.new_canvas(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.gray(0.95))
     .render_circle(@vg.Point::new(125.0, 75.0), 40.0, @color.red())
     .render_text("VG Demo", @vg.Point::new(125.0, 30.0), 16.0, @color.black())
@@ -223,7 +223,7 @@ test "complete feature showcase all renderers" (it : @test.Test) {
     )
 
   // Canvas version
-  let canvas_doc = @vg.new_canvas(350.0, 200.0)
+  let canvas_doc = @canvas.new_canvas(350.0, 200.0)
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @color.white())
     .render_text(
       "Canvas: Complete VG Features",
