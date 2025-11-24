@@ -2,7 +2,6 @@
   "is-main": false,
   "import": [
     "bobzhang/vg/geometry",
-    "bobzhang/vg/color",
-    "bobzhang/vg/svg"
+    "bobzhang/vg/color"
   ]
 }
