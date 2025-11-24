@@ -82,21 +82,6 @@ pub enum ImageOp {
   Cut(Image, Image)
 }
 
-pub struct PdfDocument {
-  width : Double
-  height : Double
-  objects : Array[String]
-  object_count : Int
-}
-fn PdfDocument::new(Double, Double) -> Self
-fn PdfDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
-fn PdfDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
-fn PdfDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
-fn PdfDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
-fn PdfDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
-fn PdfDocument::to_string(Self) -> String
-impl Show for PdfDocument
-
 pub enum Primitive {
   Circle(@geometry.Point, Double)
   Rectangle(@geometry.Point, @geometry.Point)

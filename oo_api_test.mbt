@@ -51,7 +51,7 @@ test "canvas oo-style api" (it : @test.Test) {
 ///|
 test "pdf oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for PDF
-  let doc = @vg.PdfDocument::new(300.0, 200.0)
+  let doc = @pdf.PdfDocument::new(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
     .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
@@ -101,7 +101,7 @@ test "oo-style path with document integration" (it : @test.Test) {
       14.0,
       @color.black(),
     )
-  let pdf_doc = @vg.PdfDocument::new(250.0, 150.0)
+  let pdf_doc = @pdf.PdfDocument::new(250.0, 150.0)
     .render_rectangle(0.0, 0.0, 250.0, 150.0, @color.white())
     .render_path(custom_path, @color.purple())
     .render_text(

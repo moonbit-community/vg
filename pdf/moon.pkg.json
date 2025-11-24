@@ -1,10 +1,6 @@
 {
-  "is-main": false,
   "import": [
     "bobzhang/vg/geometry",
     "bobzhang/vg/color"
-  ],
-  "test-import" : [
-    "bobzhang/vg/pdf"
   ]
 }
