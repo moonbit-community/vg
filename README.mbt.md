@@ -76,7 +76,7 @@ test "basic_shapes" (it : @test.Test) {
     .close_path()
 
   // Create SVG output with advanced shapes
-  let svg_doc = @vg.new_svg(200.0, 200.0)
+  let svg_doc = @svg.new_svg(200.0, 200.0)
     .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
     .render_ellipse(@vg.Point::new(150.0, 100.0), 30.0, 20.0, @color.blue())
     .render_path(custom_path, @color.green())
@@ -225,7 +225,7 @@ test "paths examples" {
   }
 
   // Render path to SVG
-  let svg = @vg.new_svg(100.0, 100.0).render_path(path, @color.green())
+  let svg = @svg.new_svg(100.0, 100.0).render_path(path, @color.green())
 
   // Use the variables to avoid unused warnings
   ignore(rectangle)

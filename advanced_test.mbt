@@ -11,7 +11,7 @@ test "quadratic bezier curves" (it : @test.Test) {
     qcurve_path,
     content="Path([MoveTo({x: 10, y: 50}), QCurveTo({x: 50, y: 10}, {x: 90, y: 50}), QCurveTo({x: 50, y: 90}, {x: 10, y: 50}), Close])",
   )
-  let doc = @vg.new_svg(100.0, 100.0)
+  let doc = @svg.new_svg(100.0, 100.0)
     .render_rectangle(0.0, 0.0, 100.0, 100.0, @color.gray(0.95))
     .render_path(qcurve_path, @color.blue())
   let svg_string = doc.to_string()
@@ -30,7 +30,7 @@ test "elliptical arcs" (it : @test.Test) {
     arc_path,
     content="Path([MoveTo({x: 20, y: 50}), EArcTo(30, 20, 0, false, true, {x: 80, y: 50}), EArcTo(30, 20, 0, false, true, {x: 20, y: 50}), Close])",
   )
-  let doc = @vg.new_svg(100.0, 100.0)
+  let doc = @svg.new_svg(100.0, 100.0)
     .render_rectangle(0.0, 0.0, 100.0, 100.0, @color.gray(0.95))
     .render_path(arc_path, @color.green())
   let svg_string = doc.to_string()
@@ -53,7 +53,7 @@ test "smooth curve stitching" (it : @test.Test) {
     smooth_path,
     content="Path([MoveTo({x: 10, y: 50}), CurveTo({x: 30, y: 10}, {x: 50, y: 10}, {x: 70, y: 50}), CurveTo({x: 90, y: 90}, {x: 110, y: 90}, {x: 130, y: 50}), CurveTo({x: 150, y: 10}, {x: 150, y: 10}, {x: 170, y: 50})])",
   )
-  let doc = @vg.new_svg(180.0, 100.0)
+  let doc = @svg.new_svg(180.0, 100.0)
     .render_rectangle(0.0, 0.0, 180.0, 100.0, @color.gray(0.95))
     .render_path(smooth_path, @color.purple())
   let svg_string = doc.to_string()
@@ -126,7 +126,7 @@ test "checkerboard pattern" (it : @test.Test) {
 
 ///|
 test "advanced path showcase" (it : @test.Test) {
-  let doc = @vg.new_svg(400.0, 300.0)
+  let doc = @svg.new_svg(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.gray(0.98))
     .render_text(
       "Advanced Path Features",

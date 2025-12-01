@@ -19,8 +19,6 @@ fn imageop_primitive(Primitive, @color.Color) -> ImageOp
 
 fn imageop_transform(@geometry.Transform, Image) -> ImageOp
 
-fn new_svg(Double, Double) -> SvgDocument
-
 fn primitive_circle(@geometry.Point, Double) -> Primitive
 
 fn primitive_path(@geometry.Path) -> Primitive
@@ -73,23 +71,6 @@ pub enum Primitive {
 }
 impl Eq for Primitive
 impl Show for Primitive
-
-pub struct SvgDocument {
-  width : Double
-  height : Double
-  elements : Array[String]
-}
-fn SvgDocument::add_element(Self, String) -> Self
-fn SvgDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
-fn SvgDocument::render_ellipse(Self, @geometry.Point, Double, Double, @color.Color) -> Self
-fn SvgDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
-fn SvgDocument::render_linear_gradient(Self, String, @geometry.Point, @geometry.Point, @color.Color, @color.Color) -> Self
-fn SvgDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
-fn SvgDocument::render_polygon(Self, Array[@geometry.Point], @color.Color) -> Self
-fn SvgDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
-fn SvgDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
-fn SvgDocument::to_string(Self) -> String
-impl Show for SvgDocument
 
 // Type aliases
 pub using @geometry {type Box}
