@@ -7,51 +7,51 @@ import(
 )
 
 // Values
-fn imageop_compose(Image, Image) -> ImageOp
+pub fn imageop_compose(Image, Image) -> ImageOp
 
-fn imageop_const(@color.Color) -> ImageOp
+pub fn imageop_const(@color.Color) -> ImageOp
 
-fn imageop_cut(Image, Image) -> ImageOp
+pub fn imageop_cut(Image, Image) -> ImageOp
 
-fn imageop_primitive(Primitive, @color.Color) -> ImageOp
+pub fn imageop_primitive(Primitive, @color.Color) -> ImageOp
 
-fn imageop_transform(@geometry.Transform, Image) -> ImageOp
+pub fn imageop_transform(@geometry.Transform, Image) -> ImageOp
 
-fn primitive_circle(@geometry.Point, Double) -> Primitive
+pub fn primitive_circle(@geometry.Point, Double) -> Primitive
 
-fn primitive_path(@geometry.Path) -> Primitive
+pub fn primitive_path(@geometry.Path) -> Primitive
 
-fn primitive_rectangle(@geometry.Point, @geometry.Point) -> Primitive
+pub fn primitive_rectangle(@geometry.Point, @geometry.Point) -> Primitive
 
-fn primitive_text(String, @geometry.Point, Double) -> Primitive
+pub fn primitive_text(String, @geometry.Point, Double) -> Primitive
 
 // Errors
 
 // Types and methods
 pub(all) struct Image((@geometry.Point) -> @color.Color)
-fn Image::axial_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
-fn Image::checkerboard(@color.Color, @color.Color, Double) -> Self
-fn Image::circle(@color.Color, Double) -> Self
-fn Image::compose(Self, Self) -> Self
-fn Image::conic_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
-fn Image::const_color(@color.Color) -> Self
-fn Image::cut(Self, Self) -> Self
-fn Image::ellipse(@color.Color, Double, Double) -> Self
-fn Image::empty() -> Self
+pub fn Image::axial_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
+pub fn Image::checkerboard(@color.Color, @color.Color, Double) -> Self
+pub fn Image::circle(@color.Color, Double) -> Self
+pub fn Image::compose(Self, Self) -> Self
+pub fn Image::conic_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
+pub fn Image::const_color(@color.Color) -> Self
+pub fn Image::cut(Self, Self) -> Self
+pub fn Image::ellipse(@color.Color, Double, Double) -> Self
+pub fn Image::empty() -> Self
 #deprecated
-fn Image::inner(Self) -> (@geometry.Point) -> @color.Color
-fn Image::line(@color.Color, @geometry.Point, @geometry.Point, Double) -> Self
-fn Image::linear_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
-fn Image::polygon(@color.Color, Array[@geometry.Point]) -> Self
-fn Image::radial_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
-fn Image::rectangle(@color.Color, Double, Double) -> Self
-fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
-fn Image::rotate(Self, Double) -> Self
-fn Image::scale(Self, Double, Double) -> Self
-fn Image::tile(Self, Double, Double) -> Self
-fn Image::transform(Self, @geometry.Transform) -> Self
-fn Image::translate_img(Self, Double, Double) -> Self
-fn Image::with_opacity(Self, Double) -> Self
+pub fn Image::inner(Self) -> (@geometry.Point) -> @color.Color
+pub fn Image::line(@color.Color, @geometry.Point, @geometry.Point, Double) -> Self
+pub fn Image::linear_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
+pub fn Image::polygon(@color.Color, Array[@geometry.Point]) -> Self
+pub fn Image::radial_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
+pub fn Image::rectangle(@color.Color, Double, Double) -> Self
+pub fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
+pub fn Image::rotate(Self, Double) -> Self
+pub fn Image::scale(Self, Double, Double) -> Self
+pub fn Image::tile(Self, Double, Double) -> Self
+pub fn Image::transform(Self, @geometry.Transform) -> Self
+pub fn Image::translate_img(Self, Double, Double) -> Self
+pub fn Image::with_opacity(Self, Double) -> Self
 
 pub enum ImageOp {
   Const(@color.Color)
@@ -67,8 +67,8 @@ pub enum Primitive {
   Path(@geometry.Path)
   Text(String, @geometry.Point, Double)
 }
-impl Eq for Primitive
-impl Show for Primitive
+pub impl Eq for Primitive
+pub impl Show for Primitive
 
 // Type aliases
 pub using @geometry {type Box}

@@ -2,57 +2,57 @@
 package "bobzhang/vg/color"
 
 // Values
-fn black() -> Color
+pub fn black() -> Color
 
-fn blend(Color, Color) -> Color
+pub fn blend(Color, Color) -> Color
 
-fn blue() -> Color
+pub fn blue() -> Color
 
-fn clamp(Color) -> Color
+pub fn clamp(Color) -> Color
 
-fn cyan() -> Color
+pub fn cyan() -> Color
 
-fn gold() -> Color
+pub fn gold() -> Color
 
-fn gray(Double) -> Color
+pub fn gray(Double) -> Color
 
-fn green() -> Color
+pub fn green() -> Color
 
-fn hard_light_blend(Color, Color) -> Color
+pub fn hard_light_blend(Color, Color) -> Color
 
-fn hsv(Double, Double, Double) -> Color
+pub fn hsv(Double, Double, Double) -> Color
 
-fn lerp_color(Color, Color, Double) -> Color
+pub fn lerp_color(Color, Color, Double) -> Color
 
-fn magenta() -> Color
+pub fn magenta() -> Color
 
-fn multiply_blend(Color, Color) -> Color
+pub fn multiply_blend(Color, Color) -> Color
 
-fn orange() -> Color
+pub fn orange() -> Color
 
-fn overlay_blend(Color, Color) -> Color
+pub fn overlay_blend(Color, Color) -> Color
 
-fn purple() -> Color
+pub fn purple() -> Color
 
-fn red() -> Color
+pub fn red() -> Color
 
-fn rgb(Double, Double, Double) -> Color
+pub fn rgb(Double, Double, Double) -> Color
 
-fn rgba(Double, Double, Double, Double) -> Color
+pub fn rgba(Double, Double, Double, Double) -> Color
 
-fn scale(Color, Double) -> Color
+pub fn scale(Color, Double) -> Color
 
-fn screen_blend(Color, Color) -> Color
+pub fn screen_blend(Color, Color) -> Color
 
-fn soft_light_blend(Color, Color) -> Color
+pub fn soft_light_blend(Color, Color) -> Color
 
-fn to_hex(Color) -> String
+pub fn to_hex(Color) -> String
 
-fn transparent() -> Color
+pub fn transparent() -> Color
 
-fn white() -> Color
+pub fn white() -> Color
 
-fn yellow() -> Color
+pub fn yellow() -> Color
 
 // Errors
 
@@ -63,8 +63,8 @@ pub struct Color {
   b : Double
   a : Double
 }
-impl Eq for Color
-impl Show for Color
+pub impl Eq for Color
+pub impl Show for Color
 
 // Type aliases
 

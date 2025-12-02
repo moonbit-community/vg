@@ -7,7 +7,7 @@ import(
 )
 
 // Values
-fn new_svg(Double, Double) -> SvgDocument
+pub fn new_svg(Double, Double) -> SvgDocument
 
 // Errors
 
@@ -17,17 +17,17 @@ pub struct SvgDocument {
   height : Double
   elements : Array[String]
 }
-fn SvgDocument::add_element(Self, String) -> Self
-fn SvgDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
-fn SvgDocument::render_ellipse(Self, @geometry.Point, Double, Double, @color.Color) -> Self
-fn SvgDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
-fn SvgDocument::render_linear_gradient(Self, String, @geometry.Point, @geometry.Point, @color.Color, @color.Color) -> Self
-fn SvgDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
-fn SvgDocument::render_polygon(Self, Array[@geometry.Point], @color.Color) -> Self
-fn SvgDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
-fn SvgDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
-fn SvgDocument::to_string(Self) -> String
-impl Show for SvgDocument
+pub fn SvgDocument::add_element(Self, String) -> Self
+pub fn SvgDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
+pub fn SvgDocument::render_ellipse(Self, @geometry.Point, Double, Double, @color.Color) -> Self
+pub fn SvgDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
+pub fn SvgDocument::render_linear_gradient(Self, String, @geometry.Point, @geometry.Point, @color.Color, @color.Color) -> Self
+pub fn SvgDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
+pub fn SvgDocument::render_polygon(Self, Array[@geometry.Point], @color.Color) -> Self
+pub fn SvgDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
+pub fn SvgDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
+pub fn SvgDocument::to_string(Self) -> String
+pub impl Show for SvgDocument
 
 // Type aliases
 

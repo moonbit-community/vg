@@ -7,7 +7,7 @@ import(
 )
 
 // Values
-fn new_canvas(Double, Double) -> CanvasDocument
+pub fn new_canvas(Double, Double) -> CanvasDocument
 
 // Errors
 
@@ -17,15 +17,15 @@ pub struct CanvasDocument {
   height : Double
   commands : Array[String]
 }
-fn CanvasDocument::add_command(Self, String) -> Self
-fn CanvasDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
-fn CanvasDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
-fn CanvasDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
-fn CanvasDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
-fn CanvasDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
-fn CanvasDocument::to_html(Self, String) -> String
-fn CanvasDocument::to_js(Self) -> String
-impl Show for CanvasDocument
+pub fn CanvasDocument::add_command(Self, String) -> Self
+pub fn CanvasDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
+pub fn CanvasDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
+pub fn CanvasDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
+pub fn CanvasDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
+pub fn CanvasDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
+pub fn CanvasDocument::to_html(Self, String) -> String
+pub fn CanvasDocument::to_js(Self) -> String
+pub impl Show for CanvasDocument
 
 // Type aliases
 

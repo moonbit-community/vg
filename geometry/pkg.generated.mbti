@@ -2,29 +2,29 @@
 package "bobzhang/vg/geometry"
 
 // Values
-fn apply(Transform, Point) -> Point
+pub fn apply(Transform, Point) -> Point
 
-fn compose_transforms(Transform, Transform) -> Transform
+pub fn compose_transforms(Transform, Transform) -> Transform
 
-fn determinant(Transform) -> Double
+pub fn determinant(Transform) -> Double
 
-fn identity() -> Transform
+pub fn identity() -> Transform
 
-fn invert(Transform) -> Transform?
+pub fn invert(Transform) -> Transform?
 
-fn make_rotate(Double) -> Transform
+pub fn make_rotate(Double) -> Transform
 
-fn make_scale(Double, Double) -> Transform
+pub fn make_scale(Double, Double) -> Transform
 
-fn make_translate(Double, Double) -> Transform
+pub fn make_translate(Double, Double) -> Transform
 
-fn preserves_orientation(Transform) -> Bool
+pub fn preserves_orientation(Transform) -> Bool
 
-fn scale_uniform(Double) -> Transform
+pub fn scale_uniform(Double) -> Transform
 
-fn skew_x(Double) -> Transform
+pub fn skew_x(Double) -> Transform
 
-fn skew_y(Double) -> Transform
+pub fn skew_y(Double) -> Transform
 
 // Errors
 
@@ -35,28 +35,28 @@ pub struct Box {
   max_x : Double
   max_y : Double
 }
-impl Eq for Box
-impl Show for Box
+pub impl Eq for Box
+pub impl Show for Box
 
 pub struct Path(Array[PathSegment])
-fn Path::bounds(Self) -> Box?
-fn Path::circle(Point, Double) -> Self
-fn Path::close_path(Self) -> Self
-fn Path::curve_to(Self, Point, Point, Point) -> Self
-fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
-fn Path::ellipse(Point, Double, Double) -> Self
-fn Path::empty() -> Self
+pub fn Path::bounds(Self) -> Box?
+pub fn Path::circle(Point, Double) -> Self
+pub fn Path::close_path(Self) -> Self
+pub fn Path::curve_to(Self, Point, Point, Point) -> Self
+pub fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
+pub fn Path::ellipse(Point, Double, Double) -> Self
+pub fn Path::empty() -> Self
 #deprecated
-fn Path::inner(Self) -> Array[PathSegment]
-fn Path::line_to(Self, Point) -> Self
-fn Path::move_to(Self, Point) -> Self
-fn Path::qcurve_to(Self, Point, Point) -> Self
-fn Path::rect(Double, Double, Double, Double) -> Self
-fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
-fn Path::smooth_qcurve_to(Self, Point) -> Self
-fn Path::transform(Self, Transform) -> Self
-impl Eq for Path
-impl Show for Path
+pub fn Path::inner(Self) -> Array[PathSegment]
+pub fn Path::line_to(Self, Point) -> Self
+pub fn Path::move_to(Self, Point) -> Self
+pub fn Path::qcurve_to(Self, Point, Point) -> Self
+pub fn Path::rect(Double, Double, Double, Double) -> Self
+pub fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
+pub fn Path::smooth_qcurve_to(Self, Point) -> Self
+pub fn Path::transform(Self, Transform) -> Self
+pub impl Eq for Path
+pub impl Show for Path
 
 pub enum PathSegment {
   MoveTo(Point)
@@ -66,26 +66,26 @@ pub enum PathSegment {
   EArcTo(Double, Double, Double, Bool, Bool, Point)
   Close
 }
-impl Eq for PathSegment
-impl Show for PathSegment
+pub impl Eq for PathSegment
+pub impl Show for PathSegment
 
 pub struct Point {
   x : Double
   y : Double
 }
-fn Point::add(Self, Self) -> Self
-fn Point::distance(Self, Self) -> Double
-fn Point::dot(Self, Self) -> Double
-fn Point::length(Self) -> Double
-fn Point::lerp(Self, Self, Double) -> Self
-fn Point::new(Double, Double) -> Self
-fn Point::normalize(Self) -> Self
-fn Point::origin() -> Self
-fn Point::rotate(Self, Double) -> Self
-fn Point::scale(Self, Double) -> Self
-fn Point::sub(Self, Self) -> Self
-impl Eq for Point
-impl Show for Point
+pub fn Point::add(Self, Self) -> Self
+pub fn Point::distance(Self, Self) -> Double
+pub fn Point::dot(Self, Self) -> Double
+pub fn Point::length(Self) -> Double
+pub fn Point::lerp(Self, Self, Double) -> Self
+pub fn Point::new(Double, Double) -> Self
+pub fn Point::normalize(Self) -> Self
+pub fn Point::origin() -> Self
+pub fn Point::rotate(Self, Double) -> Self
+pub fn Point::scale(Self, Double) -> Self
+pub fn Point::sub(Self, Self) -> Self
+pub impl Eq for Point
+pub impl Show for Point
 
 pub struct Transform {
   m11 : Double
@@ -95,8 +95,8 @@ pub struct Transform {
   m31 : Double
   m32 : Double
 }
-impl Eq for Transform
-impl Show for Transform
+pub impl Eq for Transform
+pub impl Show for Transform
 
 // Type aliases
 
