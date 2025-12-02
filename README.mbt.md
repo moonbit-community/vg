@@ -45,7 +45,7 @@ moon info
 
 ## Usage
 
-```moonbit
+```mbt check
 ///|
 test "basic_shapes" (it : @test.Test) {
   // Create basic shapes
@@ -106,7 +106,7 @@ The library is organized into several modules:
 ## Examples
 
 ### Basic Shapes
-```moonbit
+```mbt check
 ///|
 test "basic shapes examples" {
   // Create a red circle
@@ -134,7 +134,7 @@ test "basic shapes examples" {
 ```
 
 ### Transformations
-```moonbit
+```mbt check
 ///|
 test "transformations examples" {
   let circle_img = @vg.Image::circle(@color.red(), 25.0)
@@ -157,7 +157,7 @@ test "transformations examples" {
 ```
 
 ### Colors and Effects
-```moonbit
+```mbt check
 ///|
 test "colors and effects examples" {
   // HSV color creation
@@ -195,7 +195,7 @@ test "colors and effects examples" {
 ```
 
 ### Paths (Object-Oriented API)
-```moonbit
+```mbt check
 ///|
 test "paths examples" {
   // Create a custom path with method chaining
@@ -237,7 +237,7 @@ test "paths examples" {
 ```
 
 ### Canvas Rendering (Fluent API)
-```moonbit
+```mbt check
 ///|
 test "canvas rendering examples" {
   let custom_path = @vg.Path::empty()
@@ -270,7 +270,7 @@ test "canvas rendering examples" {
 ```
 
 ### PDF Document Generation (Fluent API)
-```moonbit
+```mbt check
 ///|
 test "pdf generation examples" {
   let star_path = @vg.Path::empty()
@@ -304,7 +304,7 @@ test "pdf generation examples" {
 #### Mandelbrot Set
 The famous Mandelbrot set fractal - a stunning example of mathematical beauty rendered as an image.
 
-```moonbit
+```mbt check
 ///|
 test "mandelbrot set" (it : @test.Test) {
   // Mandelbrot set parameters
@@ -347,7 +347,7 @@ test "mandelbrot set" (it : @test.Test) {
 #### Julia Set
 A related fractal with equally mesmerizing patterns.
 
-```moonbit
+```mbt check
 ///|
 test "julia set" (it : @test.Test) {
   let max_iter = 100
@@ -395,7 +395,7 @@ test "julia set" (it : @test.Test) {
 #### Spirograph Pattern
 Beautiful mathematical curves inspired by the classic toy.
 
-```moonbit
+```mbt check
 ///|
 test "spirograph" (it : @test.Test) {
   let width = 400.0
@@ -451,7 +451,7 @@ test "spirograph" (it : @test.Test) {
 #### Rainbow Flower
 A colorful flower pattern using polar coordinates.
 
-```moonbit
+```mbt check
 ///|
 test "rainbow flower" (it : @test.Test) {
   let width = 400.0
@@ -497,7 +497,7 @@ test "rainbow flower" (it : @test.Test) {
 #### Sierpinski Triangle
 A classic fractal demonstrating recursive self-similarity.
 
-```moonbit
+```mbt check
 ///|
 test "sierpinski triangle" (it : @test.Test) {
   let width = 400.0
@@ -564,7 +564,7 @@ test "sierpinski triangle" (it : @test.Test) {
 #### Concentric Waves
 Hypnotic concentric circles with color gradients.
 
-```moonbit
+```mbt check
 ///|
 test "concentric waves" (it : @test.Test) {
   let width = 400.0
@@ -597,7 +597,7 @@ test "concentric waves" (it : @test.Test) {
 #### Starfield
 A procedural starfield with twinkling stars.
 
-```moonbit
+```mbt check
 ///|
 test "starfield" (it : @test.Test) {
   let width = 500.0
@@ -652,7 +652,7 @@ test "starfield" (it : @test.Test) {
 #### Op Art Pattern
 An optical illusion pattern inspired by Victor Vasarely.
 
-```moonbit
+```mbt check
 ///|
 test "op art pattern" (it : @test.Test) {
   let width = 400.0
@@ -694,7 +694,7 @@ test "op art pattern" (it : @test.Test) {
 #### Gradient Gallery
 Showcase of different gradient types.
 
-```moonbit
+```mbt check
 ///|
 test "gradient gallery" (it : @test.Test) {
   let width = 500.0
