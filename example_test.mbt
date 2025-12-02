@@ -1,8 +1,16 @@
 // Integration tests for the Vg library
 
 ///|
+fn example() -> @vg.Image {
+  let red_circle = @vg.Image::circle(@color.red(), 30.0)
+  let blue_rect = @vg.Image::rectangle(@color.blue(), 40.0, 40.0)
+  let translated_rect = blue_rect.translate_img(50.0, 0.0)
+  red_circle.compose(translated_rect)
+}
+
+///|
 test "example image creation" {
-  let img = @vg.example()
+  let img = example()
 
   // Test that the example image returns appropriate colors at different points
   let center = @vg.Point::new(0.0, 0.0)

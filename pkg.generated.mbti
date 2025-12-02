@@ -7,8 +7,6 @@ import(
 )
 
 // Values
-fn example() -> Image
-
 fn imageop_compose(Image, Image) -> ImageOp
 
 fn imageop_const(@color.Color) -> ImageOp

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect x="0" y="0" width="400" height="400" fill="#000000"/>
+  <circle cx="200" cy="200" r="180" fill="#E56969"/>
+  <circle cx="200" cy="200" r="175.5" fill="#E57999"/>
+  <circle cx="200" cy="200" r="171" fill="#E584BE"/>
+  <circle cx="200" cy="200" r="166.5" fill="#E589DC"/>
+  <circle cx="200" cy="200" r="162" fill="#D288E5"/>
+  <circle cx="200" cy="200" r="157.5" fill="#B381E5"/>
+  <circle cx="200" cy="200" r="153" fill="#8B75E5"/>
+  <circle cx="200" cy="200" r="148.5" fill="#6471E5"/>
+  <circle cx="200" cy="200" r="144" fill="#508CE5"/>
+  <circle cx="200" cy="200" r="139.5" fill="#3CB2E5"/>
+  <circle cx="200" cy="200" r="135" fill="#28E5E5"/>
+  <circle cx="200" cy="200" r="130.5" fill="#17E5A7"/>
+  <circle cx="200" cy="200" r="125.99999999999999" fill="#0AE561"/>
+  <circle cx="200" cy="200" r="121.50000000000001" fill="#02E518"/>
+  <circle cx="200" cy="200" r="117" fill="#2DE500"/>
+  <circle cx="200" cy="200" r="112.5" fill="#74E504"/>
+  <circle cx="200" cy="200" r="108" fill="#BAE50E"/>
+  <circle cx="200" cy="200" r="103.49999999999999" fill="#E5D11D"/>
+  <circle cx="200" cy="200" r="99.00000000000001" fill="#E59C2F"/>
+  <circle cx="200" cy="200" r="94.5" fill="#E57443"/>
+  <circle cx="200" cy="200" r="90" fill="#E55858"/>
+  <circle cx="200" cy="200" r="85.5" fill="#E56A8F"/>
+  <circle cx="200" cy="200" r="81" fill="#E57ABA"/>
+  <circle cx="200" cy="200" r="76.5" fill="#E584DB"/>
+  <circle cx="200" cy="200" r="72" fill="#D389E5"/>
+  <circle cx="200" cy="200" r="67.5" fill="#B688E5"/>
+  <circle cx="200" cy="200" r="62.99999999999999" fill="#9480E5"/>
+  <circle cx="200" cy="200" r="58.5" fill="#747FE5"/>
+  <circle cx="200" cy="200" r="54" fill="#6397E5"/>
+  <circle cx="200" cy="200" r="49.50000000000001" fill="#4FB8E5"/>
+  <circle cx="200" cy="200" r="45" fill="#3BE5E5"/>
+  <circle cx="200" cy="200" r="40.5" fill="#27E5AC"/>
+  <circle cx="200" cy="200" r="36" fill="#16E569"/>
+  <circle cx="200" cy="200" r="31.499999999999996" fill="#09E51F"/>
+  <circle cx="200" cy="200" r="27" fill="#2FE501"/>
+  <circle cx="200" cy="200" r="22.5" fill="#72E500"/>
+  <circle cx="200" cy="200" r="18" fill="#B8E504"/>
+  <circle cx="200" cy="200" r="13.5" fill="#E5D00E"/>
+  <circle cx="200" cy="200" r="9" fill="#E5951D"/>
+  <circle cx="200" cy="200" r="4.5" fill="#E56630"/>
+  <circle cx="200" cy="200" r="0" fill="#E54444"/>
+</svg>
