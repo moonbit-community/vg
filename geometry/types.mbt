@@ -2,6 +2,7 @@
 
 ///|
 /// A 2D point in the cartesian plane
+#valtype
 pub struct Point {
   x : Double
   y : Double
@@ -9,6 +10,7 @@ pub struct Point {
 
 ///|
 /// Bounding box
+#valtype
 pub struct Box {
   min_x : Double
   min_y : Double
@@ -33,6 +35,7 @@ pub struct Path(Array[PathSegment]) derive(Eq, Show)
 
 ///|
 /// 2D transformation matrix
+#valtype
 pub struct Transform {
   m11 : Double // Scale X
   m12 : Double // Skew Y
