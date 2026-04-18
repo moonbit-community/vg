@@ -1,0 +1,8 @@
+import {
+  "bobzhang/vg/geometry",
+  "bobzhang/vg/color",
+}
+
+options(
+  "is-main": false,
+)
