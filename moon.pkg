@@ -1,0 +1,14 @@
+import {
+  "bobzhang/vg/geometry",
+  "bobzhang/vg/color",
+  "bobzhang/vg/svg",
+}
+
+import {
+  "bobzhang/vg/pdf",
+  "bobzhang/vg/canvas",
+} for "test"
+
+options(
+  "is-main": false,
+)
