@@ -9,7 +9,16 @@ test "quadratic bezier curves" (it : @test.Test) {
     .close_path()
   inspect(
     qcurve_path,
-    content="Path([MoveTo({x: 10, y: 50}), QCurveTo({x: 50, y: 10}, {x: 90, y: 50}), QCurveTo({x: 50, y: 90}, {x: 10, y: 50}), Close])",
+    content=(
+      #|Path(
+      #|  [
+      #|    MoveTo({ x: 10, y: 50 }),
+      #|    QCurveTo({ x: 50, y: 10 }, { x: 90, y: 50 }),
+      #|    QCurveTo({ x: 50, y: 90 }, { x: 10, y: 50 }),
+      #|    Close,
+      #|  ],
+      #|)
+    ),
   )
   let doc = @svg.new_svg(100.0, 100.0)
     .render_rectangle(0.0, 0.0, 100.0, 100.0, @color.gray(0.95))
@@ -28,7 +37,16 @@ test "elliptical arcs" (it : @test.Test) {
     .close_path()
   inspect(
     arc_path,
-    content="Path([MoveTo({x: 20, y: 50}), EArcTo(30, 20, 0, false, true, {x: 80, y: 50}), EArcTo(30, 20, 0, false, true, {x: 20, y: 50}), Close])",
+    content=(
+      #|Path(
+      #|  [
+      #|    MoveTo({ x: 20, y: 50 }),
+      #|    EArcTo(30, 20, 0, false, true, { x: 80, y: 50 }),
+      #|    EArcTo(30, 20, 0, false, true, { x: 20, y: 50 }),
+      #|    Close,
+      #|  ],
+      #|)
+    ),
   )
   let doc = @svg.new_svg(100.0, 100.0)
     .render_rectangle(0.0, 0.0, 100.0, 100.0, @color.gray(0.95))
@@ -51,7 +69,16 @@ test "smooth curve stitching" (it : @test.Test) {
     .smooth_ccurve_to(@vg.Point::new(150.0, 10.0), @vg.Point::new(170.0, 50.0)) // Another smooth curve
   inspect(
     smooth_path,
-    content="Path([MoveTo({x: 10, y: 50}), CurveTo({x: 30, y: 10}, {x: 50, y: 10}, {x: 70, y: 50}), CurveTo({x: 90, y: 90}, {x: 110, y: 90}, {x: 130, y: 50}), CurveTo({x: 150, y: 10}, {x: 150, y: 10}, {x: 170, y: 50})])",
+    content=(
+      #|Path(
+      #|  [
+      #|    MoveTo({ x: 10, y: 50 }),
+      #|    CurveTo({ x: 30, y: 10 }, { x: 50, y: 10 }, { x: 70, y: 50 }),
+      #|    CurveTo({ x: 90, y: 90 }, { x: 110, y: 90 }, { x: 130, y: 50 }),
+      #|    CurveTo({ x: 150, y: 10 }, { x: 150, y: 10 }, { x: 170, y: 50 }),
+      #|  ],
+      #|)
+    ),
   )
   let doc = @svg.new_svg(180.0, 100.0)
     .render_rectangle(0.0, 0.0, 180.0, 100.0, @color.gray(0.95))
@@ -102,7 +129,7 @@ test "advanced blend modes" {
   inspect(
     blend_results,
     content=(
-      #|[("normal_blend", {r: 0.8333333333333335, g: 0, b: 0.16666666666666666, a: 0.96}), ("multiply_blend", {r: 0, g: 0, b: 0, a: 0.96}), ("screen_blend", {r: 1, g: 0, b: 1, a: 0.96}), ("overlay_blend", {r: 1, g: 0, b: 0, a: 0.96}), ("hard_light_blend", {r: 0, g: 0, b: 1, a: 0.96}), ("soft_light_blend", {r: 1, g: 0, b: 0, a: 0.96})]
+      #|[("normal_blend", { r: 0.8333333333333335, g: 0, b: 0.16666666666666666, a: 0.96 }), ("multiply_blend", { r: 0, g: 0, b: 0, a: 0.96 }), ("screen_blend", { r: 1, g: 0, b: 1, a: 0.96 }), ("overlay_blend", { r: 1, g: 0, b: 0, a: 0.96 }), ("hard_light_blend", { r: 0, g: 0, b: 1, a: 0.96 }), ("soft_light_blend", { r: 1, g: 0, b: 0, a: 0.96 })]
     ),
   )
 }

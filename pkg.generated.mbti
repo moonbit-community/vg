@@ -1,10 +1,11 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "bobzhang/vg"
 
-import(
-  "bobzhang/vg/color"
-  "bobzhang/vg/geometry"
-)
+import {
+  "bobzhang/vg/color",
+  "bobzhang/vg/geometry",
+  "moonbitlang/core/debug",
+}
 
 // Values
 pub fn imageop_compose(Image, Image) -> ImageOp
@@ -38,8 +39,6 @@ pub fn Image::const_color(@color.Color) -> Self
 pub fn Image::cut(Self, Self) -> Self
 pub fn Image::ellipse(@color.Color, Double, Double) -> Self
 pub fn Image::empty() -> Self
-#deprecated
-pub fn Image::inner(Self) -> (@geometry.Point) -> @color.Color
 pub fn Image::line(@color.Color, @geometry.Point, @geometry.Point, Double) -> Self
 pub fn Image::linear_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
 pub fn Image::polygon(@color.Color, Array[@geometry.Point]) -> Self
@@ -66,8 +65,7 @@ pub enum Primitive {
   Rectangle(@geometry.Point, @geometry.Point)
   Path(@geometry.Path)
   Text(String, @geometry.Point, Double)
-}
-pub impl Eq for Primitive
+} derive(Eq, @debug.Debug)
 pub impl Show for Primitive
 
 // Type aliases

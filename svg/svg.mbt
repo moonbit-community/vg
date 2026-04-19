@@ -6,7 +6,7 @@ pub struct SvgDocument {
   width : Double
   height : Double
   elements : Array[String]
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a new SVG document
@@ -200,4 +200,9 @@ pub fn SvgDocument::to_string(self : SvgDocument) -> String {
     $|\{self.elements.map(e => "  " + e).join("\n")}
     $|</svg>
   )
+}
+
+///|
+pub impl Show for SvgDocument with output(self, logger) {
+  logger.write_string(@debug.render(self.to_repr(), max_depth=2147483647))
 }

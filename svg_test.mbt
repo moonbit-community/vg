@@ -31,7 +31,11 @@ test "circle rendering" (it : @test.Test) {
   inspect(
     doc,
     content=(
-      #|{width: 100, height: 100, elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"#FF0000\"/>"]}
+      #|{
+      #|  width: 100,
+      #|  height: 100,
+      #|  elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"#FF0000\"/>"],
+      #|}
     ),
   )
   let svg_string = doc.to_string()
@@ -61,7 +65,7 @@ test "path rendering" {
     fail("Should have one path element")
   }
   let element = doc.elements[0]
-  if not(element.contains("path")) || not(element.contains("d=\"")) {
+  if !element.contains("path") || !element.contains("d=\"") {
     fail("Path element should contain path data")
   }
 }
@@ -80,7 +84,7 @@ test "line rendering" {
     fail("Should have one line element")
   }
   let element = doc.elements[0]
-  if not(element.contains("line")) || not(element.contains("x1=\"0\"")) {
+  if !element.contains("line") || !element.contains("x1=\"0\"") {
     fail("Line element should contain correct coordinates")
   }
 }
@@ -97,7 +101,7 @@ test "text rendering" {
     fail("Should have one text element")
   }
   let element = doc.elements[0]
-  if not(element.contains("text")) || not(element.contains("Hello World")) {
+  if !element.contains("text") || !element.contains("Hello World") {
     fail("Text element should contain the text content")
   }
 }
@@ -110,19 +114,19 @@ test "SVG string generation" {
     @color.red(),
   )
   let svg_string = doc.to_string()
-  if not(svg_string.contains("<?xml")) {
+  if !svg_string.contains("<?xml") {
     fail("SVG string should contain XML declaration")
   }
-  if not(svg_string.contains("<svg")) {
+  if !svg_string.contains("<svg") {
     fail("SVG string should contain SVG root element")
   }
-  if not(svg_string.contains("width=\"100\"")) {
+  if !svg_string.contains("width=\"100\"") {
     fail("SVG string should contain correct width")
   }
-  if not(svg_string.contains("</svg>")) {
+  if !svg_string.contains("</svg>") {
     fail("SVG string should be properly closed")
   }
-  if not(svg_string.contains("circle")) {
+  if !svg_string.contains("circle") {
     fail("SVG string should contain the circle element")
   }
 }
@@ -143,10 +147,10 @@ test "complex SVG document" {
     fail("Complex document should have 4 elements")
   }
   let svg_string = doc.to_string()
-  if not(svg_string.contains("rect")) ||
-    not(svg_string.contains("circle")) ||
-    not(svg_string.contains("line")) ||
-    not(svg_string.contains("text")) {
+  if !svg_string.contains("rect") ||
+    !svg_string.contains("circle") ||
+    !svg_string.contains("line") ||
+    !svg_string.contains("text") {
     fail("Complex SVG should contain all element types")
   }
 }
@@ -155,10 +159,10 @@ test "complex SVG document" {
 test "image to SVG rendering" {
   let img = @vg.Image::circle(@color.red(), 25.0)
   let svg_string = img.render_image_to_svg(100.0, 100.0, 20)
-  if not(svg_string.contains("svg")) {
+  if !svg_string.contains("svg") {
     fail("Image rendering should produce valid SVG")
   }
-  if not(svg_string.contains("rect")) {
+  if !svg_string.contains("rect") {
     fail("Image rendering should contain rectangle elements for pixels")
   }
 }
@@ -174,7 +178,11 @@ test "color with alpha in SVG" {
   inspect(
     doc,
     content=(
-      #|{width: 100, height: 100, elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"rgba(255,0,0,0.5)\"/>"]}
+      #|{
+      #|  width: 100,
+      #|  height: 100,
+      #|  elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"rgba(255,0,0,0.5)\"/>"],
+      #|}
     ),
   )
 }
@@ -201,7 +209,18 @@ test "comprehensive svg rendering" (it : @test.Test) {
   inspect(
     complex_doc,
     content=(
-      #|{width: 300, height: 200, elements: ["<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>", "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>", "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>", "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>", "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/>", "<text x=\"150\" y=\"150\" font-size=\"16\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"#7F007F\">VG Graphics Demo</text>"]}
+      #|{
+      #|  width: 300,
+      #|  height: 200,
+      #|  elements: [
+      #|    "<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>",
+      #|    "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>",
+      #|    "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>",
+      #|    "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>",
+      #|    "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/>",
+      #|    "<text x=\"150\" y=\"150\" font-size=\"16\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"#7F007F\">VG Graphics Demo</text>",
+      #|  ],
+      #|}
     ),
   )
   let svg_string = complex_doc.to_string()
@@ -246,7 +265,11 @@ test "path rendering to svg" (it : @test.Test) {
   inspect(
     doc,
     content=(
-      #|{width: 120, height: 50, elements: ["<path d=\"M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z \" fill=\"#FF00FF\" stroke=\"none\"/>"]}
+      #|{
+      #|  width: 120,
+      #|  height: 50,
+      #|  elements: ["<path d=\"M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z \" fill=\"#FF00FF\" stroke=\"none\"/>"],
+      #|}
     ),
   )
   let svg_string = doc.to_string()
@@ -470,16 +493,16 @@ test "svg rendering validation" (it : @test.Test) {
   let svg_string = doc.to_string()
 
   // Basic validation checks
-  if not(svg_string.contains("<?xml")) {
+  if !svg_string.contains("<?xml") {
     fail("SVG should start with XML declaration")
   }
-  if not(svg_string.contains("<svg")) {
+  if !svg_string.contains("<svg") {
     fail("SVG should contain svg element")
   }
-  if not(svg_string.contains("</svg>")) {
+  if !svg_string.contains("</svg>") {
     fail("SVG should be properly closed")
   }
-  if not(svg_string.contains("font-family")) {
+  if !svg_string.contains("font-family") {
     fail("SVG text should have font-family attribute")
   }
   it.write(svg_string)

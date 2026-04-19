@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "bobzhang/vg/color"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn black() -> Color
 
@@ -62,8 +66,7 @@ pub struct Color {
   g : Double
   b : Double
   a : Double
-}
-pub impl Eq for Color
+} derive(Eq, @debug.Debug)
 pub impl Show for Color
 
 // Type aliases

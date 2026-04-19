@@ -7,7 +7,7 @@ pub struct PdfDocument {
   height : Double
   objects : Array[String]
   object_count : Int
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a new PDF document
@@ -270,4 +270,9 @@ pub fn PdfDocument::to_string(self : PdfDocument) -> String {
   pdf = pdf + "trailer\n<<\n/Size 5\n/Root 1 0 R\n>>\n"
   pdf = pdf + "startxref\n" + (pdf.length() + 50).to_string() + "\n%%EOF"
   pdf
+}
+
+///|
+pub impl Show for PdfDocument with output(self, logger) {
+  logger.write_string(@debug.render(self.to_repr(), max_depth=2147483647))
 }

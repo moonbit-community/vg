@@ -6,7 +6,7 @@ pub struct CanvasDocument {
   width : Double
   height : Double
   commands : Array[String]
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a new Canvas document
@@ -221,4 +221,9 @@ pub fn CanvasDocument::to_js(self : CanvasDocument) -> String {
 pub fn CanvasDocument::to_html(self : CanvasDocument, title : String) -> String {
   let js_code = self.to_js()
   "<!DOCTYPE html>\n<html>\n<head>\n  <title>\{title}</title>\n  <style>\n    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }\n    canvas { border: 1px solid #ccc; margin: 10px; }\n  </style>\n</head>\n<body>\n  <h1>\{title}</h1>\n  <canvas id=\"vgCanvas\"></canvas>\n  <script>\n\{js_code}\n    drawVgGraphics(document.getElementById('vgCanvas'));\n  </script>\n</body>\n</html>"
+}
+
+///|
+pub impl Show for CanvasDocument with output(self, logger) {
+  logger.write_string(@debug.render(self.to_repr(), max_depth=2147483647))
 }
