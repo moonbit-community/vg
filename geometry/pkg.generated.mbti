@@ -49,6 +49,8 @@ pub fn Path::curve_to(Self, Point, Point, Point) -> Self
 pub fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
 pub fn Path::ellipse(Point, Double, Double) -> Self
 pub fn Path::empty() -> Self
+#deprecated
+pub fn Path::inner(Self) -> Array[PathSegment]
 pub fn Path::line_to(Self, Point) -> Self
 pub fn Path::move_to(Self, Point) -> Self
 pub fn Path::qcurve_to(Self, Point, Point) -> Self
