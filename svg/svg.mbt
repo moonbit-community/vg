@@ -37,9 +37,18 @@ fn color_to_svg(c : @color.Color) -> String {
 }
 
 ///|
+/// Round a coordinate to 4 decimal places for platform-stable output.
+/// The native/wasm-gc/js backends produce subtly different float
+/// representations of the same computation; normalizing keeps the
+/// embedded README snapshots identical across all backends.
+fn round_coord(x : Double) -> Double {
+  (x * 10000.0).round() / 10000.0
+}
+
+///|
 /// Convert a point to SVG coordinate string
 fn point_to_svg(p : @geometry.Point) -> String {
-  "\{p.x},\{p.y}"
+  "\{round_coord(p.x)},\{round_coord(p.y)}"
 }
 
 ///|
@@ -76,7 +85,7 @@ pub fn SvgDocument::render_circle(
   color : @color.Color,
 ) -> SvgDocument {
   let element =
-    $|<circle cx="\{center.x}" cy="\{center.y}" r="\{radius}" fill="\{color_to_svg(color)}"/>
+    $|<circle cx="\{round_coord(center.x)}" cy="\{round_coord(center.y)}" r="\{round_coord(radius)}" fill="\{color_to_svg(color)}"/>
   self.add_element(element)
 }
 
@@ -120,7 +129,7 @@ pub fn SvgDocument::render_line(
   thickness : Double,
 ) -> SvgDocument {
   let element =
-    $|<line x1="\{start.x}" y1="\{start.y}" x2="\{end.x}" y2="\{end.y}" stroke="\{color_to_svg(color)}" stroke-width="\{thickness}" stroke-linecap="round" fill="none"/>
+    $|<line x1="\{round_coord(start.x)}" y1="\{round_coord(start.y)}" x2="\{round_coord(end.x)}" y2="\{round_coord(end.y)}" stroke="\{color_to_svg(color)}" stroke-width="\{thickness}" stroke-linecap="round" fill="none"/>
   self.add_element(element)
 }
 
@@ -148,7 +157,7 @@ pub fn SvgDocument::render_ellipse(
   color : @color.Color,
 ) -> SvgDocument {
   let element =
-    $|<ellipse cx="\{center.x}" cy="\{center.y}" rx="\{rx}" ry="\{ry}" fill="\{color_to_svg(color)}"/>
+    $|<ellipse cx="\{round_coord(center.x)}" cy="\{round_coord(center.y)}" rx="\{round_coord(rx)}" ry="\{round_coord(ry)}" fill="\{color_to_svg(color)}"/>
   self.add_element(element)
 }
 
