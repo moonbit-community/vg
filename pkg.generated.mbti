@@ -1,10 +1,11 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "bobzhang/vg"
 
-import(
-  "bobzhang/vg/color"
-  "bobzhang/vg/geometry"
-)
+import {
+  "bobzhang/vg/color",
+  "bobzhang/vg/geometry",
+  "moonbitlang/core/debug",
+}
 
 // Values
 pub fn imageop_compose(Image, Image) -> ImageOp
@@ -66,8 +67,7 @@ pub enum Primitive {
   Rectangle(@geometry.Point, @geometry.Point)
   Path(@geometry.Path)
   Text(String, @geometry.Point, Double)
-}
-pub impl Eq for Primitive
+} derive(Eq, @debug.Debug)
 pub impl Show for Primitive
 
 // Type aliases

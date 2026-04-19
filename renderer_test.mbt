@@ -21,7 +21,32 @@ test "canvas renderer basic shapes" (it : @test.Test) {
   inspect(
     doc,
     content=(
-      #|{width: 300, height: 200, commands: ["ctx.fillStyle = '#E5E5E5';", "ctx.fillRect(10, 10, 280, 180);", "ctx.beginPath();", "ctx.arc(80, 100, 30, 0, 2 * Math.PI);", "ctx.fillStyle = '#FF0000';", "ctx.fill();", "ctx.fillStyle = '#00FF00';", "ctx.fillRect(150, 70, 60, 60);", "ctx.beginPath();", "ctx.moveTo(50, 160);", "ctx.lineTo(250, 160);", "ctx.strokeStyle = '#0000FF';", "ctx.lineWidth = 3;", "ctx.lineCap = 'round';", "ctx.stroke();", "ctx.font = '16px Arial, sans-serif';", "ctx.fillStyle = '#000000';", "ctx.textAlign = 'center';", "ctx.textBaseline = 'middle';", "ctx.fillText('Canvas Rendering', 150, 40);"]}
+      #|{
+      #|  width: 300,
+      #|  height: 200,
+      #|  commands: [
+      #|    "ctx.fillStyle = '#E5E5E5';",
+      #|    "ctx.fillRect(10, 10, 280, 180);",
+      #|    "ctx.beginPath();",
+      #|    "ctx.arc(80, 100, 30, 0, 2 * Math.PI);",
+      #|    "ctx.fillStyle = '#FF0000';",
+      #|    "ctx.fill();",
+      #|    "ctx.fillStyle = '#00FF00';",
+      #|    "ctx.fillRect(150, 70, 60, 60);",
+      #|    "ctx.beginPath();",
+      #|    "ctx.moveTo(50, 160);",
+      #|    "ctx.lineTo(250, 160);",
+      #|    "ctx.strokeStyle = '#0000FF';",
+      #|    "ctx.lineWidth = 3;",
+      #|    "ctx.lineCap = 'round';",
+      #|    "ctx.stroke();",
+      #|    "ctx.font = '16px Arial, sans-serif';",
+      #|    "ctx.fillStyle = '#000000';",
+      #|    "ctx.textAlign = 'center';",
+      #|    "ctx.textBaseline = 'middle';",
+      #|    "ctx.fillText('Canvas Rendering', 150, 40);",
+      #|  ],
+      #|}
     ),
   )
   let js_code = doc.to_js()
@@ -101,7 +126,18 @@ test "pdf renderer basic shapes" (it : @test.Test) {
   inspect(
     doc,
     content=(
-      #|{width: 300, height: 200, objects: ["q\n0.9 0.9 0.9 rg\n10 10 280 180 re\nf\nQ", "q\n1 0 0 rg\n80 130 m\n96.568542494 130 110 116.568542494 110 100 c\n110 83.431457506 96.568542494 70 80 70 c\n63.431457506 70 50 83.431457506 50 100 c\n50 116.568542494 63.431457506 130 80 130 c\nf\nQ", "q\n0 1 0 rg\n150 70 60 60 re\nf\nQ", "q\n0 0 1 rg RG\n2 w\n1 J\n50 40 m\n250 40 l\nS\nQ", "q\nBT\n/F1 16 Tf\n0 0 0 rg rg\n150 160 Td\n(PDF Rendering) Tj\nET\nQ"], object_count: 5}
+      #|{
+      #|  width: 300,
+      #|  height: 200,
+      #|  objects: [
+      #|    "q\n0.9 0.9 0.9 rg\n10 10 280 180 re\nf\nQ",
+      #|    "q\n1 0 0 rg\n80 130 m\n96.568542494 130 110 116.568542494 110 100 c\n110 83.431457506 96.568542494 70 80 70 c\n63.431457506 70 50 83.431457506 50 100 c\n50 116.568542494 63.431457506 130 80 130 c\nf\nQ",
+      #|    "q\n0 1 0 rg\n150 70 60 60 re\nf\nQ",
+      #|    "q\n0 0 1 rg RG\n2 w\n1 J\n50 40 m\n250 40 l\nS\nQ",
+      #|    "q\nBT\n/F1 16 Tf\n0 0 0 rg rg\n150 160 Td\n(PDF Rendering) Tj\nET\nQ",
+      #|  ],
+      #|  object_count: 5,
+      #|}
     ),
   )
   let pdf_content = doc.to_string()

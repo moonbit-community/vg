@@ -1,10 +1,11 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "bobzhang/vg/canvas"
 
-import(
-  "bobzhang/vg/color"
-  "bobzhang/vg/geometry"
-)
+import {
+  "bobzhang/vg/color",
+  "bobzhang/vg/geometry",
+  "moonbitlang/core/debug",
+}
 
 // Values
 pub fn new_canvas(Double, Double) -> CanvasDocument
@@ -16,7 +17,7 @@ pub struct CanvasDocument {
   width : Double
   height : Double
   commands : Array[String]
-}
+} derive(@debug.Debug)
 pub fn CanvasDocument::add_command(Self, String) -> Self
 pub fn CanvasDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
 pub fn CanvasDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self

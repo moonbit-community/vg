@@ -108,7 +108,7 @@ test "determinant calculation" {
 test "orientation preservation" {
   let t1 = @geometry.make_scale(2.0, 3.0) // Positive determinant
   let t2 = @geometry.make_scale(-2.0, 3.0) // Negative determinant
-  if not(@geometry.preserves_orientation(t1)) {
+  if !@geometry.preserves_orientation(t1) {
     fail("Positive scale should preserve orientation")
   }
   if @geometry.preserves_orientation(t2) {
@@ -131,7 +131,7 @@ test "skew transforms" {
   inspect(
     skew_results,
     content=(
-      #|[("original_point", {x: 1, y: 1}), ("skewed_x_result", {x: 1.5463024898437905, y: 1}), ("skewed_y_result", {x: 1, y: 1.5463024898437905})]
+      #|[("original_point", { x: 1, y: 1 }), ("skewed_x_result", { x: 1.5463024898437905, y: 1 }), ("skewed_y_result", { x: 1, y: 1.5463024898437905 })]
     ),
   )
 }
@@ -193,7 +193,14 @@ test "comprehensive transform matrix operations" {
   inspect(
     transform_results,
     content=(
-      #|[("identity", {m11: 1, m12: 0, m21: 0, m22: 1, m31: 0, m32: 0}, {x: 2, y: 3}, 1), ("translate_5_3", {m11: 1, m12: 0, m21: 0, m22: 1, m31: 5, m32: 3}, {x: 7, y: 6}, 1), ("scale_2_3", {m11: 2, m12: 0, m21: 0, m22: 3, m31: 0, m32: 0}, {x: 4, y: 9}, 6), ("rotate_90deg", {m11: -1.0341155355510722e-13, m12: -1, m21: 1, m22: -1.0341155355510722e-13, m31: 0, m32: 0}, {x: -3.000000000000207, y: 1.9999999999996898}, 1), ("uniform_scale_2", {m11: 2, m12: 0, m21: 0, m22: 2, m31: 0, m32: 0}, {x: 4, y: 6}, 4), ("skew_x_half", {m11: 1, m12: 0.5463024898437905, m21: 0, m22: 1, m31: 0, m32: 0}, {x: 3.6389074695313717, y: 3}, 1), ("skew_y_quarter", {m11: 1, m12: 0, m21: 0.25534192122103627, m22: 1, m31: 0, m32: 0}, {x: 2, y: 3.5106838424420728}, 1)]
+      #|[("identity", { m11: 1, m12: 0, m21: 0, m22: 1, m31: 0, m32: 0 }, { x: 2, y: 3 }, 1), ("translate_5_3", { m11: 1, m12: 0, m21: 0, m22: 1, m31: 5, m32: 3 }, { x: 7, y: 6 }, 1), ("scale_2_3", { m11: 2, m12: 0, m21: 0, m22: 3, m31: 0, m32: 0 }, { x: 4, y: 9 }, 6), ("rotate_90deg", {
+      #|  m11: -1.0341155355510722e-13,
+      #|  m12: -1,
+      #|  m21: 1,
+      #|  m22: -1.0341155355510722e-13,
+      #|  m31: 0,
+      #|  m32: 0,
+      #|}, { x: -3.000000000000207, y: 1.9999999999996898 }, 1), ("uniform_scale_2", { m11: 2, m12: 0, m21: 0, m22: 2, m31: 0, m32: 0 }, { x: 4, y: 6 }, 4), ("skew_x_half", { m11: 1, m12: 0.5463024898437905, m21: 0, m22: 1, m31: 0, m32: 0 }, { x: 3.6389074695313717, y: 3 }, 1), ("skew_y_quarter", { m11: 1, m12: 0, m21: 0.25534192122103627, m22: 1, m31: 0, m32: 0 }, { x: 2, y: 3.5106838424420728 }, 1)]
     ),
   )
 }
@@ -230,7 +237,7 @@ test "transform composition and inversion" {
   inspect(
     (composition_results, inversion_results),
     content=(
-      #|([("original_point", {x: 1, y: 1}), ("after_translate", {x: 11, y: 6}), ("after_scale", {x: 22, y: 18}), ("after_rotate", {x: 2.8284458884589423, y: 28.284269371084342}), ("composed_result", {x: 24.748741563359225, y: 0.7071231994355944})], ("has_inverse", true, {x: 1, y: 1}))
+      #|([("original_point", { x: 1, y: 1 }), ("after_translate", { x: 11, y: 6 }), ("after_scale", { x: 22, y: 18 }), ("after_rotate", { x: 2.8284458884589423, y: 28.284269371084342 }), ("composed_result", { x: 24.748741563359225, y: 0.7071231994355944 })], ("has_inverse", true, { x: 1, y: 1 }))
     ),
   )
 }

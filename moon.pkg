@@ -2,11 +2,14 @@ import {
   "bobzhang/vg/geometry",
   "bobzhang/vg/color",
   "bobzhang/vg/svg",
+  "moonbitlang/core/math",
+  "moonbitlang/core/debug",
 }
 
 import {
   "bobzhang/vg/pdf",
   "bobzhang/vg/canvas",
+  "moonbitlang/core/test",
 } for "test"
 
 options(

@@ -32,13 +32,15 @@ pub fn Image::rectangle(
   width : Double,
   height : Double,
 ) -> Image {
-  p => if p.x >= -width / 2.0 &&
-    p.x <= width / 2.0 &&
-    p.y >= -height / 2.0 &&
-    p.y <= height / 2.0 {
-    color
-  } else {
-    @color.transparent()
+  p => {
+    if p.x >= -width / 2.0 &&
+      p.x <= width / 2.0 &&
+      p.y >= -height / 2.0 &&
+      p.y <= height / 2.0 {
+      color
+    } else {
+      @color.transparent()
+    }
   }
 }
 
@@ -79,9 +81,11 @@ pub fn Image::line(
 ///|
 /// Transform an image
 pub fn Image::transform(img : Image, t : Transform) -> Image {
-  p => match @geometry.invert(t) {
-    Some(inv_t) => img(@geometry.apply(inv_t, p))
-    None => @color.transparent()
+  p => {
+    match @geometry.invert(t) {
+      Some(inv_t) => img(@geometry.apply(inv_t, p))
+      None => @color.transparent()
+    }
   }
 }
 
@@ -214,7 +218,7 @@ pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
         let pj = points[j]
         if (pi.y > p.y) != (pj.y > p.y) &&
           p.x < (pj.x - pi.x) * (p.y - pi.y) / (pj.y - pi.y) + pi.x {
-          inside = not(inside)
+          inside = !inside
         }
         j = i
       }

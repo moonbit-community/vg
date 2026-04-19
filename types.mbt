@@ -33,7 +33,7 @@ pub enum Primitive {
   Rectangle(Point, Point) // top-left, bottom-right
   Path(Path)
   Text(String, Point, Double) // text, position, size
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 /// Create a circle primitive
@@ -101,4 +101,9 @@ pub fn imageop_compose(image1 : Image, image2 : Image) -> ImageOp {
 /// Create a cut image operation
 pub fn imageop_cut(image : Image, mask : Image) -> ImageOp {
   ImageOp::Cut(image, mask)
+}
+
+///|
+pub impl Show for Primitive with output(self, logger) {
+  logger.write_string(@debug.render(self.to_repr(), max_depth=2147483647))
 }

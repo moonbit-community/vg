@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "bobzhang/vg/geometry"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn apply(Transform, Point) -> Point
 
@@ -34,11 +38,10 @@ pub struct Box {
   min_y : Double
   max_x : Double
   max_y : Double
-}
-pub impl Eq for Box
+} derive(Eq, @debug.Debug)
 pub impl Show for Box
 
-pub struct Path(Array[PathSegment])
+pub struct Path(Array[PathSegment]) derive(Eq, @debug.Debug)
 pub fn Path::bounds(Self) -> Box?
 pub fn Path::circle(Point, Double) -> Self
 pub fn Path::close_path(Self) -> Self
@@ -55,7 +58,6 @@ pub fn Path::rect(Double, Double, Double, Double) -> Self
 pub fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
 pub fn Path::smooth_qcurve_to(Self, Point) -> Self
 pub fn Path::transform(Self, Transform) -> Self
-pub impl Eq for Path
 pub impl Show for Path
 
 pub enum PathSegment {
@@ -65,14 +67,13 @@ pub enum PathSegment {
   QCurveTo(Point, Point)
   EArcTo(Double, Double, Double, Bool, Bool, Point)
   Close
-}
-pub impl Eq for PathSegment
+} derive(Eq, @debug.Debug)
 pub impl Show for PathSegment
 
 pub struct Point {
   x : Double
   y : Double
-}
+} derive(Eq, @debug.Debug)
 pub fn Point::add(Self, Self) -> Self
 pub fn Point::distance(Self, Self) -> Double
 pub fn Point::dot(Self, Self) -> Double
@@ -84,7 +85,6 @@ pub fn Point::origin() -> Self
 pub fn Point::rotate(Self, Double) -> Self
 pub fn Point::scale(Self, Double) -> Self
 pub fn Point::sub(Self, Self) -> Self
-pub impl Eq for Point
 pub impl Show for Point
 
 pub struct Transform {
@@ -94,8 +94,7 @@ pub struct Transform {
   m22 : Double
   m31 : Double
   m32 : Double
-}
-pub impl Eq for Transform
+} derive(Eq, @debug.Debug)
 pub impl Show for Transform
 
 // Type aliases
