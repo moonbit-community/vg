@@ -174,7 +174,7 @@ pub fn SvgDocument::render_polygon(
     let mut points_str = ""
     for i = 0; i < points.length(); i = i + 1 {
       let p = points[i]
-      points_str = points_str + "\{p.x},\{p.y}"
+      points_str = points_str + point_to_svg(p)
       if i < points.length() - 1 {
         points_str = points_str + " "
       }
