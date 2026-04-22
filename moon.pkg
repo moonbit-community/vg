@@ -1,10 +1,12 @@
 import {
+  "moonbitlang/core/math",
   "bobzhang/vg/geometry",
   "bobzhang/vg/color",
   "bobzhang/vg/svg",
 }
 
 import {
+  "moonbitlang/core/test",
   "bobzhang/vg/pdf",
   "bobzhang/vg/canvas",
 } for "test"
