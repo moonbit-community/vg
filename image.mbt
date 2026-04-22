@@ -214,7 +214,7 @@ pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
         let pj = points[j]
         if (pi.y > p.y) != (pj.y > p.y) &&
           p.x < (pj.x - pi.x) * (p.y - pi.y) / (pj.y - pi.y) + pi.x {
-          inside = not(inside)
+          inside = !inside
         }
         j = i
       }
