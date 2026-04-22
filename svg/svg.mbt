@@ -6,7 +6,18 @@ pub struct SvgDocument {
   width : Double
   height : Double
   elements : Array[String]
-} derive(Show)
+}
+
+///|
+pub impl Show for SvgDocument with output(self, logger) {
+  logger.write_string("{width: ")
+  self.width.output(logger)
+  logger.write_string(", height: ")
+  self.height.output(logger)
+  logger.write_string(", elements: ")
+  self.elements.output(logger)
+  logger.write_string("}")
+}
 
 ///|
 /// Create a new SVG document

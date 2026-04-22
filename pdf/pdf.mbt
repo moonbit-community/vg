@@ -7,7 +7,20 @@ pub struct PdfDocument {
   height : Double
   objects : Array[String]
   object_count : Int
-} derive(Show)
+}
+
+///|
+pub impl Show for PdfDocument with output(self, logger) {
+  logger.write_string("{width: ")
+  self.width.output(logger)
+  logger.write_string(", height: ")
+  self.height.output(logger)
+  logger.write_string(", objects: ")
+  self.objects.output(logger)
+  logger.write_string(", object_count: ")
+  self.object_count.output(logger)
+  logger.write_string("}")
+}
 
 ///|
 /// Create a new PDF document

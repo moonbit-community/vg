@@ -33,7 +33,41 @@ pub enum Primitive {
   Rectangle(Point, Point) // top-left, bottom-right
   Path(Path)
   Text(String, Point, Double) // text, position, size
-} derive(Eq, Show)
+} derive(Eq)
+
+///|
+pub impl Show for Primitive with output(self, logger) {
+  match self {
+    Circle(center, radius) => {
+      logger.write_string("Circle(")
+      center.output(logger)
+      logger.write_string(", ")
+      radius.output(logger)
+      logger.write_string(")")
+    }
+    Rectangle(top_left, bottom_right) => {
+      logger.write_string("Rectangle(")
+      top_left.output(logger)
+      logger.write_string(", ")
+      bottom_right.output(logger)
+      logger.write_string(")")
+    }
+    Path(path) => {
+      logger.write_string("Path(")
+      path.output(logger)
+      logger.write_string(")")
+    }
+    Text(text, position, size) => {
+      logger.write_string("Text(")
+      text.output(logger)
+      logger.write_string(", ")
+      position.output(logger)
+      logger.write_string(", ")
+      size.output(logger)
+      logger.write_string(")")
+    }
+  }
+}
 
 ///|
 /// Create a circle primitive

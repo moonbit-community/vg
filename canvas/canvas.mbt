@@ -6,7 +6,18 @@ pub struct CanvasDocument {
   width : Double
   height : Double
   commands : Array[String]
-} derive(Show)
+}
+
+///|
+pub impl Show for CanvasDocument with output(self, logger) {
+  logger.write_string("{width: ")
+  self.width.output(logger)
+  logger.write_string(", height: ")
+  self.height.output(logger)
+  logger.write_string(", commands: ")
+  self.commands.output(logger)
+  logger.write_string("}")
+}
 
 ///|
 /// Create a new Canvas document
