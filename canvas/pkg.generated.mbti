@@ -1,10 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "bobzhang/vg/canvas"
 
-import(
-  "bobzhang/vg/color"
-  "bobzhang/vg/geometry"
-)
+import {
+  "bobzhang/vg/color",
+  "bobzhang/vg/geometry",
+}
 
 // Values
 pub fn new_canvas(Double, Double) -> CanvasDocument

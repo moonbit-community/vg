@@ -62,8 +62,7 @@ pub struct Color {
   g : Double
   b : Double
   a : Double
-}
-pub impl Eq for Color
+} derive(Eq)
 pub impl Show for Color
 
 // Type aliases
