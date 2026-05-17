@@ -6,7 +6,7 @@
 pub struct Point {
   x : Double
   y : Double
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 /// Bounding box
@@ -16,7 +16,7 @@ pub struct Box {
   min_y : Double
   max_x : Double
   max_y : Double
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 /// Path segment types
@@ -27,11 +27,11 @@ pub enum PathSegment {
   QCurveTo(Point, Point) // control, end (quadratic Bézier)
   EArcTo(Double, Double, Double, Bool, Bool, Point) // rx, ry, rotation, large_arc, sweep, end
   Close
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 /// A path is a sequence of segments
-pub struct Path(Array[PathSegment]) derive(Eq, Show)
+pub struct Path(Array[PathSegment]) derive(Eq, Debug)
 
 ///|
 /// 2D transformation matrix
@@ -43,4 +43,4 @@ pub struct Transform {
   m22 : Double // Scale Y
   m31 : Double // Translate X
   m32 : Double // Translate Y
-} derive(Eq, Show)
+} derive(Eq, Debug)

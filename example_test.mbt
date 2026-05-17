@@ -54,7 +54,7 @@ test "complete workflow - create and render image" {
 
   // Render to SVG
   let svg = complex_image.render_image_to_svg(200.0, 200.0, 50)
-  if not(svg.contains("svg")) {
+  if !svg.contains("svg") {
     fail("Should produce valid SVG output")
   }
   if svg.length() < 100 {
@@ -79,10 +79,10 @@ test "path to SVG integration" {
   // Render to SVG
   let doc = @svg.new_svg(150.0, 100.0).render_path(path, @color.magenta())
   let svg_string = doc.to_string()
-  if not(svg_string.contains("path")) {
+  if !svg_string.contains("path") {
     fail("Should contain path element")
   }
-  if not(svg_string.contains("M 50,50")) {
+  if !svg_string.contains("M 50,50") {
     fail("Should contain correct path data")
   }
 }

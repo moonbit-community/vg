@@ -6,7 +6,7 @@ pub struct SvgDocument {
   width : Double
   height : Double
   elements : Array[String]
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a new SVG document
