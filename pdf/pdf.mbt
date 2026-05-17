@@ -7,7 +7,7 @@ pub struct PdfDocument {
   height : Double
   objects : Array[String]
   object_count : Int
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a new PDF document

@@ -66,7 +66,7 @@ test "determinant" {
 ///|
 test "preserves orientation" {
   let t1 = @geometry.make_scale(2.0, 3.0)
-  if not(@geometry.preserves_orientation(t1)) {
+  if !@geometry.preserves_orientation(t1) {
     fail("Positive scale should preserve orientation")
   }
   let t2 = @geometry.make_scale(-1.0, 1.0) // Mirror

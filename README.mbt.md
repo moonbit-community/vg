@@ -220,7 +220,7 @@ test "paths examples" {
 
   // Get path bounds
   match path.bounds() {
-    Some(bounds) => println("Path bounds: " + bounds.to_string())
+    Some(bounds) => println("Path bounds: " + @debug.to_string(bounds))
     None => println("Empty path")
   }
 
