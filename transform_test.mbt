@@ -108,7 +108,7 @@ test "determinant calculation" {
 test "orientation preservation" {
   let t1 = @geometry.make_scale(2.0, 3.0) // Positive determinant
   let t2 = @geometry.make_scale(-2.0, 3.0) // Negative determinant
-  if not(@geometry.preserves_orientation(t1)) {
+  if !@geometry.preserves_orientation(t1) {
     fail("Positive scale should preserve orientation")
   }
   if @geometry.preserves_orientation(t2) {
