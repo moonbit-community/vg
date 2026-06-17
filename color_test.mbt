@@ -3,33 +3,45 @@
 ///|
 test "rgba color creation" {
   let c = @color.rgba(0.5, 0.7, 0.9, 0.8)
-  debug_inspect(c, content=(
-    #|{ r: 0.5, g: 0.7, b: 0.9, a: 0.8 }
-  ))
+  debug_inspect(
+    c,
+    content=(
+      #|{ r: 0.5, g: 0.7, b: 0.9, a: 0.8 }
+    ),
+  )
 }
 
 ///|
 test "rgb color creation" {
   let c = @color.rgb(0.2, 0.4, 0.6)
-  debug_inspect(c, content=(
-    #|{ r: 0.2, g: 0.4, b: 0.6, a: 1 }
-  ))
+  debug_inspect(
+    c,
+    content=(
+      #|{ r: 0.2, g: 0.4, b: 0.6, a: 1 }
+    ),
+  )
 }
 
 ///|
 test "gray color creation" {
   let c = @color.gray(0.5)
-  debug_inspect(c, content=(
-    #|{ r: 0.5, g: 0.5, b: 0.5, a: 1 }
-  ))
+  debug_inspect(
+    c,
+    content=(
+      #|{ r: 0.5, g: 0.5, b: 0.5, a: 1 }
+    ),
+  )
 }
 
 ///|
 test "transparent color" {
   let c = @color.transparent()
-  debug_inspect(c, content=(
-    #|{ r: 0, g: 0, b: 0, a: 0 }
-  ))
+  debug_inspect(
+    c,
+    content=(
+      #|{ r: 0, g: 0, b: 0, a: 0 }
+    ),
+  )
 }
 
 ///|
@@ -84,9 +96,12 @@ test "color blending" {
 test "color scaling" {
   let c = @color.rgb(0.8, 0.6, 0.4)
   let scaled = @color.scale(c, 0.5)
-  debug_inspect(scaled, content=(
-    #|{ r: 0.4, g: 0.3, b: 0.2, a: 1 }
-  ))
+  debug_inspect(
+    scaled,
+    content=(
+      #|{ r: 0.4, g: 0.3, b: 0.2, a: 1 }
+    ),
+  )
 }
 
 ///|

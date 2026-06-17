@@ -197,15 +197,24 @@ test "ellipse image" {
   let c_inside = ellipse_img(inside)
   let c_outside = ellipse_img(outside)
   let c_edge = ellipse_img(edge)
-  debug_inspect(c_inside, content=(
-    #|{ r: 0, g: 1, b: 0, a: 1 }
-  ))
-  debug_inspect(c_outside, content=(
-    #|{ r: 0, g: 0, b: 0, a: 0 }
-  ))
-  debug_inspect(c_edge, content=(
-    #|{ r: 0, g: 1, b: 0, a: 1 }
-  ))
+  debug_inspect(
+    c_inside,
+    content=(
+      #|{ r: 0, g: 1, b: 0, a: 1 }
+    ),
+  )
+  debug_inspect(
+    c_outside,
+    content=(
+      #|{ r: 0, g: 0, b: 0, a: 0 }
+    ),
+  )
+  debug_inspect(
+    c_edge,
+    content=(
+      #|{ r: 0, g: 1, b: 0, a: 1 }
+    ),
+  )
   if c_inside != @color.green() {
     fail("Point inside ellipse should be green")
   }
