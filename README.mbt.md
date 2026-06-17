@@ -440,8 +440,14 @@ test "spirograph" (it : @test.Test) {
     let steps = 1000
     for i = 0; i <= steps; i = i + 1 {
       let t = i.to_double() / steps.to_double() * 20.0 * 3.14159 + offset
-      let x = cx + (r1 - r2) * @math.cos(t) + d * @math.cos((r1 - r2) / r2 * t)
-      let y = cy + (r1 - r2) * @math.sin(t) - d * @math.sin((r1 - r2) / r2 * t)
+      let x_raw = cx +
+        (r1 - r2) * @math.cos(t) +
+        d * @math.cos((r1 - r2) / r2 * t)
+      let y_raw = cy +
+        (r1 - r2) * @math.sin(t) -
+        d * @math.sin((r1 - r2) / r2 * t)
+      let x = (x_raw * 1000000.0).round() / 1000000.0
+      let y = (y_raw * 1000000.0).round() / 1000000.0
       if i == 0 {
         path = path.move_to(@vg.Point::new(x, y))
       } else {
@@ -485,8 +491,10 @@ test "rainbow flower" (it : @test.Test) {
     let color = @color.hsv(hue, 0.8, 0.9)
 
     // Create petal shape using ellipse
-    let petal_cx = cx + 60.0 * @math.cos(angle)
-    let petal_cy = cy + 60.0 * @math.sin(angle)
+    let petal_cx_raw = cx + 60.0 * @math.cos(angle)
+    let petal_cy_raw = cy + 60.0 * @math.sin(angle)
+    let petal_cx = (petal_cx_raw * 1000000.0).round() / 1000000.0
+    let petal_cy = (petal_cy_raw * 1000000.0).round() / 1000000.0
     doc = doc.render_ellipse(
       @vg.Point::new(petal_cx, petal_cy),
       50.0,
