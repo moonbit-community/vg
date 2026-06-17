@@ -33,7 +33,7 @@ pub enum Primitive {
   Rectangle(Point, Point) // top-left, bottom-right
   Path(Path)
   Text(String, Point, Double) // text, position, size
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 /// Create a circle primitive

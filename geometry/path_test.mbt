@@ -15,9 +15,18 @@ test "path building with move_to and line_to" {
     .line_to(@geometry.Point::new(10.0, 0.0))
     .line_to(@geometry.Point::new(10.0, 10.0))
     .close_path()
-  inspect(
+  debug_inspect(
     path,
-    content="Path([MoveTo({x: 0, y: 0}), LineTo({x: 10, y: 0}), LineTo({x: 10, y: 10}), Close])",
+    content=(
+      #|Path(
+      #|  [
+      #|    MoveTo({ x: 0, y: 0 }),
+      #|    LineTo({ x: 10, y: 0 }),
+      #|    LineTo({ x: 10, y: 10 }),
+      #|    Close,
+      #|  ],
+      #|)
+    ),
   )
 }
 
@@ -30,9 +39,16 @@ test "curve_to segment" {
       @geometry.Point::new(10.0, 5.0),
       @geometry.Point::new(10.0, 10.0),
     )
-  inspect(
+  debug_inspect(
     path,
-    content="Path([MoveTo({x: 0, y: 0}), CurveTo({x: 5, y: 0}, {x: 10, y: 5}, {x: 10, y: 10})])",
+    content=(
+      #|Path(
+      #|  [
+      #|    MoveTo({ x: 0, y: 0 }),
+      #|    CurveTo({ x: 5, y: 0 }, { x: 10, y: 5 }, { x: 10, y: 10 }),
+      #|  ],
+      #|)
+    ),
   )
 }
 
