@@ -28,11 +28,14 @@ test "circle rendering" (it : @test.Test) {
     25.0,
     @color.red(),
   )
-  inspect(
+  debug_inspect(
     doc,
     content=(
-      #|{width: 100, height: 100, elements: [<circle cx="50" cy="50" r="25" fill="#FF0000"/>]}
-
+      #|{
+      #|  width: 100,
+      #|  height: 100,
+      #|  elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"#FF0000\"/>"],
+      #|}
     ),
   )
   let svg_string = doc.to_string()
@@ -172,11 +175,14 @@ test "color with alpha in SVG" {
     25.0,
     semi_transparent,
   )
-  inspect(
+  debug_inspect(
     doc,
     content=(
-      #|{width: 100, height: 100, elements: [<circle cx="50" cy="50" r="25" fill="rgba(255,0,0,0.5)"/>]}
-
+      #|{
+      #|  width: 100,
+      #|  height: 100,
+      #|  elements: ["<circle cx=\"50\" cy=\"50\" r=\"25\" fill=\"rgba(255,0,0,0.5)\"/>"],
+      #|}
     ),
   )
 }
@@ -200,11 +206,21 @@ test "comprehensive svg rendering" (it : @test.Test) {
       16.0,
       @color.purple(),
     ) // Title text
-  inspect(
+  debug_inspect(
     complex_doc,
     content=(
-      #|{width: 300, height: 200, elements: [<rect x="10" y="10" width="280" height="180" fill="#F2F2F2"/>, <circle cx="80" cy="60" r="30" fill="#FF0000"/>, <ellipse cx="150" cy="60" rx="25" ry="15" fill="#0000FF"/>, <rect x="200" y="30" width="40" height="60" fill="#00FF00"/>, <line x1="20" y1="120" x2="280" y2="120" stroke="#000000" stroke-width="2" stroke-linecap="round" fill="none"/>, <text x="150" y="150" font-size="16" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#7F007F">VG Graphics Demo</text>]}
-
+      #|{
+      #|  width: 300,
+      #|  height: 200,
+      #|  elements: [
+      #|    "<rect x=\"10\" y=\"10\" width=\"280\" height=\"180\" fill=\"#F2F2F2\"/>",
+      #|    "<circle cx=\"80\" cy=\"60\" r=\"30\" fill=\"#FF0000\"/>",
+      #|    "<ellipse cx=\"150\" cy=\"60\" rx=\"25\" ry=\"15\" fill=\"#0000FF\"/>",
+      #|    "<rect x=\"200\" y=\"30\" width=\"40\" height=\"60\" fill=\"#00FF00\"/>",
+      #|    "<line x1=\"20\" y1=\"120\" x2=\"280\" y2=\"120\" stroke=\"#000000\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/>",
+      #|    "<text x=\"150\" y=\"150\" font-size=\"16\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"#7F007F\">VG Graphics Demo</text>",
+      #|  ],
+      #|}
     ),
   )
   let svg_string = complex_doc.to_string()
@@ -246,11 +262,14 @@ test "path rendering to svg" (it : @test.Test) {
     .line_to(@vg.Point::new(10.0, 30.0))
     .close_path()
   let doc = @svg.new_svg(120.0, 50.0).render_path(custom_path, @color.magenta())
-  inspect(
+  debug_inspect(
     doc,
     content=(
-      #|{width: 120, height: 50, elements: [<path d="M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z " fill="#FF00FF" stroke="none"/>]}
-
+      #|{
+      #|  width: 120,
+      #|  height: 50,
+      #|  elements: ["<path d=\"M 10,10 L 90,10 C 110,10 110,30 90,30 L 10,30 Z \" fill=\"#FF00FF\" stroke=\"none\"/>"],
+      #|}
     ),
   )
   let svg_string = doc.to_string()
