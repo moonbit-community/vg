@@ -99,10 +99,21 @@ test "advanced blend modes" {
     ("hard_light_blend", @color.hard_light_blend(red, blue)),
     ("soft_light_blend", @color.soft_light_blend(red, blue)),
   ]
-  inspect(
+  debug_inspect(
     blend_results,
     content=(
-      #|[("normal_blend", {r: 0.8333333333333335, g: 0, b: 0.16666666666666666, a: 0.96}), ("multiply_blend", {r: 0, g: 0, b: 0, a: 0.96}), ("screen_blend", {r: 1, g: 0, b: 1, a: 0.96}), ("overlay_blend", {r: 1, g: 0, b: 0, a: 0.96}), ("hard_light_blend", {r: 0, g: 0, b: 1, a: 0.96}), ("soft_light_blend", {r: 1, g: 0, b: 0, a: 0.96})]
+      #|[
+      #|  (
+      #|    "normal_blend",
+      #|    { r: 0.8333333333333335, g: 0, b: 0.16666666666666666, a: 0.96 },
+      #|  ),
+      #|  ("multiply_blend", { r: 0, g: 0, b: 0, a: 0.96 }),
+      #|  ("screen_blend", { r: 1, g: 0, b: 1, a: 0.96 }),
+      #|  ("overlay_blend", { r: 1, g: 0, b: 0, a: 0.96 }),
+      #|  ("hard_light_blend", { r: 0, g: 0, b: 1, a: 0.96 }),
+      #|  ("soft_light_blend", { r: 1, g: 0, b: 0, a: 0.96 }),
+      #|]
+
     ),
   )
 }
