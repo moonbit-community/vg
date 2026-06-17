@@ -136,7 +136,6 @@ test "skew transforms" {
       #|  ("skewed_x_result", { x: 1.5463024898437905, y: 1 }),
       #|  ("skewed_y_result", { x: 1, y: 1.5463024898437905 }),
       #|]
-
     ),
   )
 }
@@ -249,7 +248,6 @@ test "comprehensive transform matrix operations" {
       #|    1,
       #|  ),
       #|]
-
     ),
   )
 }
@@ -296,7 +294,6 @@ test "transform composition and inversion" {
       #|  ],
       #|  ("has_inverse", true, { x: 1, y: 1 }),
       #|)
-
     ),
   )
 }

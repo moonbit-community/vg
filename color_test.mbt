@@ -55,7 +55,6 @@ test "predefined colors" {
       #|  ("purple", { r: 0.5, g: 0, b: 0.5, a: 1 }),
       #|  ("gold", { r: 1, g: 0.843, b: 0, a: 1 }),
       #|]
-
     ),
   )
 }
@@ -113,7 +112,6 @@ test "color to hex conversion" {
       #|  ("orange", { r: 1, g: 0.5, b: 0, a: 1 }, "#FF7F00"),
       #|  ("gray", { r: 0.5, g: 0.5, b: 0.5, a: 1 }, "#7F7F7F"),
       #|]
-
     ),
   )
 }
@@ -143,7 +141,6 @@ test "hsv color space" {
       #|  ("gray_hsv", { r: 0.5, g: 0.5, b: 0.5, a: 1 }),
       #|  ("dark_red", { r: 0.5, g: 0, b: 0, a: 1 }),
       #|]
-
     ),
   )
 }
@@ -177,7 +174,6 @@ test "color interpolation" {
       #|  ("white_to_black_50", { r: 0.5, g: 0.5, b: 0.5, a: 1 }),
       #|  ("transparent_to_opaque", { r: 0.5, g: 0, b: 0, a: 0.5 }),
       #|]
-
     ),
   )
 }

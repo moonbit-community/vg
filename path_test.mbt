@@ -255,7 +255,6 @@ test "comprehensive path shapes" {
       #|    ),
       #|  ),
       #|]
-
     ),
   )
 }
@@ -337,7 +336,6 @@ test "path bounds calculation with curves" {
       #|    Some({ min_x: -5, min_y: -5, max_x: 5, max_y: 5 }),
       #|  ),
       #|]
-
     ),
   )
 }
