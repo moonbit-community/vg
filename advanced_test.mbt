@@ -113,7 +113,6 @@ test "advanced blend modes" {
       #|  ("hard_light_blend", { r: 0, g: 0, b: 1, a: 0.96 }),
       #|  ("soft_light_blend", { r: 1, g: 0, b: 0, a: 0.96 }),
       #|]
-
     ),
   )
 }
