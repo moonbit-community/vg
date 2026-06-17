@@ -220,7 +220,18 @@ test "paths examples" {
 
   // Get path bounds
   match path.bounds() {
-    Some(bounds) => println("Path bounds: " + bounds.to_string())
+    Some(bounds) =>
+      println(
+        "Path bounds: { min_x: " +
+        bounds.min_x.to_string() +
+        ", min_y: " +
+        bounds.min_y.to_string() +
+        ", max_x: " +
+        bounds.max_x.to_string() +
+        ", max_y: " +
+        bounds.max_y.to_string() +
+        " }",
+      )
     None => println("Empty path")
   }
 

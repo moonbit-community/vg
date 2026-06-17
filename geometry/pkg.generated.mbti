@@ -38,9 +38,9 @@ pub struct Box {
   min_y : Double
   max_x : Double
   max_y : Double
-} derive(Eq, Show, @debug.Debug)
+} derive(Eq, @debug.Debug)
 
-pub struct Path(Array[PathSegment]) derive(Eq, Show, @debug.Debug)
+pub struct Path(Array[PathSegment]) derive(Eq, @debug.Debug)
 pub fn Path::bounds(Self) -> Box?
 pub fn Path::circle(Point, Double) -> Self
 pub fn Path::close_path(Self) -> Self
@@ -63,12 +63,12 @@ pub enum PathSegment {
   QCurveTo(Point, Point)
   EArcTo(Double, Double, Double, Bool, Bool, Point)
   Close
-} derive(Eq, Show, @debug.Debug)
+} derive(Eq, @debug.Debug)
 
 pub struct Point {
   x : Double
   y : Double
-} derive(Eq, Show, @debug.Debug)
+} derive(Eq, @debug.Debug)
 pub fn Point::add(Self, Self) -> Self
 pub fn Point::distance(Self, Self) -> Double
 pub fn Point::dot(Self, Self) -> Double
@@ -88,7 +88,7 @@ pub struct Transform {
   m22 : Double
   m31 : Double
   m32 : Double
-} derive(Eq, Show, @debug.Debug)
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 
