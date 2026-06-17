@@ -39,10 +39,23 @@ test "predefined colors" {
     ("purple", @color.purple()),
     ("gold", @color.gold()),
   ]
-  inspect(
+  debug_inspect(
     colors,
     content=(
-      #|[("red", {r: 1, g: 0, b: 0, a: 1}), ("green", {r: 0, g: 1, b: 0, a: 1}), ("blue", {r: 0, g: 0, b: 1, a: 1}), ("white", {r: 1, g: 1, b: 1, a: 1}), ("black", {r: 0, g: 0, b: 0, a: 1}), ("cyan", {r: 0, g: 1, b: 1, a: 1}), ("magenta", {r: 1, g: 0, b: 1, a: 1}), ("yellow", {r: 1, g: 1, b: 0, a: 1}), ("orange", {r: 1, g: 0.647, b: 0, a: 1}), ("purple", {r: 0.5, g: 0, b: 0.5, a: 1}), ("gold", {r: 1, g: 0.843, b: 0, a: 1})]
+      #|[
+      #|  ("red", { r: 1, g: 0, b: 0, a: 1 }),
+      #|  ("green", { r: 0, g: 1, b: 0, a: 1 }),
+      #|  ("blue", { r: 0, g: 0, b: 1, a: 1 }),
+      #|  ("white", { r: 1, g: 1, b: 1, a: 1 }),
+      #|  ("black", { r: 0, g: 0, b: 0, a: 1 }),
+      #|  ("cyan", { r: 0, g: 1, b: 1, a: 1 }),
+      #|  ("magenta", { r: 1, g: 0, b: 1, a: 1 }),
+      #|  ("yellow", { r: 1, g: 1, b: 0, a: 1 }),
+      #|  ("orange", { r: 1, g: 0.647, b: 0, a: 1 }),
+      #|  ("purple", { r: 0.5, g: 0, b: 0.5, a: 1 }),
+      #|  ("gold", { r: 1, g: 0.843, b: 0, a: 1 }),
+      #|]
+
     ),
   )
 }
@@ -90,10 +103,17 @@ test "color to hex conversion" {
     ),
     ("gray", @color.gray(0.5), @color.to_hex(@color.gray(0.5))),
   ]
-  inspect(
+  debug_inspect(
     colors_and_hex,
     content=(
-      #|[("red", {r: 1, g: 0, b: 0, a: 1}, "#FF0000"), ("green", {r: 0, g: 1, b: 0, a: 1}, "#00FF00"), ("blue", {r: 0, g: 0, b: 1, a: 1}, "#0000FF"), ("orange", {r: 1, g: 0.5, b: 0, a: 1}, "#FF7F00"), ("gray", {r: 0.5, g: 0.5, b: 0.5, a: 1}, "#7F7F7F")]
+      #|[
+      #|  ("red", { r: 1, g: 0, b: 0, a: 1 }, "#FF0000"),
+      #|  ("green", { r: 0, g: 1, b: 0, a: 1 }, "#00FF00"),
+      #|  ("blue", { r: 0, g: 0, b: 1, a: 1 }, "#0000FF"),
+      #|  ("orange", { r: 1, g: 0.5, b: 0, a: 1 }, "#FF7F00"),
+      #|  ("gray", { r: 0.5, g: 0.5, b: 0.5, a: 1 }, "#7F7F7F"),
+      #|]
+
     ),
   )
 }
@@ -110,10 +130,20 @@ test "hsv color space" {
     ("gray_hsv", @color.hsv(0.0, 0.0, 0.5)), // Gray (no saturation)
     ("dark_red", @color.hsv(0.0, 1.0, 0.5)), // Dark red (low value)
   ]
-  inspect(
+  debug_inspect(
     hsv_colors,
     content=(
-      #|[("red_hsv", {r: 1, g: 0, b: 0, a: 1}), ("green_hsv", {r: 0, g: 1, b: 0, a: 1}), ("blue_hsv", {r: 0, g: 0, b: 1, a: 1}), ("yellow_hsv", {r: 1, g: 1, b: 0, a: 1}), ("orange_hsv", {r: 1, g: 0.5, b: 0, a: 1}), ("purple_hsv", {r: 1, g: 0, b: 1, a: 1}), ("gray_hsv", {r: 0.5, g: 0.5, b: 0.5, a: 1}), ("dark_red", {r: 0.5, g: 0, b: 0, a: 1})]
+      #|[
+      #|  ("red_hsv", { r: 1, g: 0, b: 0, a: 1 }),
+      #|  ("green_hsv", { r: 0, g: 1, b: 0, a: 1 }),
+      #|  ("blue_hsv", { r: 0, g: 0, b: 1, a: 1 }),
+      #|  ("yellow_hsv", { r: 1, g: 1, b: 0, a: 1 }),
+      #|  ("orange_hsv", { r: 1, g: 0.5, b: 0, a: 1 }),
+      #|  ("purple_hsv", { r: 1, g: 0, b: 1, a: 1 }),
+      #|  ("gray_hsv", { r: 0.5, g: 0.5, b: 0.5, a: 1 }),
+      #|  ("dark_red", { r: 0.5, g: 0, b: 0, a: 1 }),
+      #|]
+
     ),
   )
 }
@@ -135,10 +165,19 @@ test "color interpolation" {
       @color.lerp_color(@color.transparent(), @color.red(), 0.5),
     ),
   ]
-  inspect(
+  debug_inspect(
     interpolations,
     content=(
-      #|[("red_to_blue_0", {r: 1, g: 0, b: 0, a: 1}), ("red_to_blue_25", {r: 0.75, g: 0, b: 0.25, a: 1}), ("red_to_blue_50", {r: 0.5, g: 0, b: 0.5, a: 1}), ("red_to_blue_75", {r: 0.25, g: 0, b: 0.75, a: 1}), ("red_to_blue_100", {r: 0, g: 0, b: 1, a: 1}), ("white_to_black_50", {r: 0.5, g: 0.5, b: 0.5, a: 1}), ("transparent_to_opaque", {r: 0.5, g: 0, b: 0, a: 0.5})]
+      #|[
+      #|  ("red_to_blue_0", { r: 1, g: 0, b: 0, a: 1 }),
+      #|  ("red_to_blue_25", { r: 0.75, g: 0, b: 0.25, a: 1 }),
+      #|  ("red_to_blue_50", { r: 0.5, g: 0, b: 0.5, a: 1 }),
+      #|  ("red_to_blue_75", { r: 0.25, g: 0, b: 0.75, a: 1 }),
+      #|  ("red_to_blue_100", { r: 0, g: 0, b: 1, a: 1 }),
+      #|  ("white_to_black_50", { r: 0.5, g: 0.5, b: 0.5, a: 1 }),
+      #|  ("transparent_to_opaque", { r: 0.5, g: 0, b: 0, a: 0.5 }),
+      #|]
+
     ),
   )
 }

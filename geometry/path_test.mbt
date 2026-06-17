@@ -122,13 +122,13 @@ test "path bounds calculation" {
 ///|
 test "empty path bounds" {
   let path = @geometry.Path::empty()
-  inspect(path.bounds(), content="None")
+  debug_inspect(path.bounds(), content="None")
 }
 
 ///|
 test "path with only close segment" {
   let path = @geometry.Path::empty().close_path()
-  inspect((path, path.bounds()), content="(Path([Close]), None)")
+  debug_inspect((path, path.bounds()), content="(Path([Close]), None)")
 }
 
 ///|
@@ -154,10 +154,94 @@ test "comprehensive path shapes" {
       .close_path(),
     ),
   ]
-  inspect(
+  debug_inspect(
     shapes,
     content=(
-      #|[("rectangle", Path([MoveTo({x: 0, y: 0}), LineTo({x: 10, y: 0}), LineTo({x: 10, y: 5}), LineTo({x: 0, y: 5}), Close])), ("circle", Path([MoveTo({x: 5, y: 2}), CurveTo({x: 6.6568542494, y: 2}, {x: 8, y: 3.3431457506}, {x: 8, y: 5}), CurveTo({x: 8, y: 6.6568542494}, {x: 6.6568542494, y: 8}, {x: 5, y: 8}), CurveTo({x: 3.3431457506, y: 8}, {x: 2, y: 6.6568542494}, {x: 2, y: 5}), CurveTo({x: 2, y: 3.3431457506}, {x: 3.3431457506, y: 2}, {x: 5, y: 2}), Close])), ("ellipse", Path([MoveTo({x: 0, y: -3}), CurveTo({x: 2.761423749, y: -3}, {x: 5, y: -1.6568542493999998}, {x: 5, y: 0}), CurveTo({x: 5, y: 1.6568542493999998}, {x: 2.761423749, y: 3}, {x: 0, y: 3}), CurveTo({x: -2.761423749, y: 3}, {x: -5, y: 1.6568542493999998}, {x: -5, y: 0}), CurveTo({x: -5, y: -1.6568542493999998}, {x: -2.761423749, y: -3}, {x: 0, y: -3}), Close])), ("complex_path", Path([MoveTo({x: 0, y: 0}), LineTo({x: 10, y: 0}), CurveTo({x: 15, y: 0}, {x: 15, y: 5}, {x: 10, y: 5}), LineTo({x: 0, y: 5}), Close]))]
+      #|[
+      #|  (
+      #|    "rectangle",
+      #|    Path(
+      #|      [
+      #|        MoveTo({ x: 0, y: 0 }),
+      #|        LineTo({ x: 10, y: 0 }),
+      #|        LineTo({ x: 10, y: 5 }),
+      #|        LineTo({ x: 0, y: 5 }),
+      #|        Close,
+      #|      ],
+      #|    ),
+      #|  ),
+      #|  (
+      #|    "circle",
+      #|    Path(
+      #|      [
+      #|        MoveTo({ x: 5, y: 2 }),
+      #|        CurveTo(
+      #|          { x: 6.6568542494, y: 2 },
+      #|          { x: 8, y: 3.3431457506 },
+      #|          { x: 8, y: 5 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: 8, y: 6.6568542494 },
+      #|          { x: 6.6568542494, y: 8 },
+      #|          { x: 5, y: 8 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: 3.3431457506, y: 8 },
+      #|          { x: 2, y: 6.6568542494 },
+      #|          { x: 2, y: 5 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: 2, y: 3.3431457506 },
+      #|          { x: 3.3431457506, y: 2 },
+      #|          { x: 5, y: 2 },
+      #|        ),
+      #|        Close,
+      #|      ],
+      #|    ),
+      #|  ),
+      #|  (
+      #|    "ellipse",
+      #|    Path(
+      #|      [
+      #|        MoveTo({ x: 0, y: -3 }),
+      #|        CurveTo(
+      #|          { x: 2.761423749, y: -3 },
+      #|          { x: 5, y: -1.6568542493999998 },
+      #|          { x: 5, y: 0 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: 5, y: 1.6568542493999998 },
+      #|          { x: 2.761423749, y: 3 },
+      #|          { x: 0, y: 3 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: -2.761423749, y: 3 },
+      #|          { x: -5, y: 1.6568542493999998 },
+      #|          { x: -5, y: 0 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: -5, y: -1.6568542493999998 },
+      #|          { x: -2.761423749, y: -3 },
+      #|          { x: 0, y: -3 },
+      #|        ),
+      #|        Close,
+      #|      ],
+      #|    ),
+      #|  ),
+      #|  (
+      #|    "complex_path",
+      #|    Path(
+      #|      [
+      #|        MoveTo({ x: 0, y: 0 }),
+      #|        LineTo({ x: 10, y: 0 }),
+      #|        CurveTo({ x: 15, y: 0 }, { x: 15, y: 5 }, { x: 10, y: 5 }),
+      #|        LineTo({ x: 0, y: 5 }),
+      #|        Close,
+      #|      ],
+      #|    ),
+      #|  ),
+      #|]
+
     ),
   )
 }
@@ -186,10 +270,60 @@ test "path bounds calculation with curves" {
       @geometry.Path::circle(@geometry.Point::new(0.0, 0.0), 5.0).bounds(),
     ),
   ]
-  inspect(
+  debug_inspect(
     paths_with_bounds,
     content=(
-      #|[("simple_line", Path([MoveTo({x: -5, y: -3}), LineTo({x: 10, y: 7})]), Some({min_x: -5, min_y: -3, max_x: 10, max_y: 7})), ("rectangle_bounds", Path([MoveTo({x: 2, y: 3}), LineTo({x: 10, y: 3}), LineTo({x: 10, y: 9}), LineTo({x: 2, y: 9}), Close]), Some({min_x: 2, min_y: 3, max_x: 10, max_y: 9})), ("circle_bounds", Path([MoveTo({x: 0, y: -5}), CurveTo({x: 2.761423749, y: -5}, {x: 5, y: -2.761423749}, {x: 5, y: 0}), CurveTo({x: 5, y: 2.761423749}, {x: 2.761423749, y: 5}, {x: 0, y: 5}), CurveTo({x: -2.761423749, y: 5}, {x: -5, y: 2.761423749}, {x: -5, y: 0}), CurveTo({x: -5, y: -2.761423749}, {x: -2.761423749, y: -5}, {x: 0, y: -5}), Close]), Some({min_x: -5, min_y: -5, max_x: 5, max_y: 5}))]
+      #|[
+      #|  (
+      #|    "simple_line",
+      #|    Path([MoveTo({ x: -5, y: -3 }), LineTo({ x: 10, y: 7 })]),
+      #|    Some({ min_x: -5, min_y: -3, max_x: 10, max_y: 7 }),
+      #|  ),
+      #|  (
+      #|    "rectangle_bounds",
+      #|    Path(
+      #|      [
+      #|        MoveTo({ x: 2, y: 3 }),
+      #|        LineTo({ x: 10, y: 3 }),
+      #|        LineTo({ x: 10, y: 9 }),
+      #|        LineTo({ x: 2, y: 9 }),
+      #|        Close,
+      #|      ],
+      #|    ),
+      #|    Some({ min_x: 2, min_y: 3, max_x: 10, max_y: 9 }),
+      #|  ),
+      #|  (
+      #|    "circle_bounds",
+      #|    Path(
+      #|      [
+      #|        MoveTo({ x: 0, y: -5 }),
+      #|        CurveTo(
+      #|          { x: 2.761423749, y: -5 },
+      #|          { x: 5, y: -2.761423749 },
+      #|          { x: 5, y: 0 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: 5, y: 2.761423749 },
+      #|          { x: 2.761423749, y: 5 },
+      #|          { x: 0, y: 5 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: -2.761423749, y: 5 },
+      #|          { x: -5, y: 2.761423749 },
+      #|          { x: -5, y: 0 },
+      #|        ),
+      #|        CurveTo(
+      #|          { x: -5, y: -2.761423749 },
+      #|          { x: -2.761423749, y: -5 },
+      #|          { x: 0, y: -5 },
+      #|        ),
+      #|        Close,
+      #|      ],
+      #|    ),
+      #|    Some({ min_x: -5, min_y: -5, max_x: 5, max_y: 5 }),
+      #|  ),
+      #|]
+
     ),
   )
 }
