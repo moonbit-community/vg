@@ -6,7 +6,7 @@ pub struct CanvasDocument {
   width : Double
   height : Double
   commands : Array[String]
-} derive(Show)
+} derive(Debug)
 
 ///|
 /// Create a new Canvas document
