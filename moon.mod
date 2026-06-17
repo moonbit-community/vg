@@ -1,0 +1,15 @@
+name = "bobzhang/vg"
+
+version = "0.1.3"
+
+readme = "README.md"
+
+repository = "https://github.com/moonbit-community/vg"
+
+license = "ISC"
+
+keywords = [ "graphics", "vector", "2d", "svg", "canvas" ]
+
+description = "Declarative 2D vector graphics library for MoonBit"
+
+warnings = "-unused_constructor-struct_never_constructed"
