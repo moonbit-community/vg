@@ -60,10 +60,7 @@ pub fn compose_transforms(t1 : Transform, t2 : Transform) -> Transform {
 ///|
 /// Apply transformation to a point
 pub fn apply(t : Transform, p : Point) -> Point {
-  Point::Point(
-    t.m11 * p.x + t.m12 * p.y + t.m31,
-    t.m21 * p.x + t.m22 * p.y + t.m32,
-  )
+  Point(t.m11 * p.x + t.m12 * p.y + t.m31, t.m21 * p.x + t.m22 * p.y + t.m32)
 }
 
 ///|

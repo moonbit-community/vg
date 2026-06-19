@@ -309,10 +309,7 @@ pub fn Image::tile(
       tiled_y
     }
     self(
-      Point::Point(
-        normalized_x - tile_width / 2.0,
-        normalized_y - tile_height / 2.0,
-      ),
+      Point(normalized_x - tile_width / 2.0, normalized_y - tile_height / 2.0),
     )
   }
 }

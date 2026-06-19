@@ -42,13 +42,9 @@ test "Transform creation and equality" {
 ///|
 test "Path construction" {
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::Point(1.0, 2.0))
-    .line_to(@vg.Point::Point(3.0, 4.0))
-    .curve_to(
-      @vg.Point::Point(1.0, 1.0),
-      @vg.Point::Point(2.0, 2.0),
-      @vg.Point::Point(3.0, 3.0),
-    )
+    .move_to(Point(1.0, 2.0))
+    .line_to(Point(3.0, 4.0))
+    .curve_to(Point(1.0, 1.0), Point(2.0, 2.0), Point(3.0, 3.0))
     .close_path()
   if path.0.length() != 4 {
     fail("Path should have 4 segments")
@@ -59,13 +55,9 @@ test "Path construction" {
 test "PathSegment variants" {
   // Test using path construction functions instead of direct enum construction
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::Point(1.0, 2.0))
-    .line_to(@vg.Point::Point(3.0, 4.0))
-    .curve_to(
-      @vg.Point::Point(1.0, 1.0),
-      @vg.Point::Point(2.0, 2.0),
-      @vg.Point::Point(3.0, 3.0),
-    )
+    .move_to(Point(1.0, 2.0))
+    .line_to(Point(3.0, 4.0))
+    .curve_to(Point(1.0, 1.0), Point(2.0, 2.0), Point(3.0, 3.0))
     .close_path()
   if path.0.length() != 4 {
     fail("Path should have 4 segments")
@@ -129,9 +121,7 @@ test "Primitive constructors and equality" {
   }
 
   // Test path primitive
-  let path = @vg.Path::empty()
-    .move_to(@vg.Point::Point(1.0, 1.0))
-    .line_to(@vg.Point::Point(2.0, 2.0))
+  let path = @vg.Path::empty().move_to(Point(1.0, 1.0)).line_to(Point(2.0, 2.0))
   let path_prim = @vg.primitive_path(path)
   match path_prim {
     Path(p) => if p.0.length() != 2 { fail("Path should have 2 segments") }
@@ -233,12 +223,9 @@ test "Primitive and ImageOp integration" {
   let blue_color = @color.blue()
 
   // Create primitives
-  let circle = @vg.primitive_circle(@vg.Point::Point(50.0, 50.0), 25.0)
-  let rect = @vg.primitive_rectangle(
-    @vg.Point::Point(0.0, 0.0),
-    @vg.Point::Point(100.0, 20.0),
-  )
-  let text = @vg.primitive_text("Test", @vg.Point::Point(10.0, 80.0), 12.0)
+  let circle = @vg.primitive_circle(Point(50.0, 50.0), 25.0)
+  let rect = @vg.primitive_rectangle(Point(0.0, 0.0), Point(100.0, 20.0))
+  let text = @vg.primitive_text("Test", Point(10.0, 80.0), 12.0)
 
   // Create image operations
   let circle_op = @vg.imageop_primitive(circle, red_color)
