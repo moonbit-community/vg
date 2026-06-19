@@ -3,24 +3,18 @@
 // Re-export geometry types
 
 ///|
-pub type Point = @geometry.Point
-
-///|
-pub type Box = @geometry.Box
-
-///|
-pub type Path = @geometry.Path
-
-///|
-pub type PathSegment = @geometry.PathSegment
-
-///|
-pub type Transform = @geometry.Transform
+pub using @geometry {
+  type Point,
+  type Box,
+  type Path,
+  type PathSegment,
+  type Transform,
+}
 
 // Re-export color type
 
 ///|
-pub type Color = @color.Color
+pub using @color {type Color}
 
 ///|
 /// An image is a function from points to colors
