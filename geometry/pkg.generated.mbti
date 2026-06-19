@@ -69,12 +69,13 @@ pub struct Point {
   x : Double
   y : Double
 } derive(Eq, @debug.Debug)
+#alias(new, deprecated)
+pub fn Point::Point(Double, Double) -> Self
 pub fn Point::add(Self, Self) -> Self
 pub fn Point::distance(Self, Self) -> Double
 pub fn Point::dot(Self, Self) -> Double
 pub fn Point::length(Self) -> Double
 pub fn Point::lerp(Self, Self, Double) -> Self
-pub fn Point::new(Double, Double) -> Self
 pub fn Point::normalize(Self) -> Self
 pub fn Point::origin() -> Self
 pub fn Point::rotate(Self, Double) -> Self

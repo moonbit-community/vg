@@ -52,9 +52,9 @@ test "basic_shapes" (it : @test.Test) {
   let red_circle = @vg.Image::circle(@color.red(), 50.0)
   let blue_ellipse = @vg.Image::ellipse(@color.blue(), 60.0, 40.0)
   let _triangle = @vg.Image::polygon(@color.green(), [
-    @vg.Point::new(0.0, -30.0),
-    @vg.Point::new(-30.0, 30.0),
-    @vg.Point::new(30.0, 30.0),
+    @vg.Point::Point(0.0, -30.0),
+    @vg.Point::Point(-30.0, 30.0),
+    @vg.Point::Point(30.0, 30.0),
   ])
 
   // Apply transformations and effects
@@ -66,19 +66,19 @@ test "basic_shapes" (it : @test.Test) {
 
   // Create paths with object-oriented API
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(10.0, 10.0))
-    .line_to(@vg.Point::new(90.0, 10.0))
+    .move_to(@vg.Point::Point(10.0, 10.0))
+    .line_to(@vg.Point::Point(90.0, 10.0))
     .curve_to(
-      @vg.Point::new(110.0, 10.0),
-      @vg.Point::new(110.0, 30.0),
-      @vg.Point::new(90.0, 30.0),
+      @vg.Point::Point(110.0, 10.0),
+      @vg.Point::Point(110.0, 30.0),
+      @vg.Point::Point(90.0, 30.0),
     )
     .close_path()
 
   // Create SVG output with advanced shapes
   let svg_doc = @svg.new_svg(200.0, 200.0)
-    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
-    .render_ellipse(@vg.Point::new(150.0, 100.0), 30.0, 20.0, @color.blue())
+    .render_circle(@vg.Point::Point(100.0, 100.0), 50.0, @color.red())
+    .render_ellipse(@vg.Point::Point(150.0, 100.0), 30.0, 20.0, @color.blue())
     .render_path(custom_path, @color.green())
   it.write(svg_doc.to_string())
   it.snapshot(filename="basic_shapes.svg")
@@ -120,9 +120,9 @@ test "basic shapes examples" {
 
   // Create a polygon (triangle)
   let triangle = @vg.Image::polygon(@color.yellow(), [
-    @vg.Point::new(0.0, -20.0),
-    @vg.Point::new(-20.0, 20.0),
-    @vg.Point::new(20.0, 20.0),
+    @vg.Point::Point(0.0, -20.0),
+    @vg.Point::Point(-20.0, 20.0),
+    @vg.Point::Point(20.0, 20.0),
   ])
 
   // Use the variables to avoid unused warnings
@@ -173,15 +173,15 @@ test "colors and effects examples" {
   let gradient = @vg.Image::linear_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::new(-50.0, 0.0),
-    @vg.Point::new(50.0, 0.0),
+    @vg.Point::Point(-50.0, 0.0),
+    @vg.Point::Point(50.0, 0.0),
   )
 
   // Radial gradient
   let radial = @vg.Image::radial_gradient(
     @color.white(),
     @color.black(),
-    @vg.Point::new(0.0, 0.0),
+    @vg.Point::Point(0.0, 0.0),
     50.0,
   )
 
@@ -200,19 +200,19 @@ test "colors and effects examples" {
 test "paths examples" {
   // Create a custom path with method chaining
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::new(10.0, 10.0))
-    .line_to(@vg.Point::new(90.0, 10.0))
+    .move_to(@vg.Point::Point(10.0, 10.0))
+    .line_to(@vg.Point::Point(90.0, 10.0))
     .curve_to(
-      @vg.Point::new(110.0, 10.0),
-      @vg.Point::new(110.0, 30.0),
-      @vg.Point::new(90.0, 30.0),
+      @vg.Point::Point(110.0, 10.0),
+      @vg.Point::Point(110.0, 30.0),
+      @vg.Point::Point(90.0, 30.0),
     )
     .close_path()
 
   // Create predefined shapes
   let rectangle = @vg.Path::rect(0.0, 0.0, 50.0, 30.0)
-  let circle = @vg.Path::circle(@vg.Point::new(25.0, 25.0), 20.0)
-  let ellipse = @vg.Path::ellipse(@vg.Point::new(0.0, 0.0), 30.0, 15.0)
+  let circle = @vg.Path::circle(@vg.Point::Point(25.0, 25.0), 20.0)
+  let ellipse = @vg.Path::ellipse(@vg.Point::Point(0.0, 0.0), 30.0, 15.0)
 
   // Transform paths
   let transform = @geometry.make_translate(10.0, 20.0)
@@ -252,18 +252,18 @@ test "paths examples" {
 ///|
 test "canvas rendering examples" {
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(10.0, 10.0))
-    .line_to(@vg.Point::new(50.0, 10.0))
+    .move_to(@vg.Point::Point(10.0, 10.0))
+    .line_to(@vg.Point::Point(50.0, 10.0))
     .close_path()
 
   // Create an HTML5 Canvas document with fluent method chaining
   let canvas_doc = @canvas.new_canvas(400.0, 300.0)
-    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
+    .render_circle(@vg.Point::Point(100.0, 100.0), 50.0, @color.red())
     .render_rectangle(150.0, 50.0, 80.0, 60.0, @color.blue())
     .render_path(custom_path, @color.green())
     .render_text(
       "Hello Canvas!",
-      @vg.Point::new(200.0, 200.0),
+      @vg.Point::Point(200.0, 200.0),
       16.0,
       @color.black(),
     )
@@ -285,19 +285,19 @@ test "canvas rendering examples" {
 ///|
 test "pdf generation examples" {
   let star_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(0.0, -20.0))
-    .line_to(@vg.Point::new(5.0, -5.0))
-    .line_to(@vg.Point::new(20.0, -5.0))
+    .move_to(@vg.Point::Point(0.0, -20.0))
+    .line_to(@vg.Point::Point(5.0, -5.0))
+    .line_to(@vg.Point::Point(20.0, -5.0))
     .close_path()
 
   // Create a PDF document with fluent method chaining
   let pdf_doc = @pdf.PdfDocument::new(210.0, 297.0) // A4 size
-    .render_circle(@vg.Point::new(105.0, 100.0), 30.0, @color.red())
+    .render_circle(@vg.Point::Point(105.0, 100.0), 30.0, @color.red())
     .render_rectangle(50.0, 150.0, 110.0, 50.0, @color.blue())
     .render_path(star_path, @color.gold())
     .render_text(
       "PDF Graphics Demo",
-      @vg.Point::new(50.0, 250.0),
+      @vg.Point::Point(50.0, 250.0),
       14.0,
       @color.black(),
     )
@@ -449,9 +449,9 @@ test "spirograph" (it : @test.Test) {
       let x = (x_raw * 1000000.0).round() / 1000000.0
       let y = (y_raw * 1000000.0).round() / 1000000.0
       if i == 0 {
-        path = path.move_to(@vg.Point::new(x, y))
+        path = path.move_to(@vg.Point::Point(x, y))
       } else {
-        path = path.line_to(@vg.Point::new(x, y))
+        path = path.line_to(@vg.Point::Point(x, y))
       }
     }
 
@@ -496,7 +496,7 @@ test "rainbow flower" (it : @test.Test) {
     let petal_cx = (petal_cx_raw * 1000000.0).round() / 1000000.0
     let petal_cy = (petal_cy_raw * 1000000.0).round() / 1000000.0
     doc = doc.render_ellipse(
-      @vg.Point::new(petal_cx, petal_cy),
+      @vg.Point::Point(petal_cx, petal_cy),
       50.0,
       25.0,
       @color.rgba(color.r, color.g, color.b, 0.7),
@@ -504,8 +504,8 @@ test "rainbow flower" (it : @test.Test) {
   }
 
   // Center circle
-  doc = doc.render_circle(@vg.Point::new(cx, cy), 30.0, @color.gold())
-  doc = doc.render_circle(@vg.Point::new(cx, cy), 20.0, @color.orange())
+  doc = doc.render_circle(@vg.Point::Point(cx, cy), 30.0, @color.gold())
+  doc = doc.render_circle(@vg.Point::Point(cx, cy), 20.0, @color.orange())
   it.write(doc.to_string())
   it.snapshot(filename="rainbow_flower.svg")
 }
@@ -542,7 +542,11 @@ test "sierpinski triangle" (it : @test.Test) {
   ) -> @svg.SvgDocument {
     if depth == 0 {
       doc.render_polygon(
-        [@vg.Point::new(x1, y1), @vg.Point::new(x2, y2), @vg.Point::new(x3, y3)],
+        [
+          @vg.Point::Point(x1, y1),
+          @vg.Point::Point(x2, y2),
+          @vg.Point::Point(x3, y3),
+        ],
         @color.hsv(depth.to_double() * 60.0, 0.7, 0.8),
       )
     } else {
@@ -605,7 +609,7 @@ test "concentric waves" (it : @test.Test) {
     let hue = i.to_double() / num_rings.to_double() * 360.0 * 2.0 // Two full color cycles
     let saturation = 0.7 + 0.3 * @math.sin(i.to_double() * 0.3)
     let color = @color.hsv(hue % 360.0, saturation, 0.9)
-    doc = doc.render_circle(@vg.Point::new(cx, cy), radius, color)
+    doc = doc.render_circle(@vg.Point::Point(cx, cy), radius, color)
   }
   it.write(doc.to_string())
   it.snapshot(filename="concentric_waves.svg")
@@ -646,16 +650,16 @@ test "starfield" (it : @test.Test) {
     // Star color varies from white to blue-ish
     let bright_b = if brightness + 0.2 > 1.0 { 1.0 } else { brightness + 0.2 }
     let color = @color.rgba(brightness, brightness, bright_b, brightness)
-    doc = doc.render_circle(@vg.Point::new(x, y), size, color)
+    doc = doc.render_circle(@vg.Point::Point(x, y), size, color)
   }
 
   // Add a few larger "bright" stars
   for i = 0; i < 10; i = i + 1 {
     let x = pseudo_random(i * 7 + 100) * width
     let y = pseudo_random(i * 7 + 101) * height
-    doc = doc.render_circle(@vg.Point::new(x, y), 4.0, @color.white())
+    doc = doc.render_circle(@vg.Point::Point(x, y), 4.0, @color.white())
     doc = doc.render_circle(
-      @vg.Point::new(x, y),
+      @vg.Point::Point(x, y),
       8.0,
       @color.rgba(1.0, 1.0, 1.0, 0.3),
     )
@@ -699,7 +703,7 @@ test "op art pattern" (it : @test.Test) {
       let circle_size = cell_size * 0.4 * (1.0 + 0.5 * @math.sin(dist * 0.05))
       let circle_color = if checker { @color.white() } else { @color.black() }
       doc = doc.render_circle(
-        @vg.Point::new(x + cell_size / 2.0, y + cell_size / 2.0),
+        @vg.Point::Point(x + cell_size / 2.0, y + cell_size / 2.0),
         circle_size,
         circle_color,
       )
@@ -730,15 +734,15 @@ test "gradient gallery" (it : @test.Test) {
   let linear_grad = @vg.Image::linear_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::new(-40.0, 0.0),
-    @vg.Point::new(40.0, 0.0),
+    @vg.Point::Point(-40.0, 0.0),
+    @vg.Point::Point(40.0, 0.0),
   )
 
   // Radial gradient
   let radial_grad = @vg.Image::radial_gradient(
     @color.yellow(),
     @color.purple(),
-    @vg.Point::new(0.0, 0.0),
+    @vg.Point::Point(0.0, 0.0),
     50.0,
   )
 
@@ -746,26 +750,26 @@ test "gradient gallery" (it : @test.Test) {
   let conic_grad = @vg.Image::conic_gradient(
     @color.cyan(),
     @color.magenta(),
-    @vg.Point::new(0.0, 0.0),
+    @vg.Point::Point(0.0, 0.0),
     0.0,
   )
 
   // Render gradient samples as rectangles
   doc = doc.render_text(
     "Linear Gradient",
-    @vg.Point::new(100.0, 50.0),
+    @vg.Point::Point(100.0, 50.0),
     14.0,
     @color.white(),
   )
   doc = doc.render_text(
     "Radial Gradient",
-    @vg.Point::new(250.0, 50.0),
+    @vg.Point::Point(250.0, 50.0),
     14.0,
     @color.white(),
   )
   doc = doc.render_text(
     "Conic Gradient",
-    @vg.Point::new(400.0, 50.0),
+    @vg.Point::Point(400.0, 50.0),
     14.0,
     @color.white(),
   )
@@ -774,36 +778,40 @@ test "gradient gallery" (it : @test.Test) {
   doc = doc
     .render_linear_gradient(
       "grad1",
-      @vg.Point::new(0.0, 0.0),
-      @vg.Point::new(100.0, 0.0),
+      @vg.Point::Point(0.0, 0.0),
+      @vg.Point::Point(100.0, 0.0),
       @color.red(),
       @color.blue(),
     )
     .render_linear_gradient(
       "grad2",
-      @vg.Point::new(50.0, 0.0),
-      @vg.Point::new(50.0, 100.0),
+      @vg.Point::Point(50.0, 0.0),
+      @vg.Point::Point(50.0, 100.0),
       @color.yellow(),
       @color.purple(),
     )
     .render_linear_gradient(
       "grad3",
-      @vg.Point::new(0.0, 0.0),
-      @vg.Point::new(100.0, 100.0),
+      @vg.Point::Point(0.0, 0.0),
+      @vg.Point::Point(100.0, 100.0),
       @color.cyan(),
       @color.magenta(),
     )
 
   // Draw circles with solid colors representing gradients
-  doc = doc.render_circle(@vg.Point::new(100.0, 150.0), 60.0, @color.red())
-  doc = doc.render_circle(@vg.Point::new(100.0, 150.0), 40.0, @color.purple())
-  doc = doc.render_circle(@vg.Point::new(100.0, 150.0), 20.0, @color.blue())
-  doc = doc.render_circle(@vg.Point::new(250.0, 150.0), 60.0, @color.purple())
-  doc = doc.render_circle(@vg.Point::new(250.0, 150.0), 40.0, @color.orange())
-  doc = doc.render_circle(@vg.Point::new(250.0, 150.0), 20.0, @color.yellow())
-  doc = doc.render_circle(@vg.Point::new(400.0, 150.0), 60.0, @color.magenta())
-  doc = doc.render_circle(@vg.Point::new(400.0, 150.0), 40.0, @color.white())
-  doc = doc.render_circle(@vg.Point::new(400.0, 150.0), 20.0, @color.cyan())
+  doc = doc.render_circle(@vg.Point::Point(100.0, 150.0), 60.0, @color.red())
+  doc = doc.render_circle(@vg.Point::Point(100.0, 150.0), 40.0, @color.purple())
+  doc = doc.render_circle(@vg.Point::Point(100.0, 150.0), 20.0, @color.blue())
+  doc = doc.render_circle(@vg.Point::Point(250.0, 150.0), 60.0, @color.purple())
+  doc = doc.render_circle(@vg.Point::Point(250.0, 150.0), 40.0, @color.orange())
+  doc = doc.render_circle(@vg.Point::Point(250.0, 150.0), 20.0, @color.yellow())
+  doc = doc.render_circle(
+    @vg.Point::Point(400.0, 150.0),
+    60.0,
+    @color.magenta(),
+  )
+  doc = doc.render_circle(@vg.Point::Point(400.0, 150.0), 40.0, @color.white())
+  doc = doc.render_circle(@vg.Point::Point(400.0, 150.0), 20.0, @color.cyan())
 
   // Display gradient types as image samples
   let _grad_svg1 = linear_grad.render_image_to_svg(80.0, 80.0, 20)
@@ -813,7 +821,7 @@ test "gradient gallery" (it : @test.Test) {
   // Labels for bottom row
   doc = doc.render_text(
     "Image Gradients",
-    @vg.Point::new(250.0, 280.0),
+    @vg.Point::Point(250.0, 280.0),
     16.0,
     @color.white(),
   )

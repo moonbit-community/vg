@@ -5,17 +5,17 @@ test "svg oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for SVG
   let doc = @svg.new_svg(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_circle(@vg.Point::Point(80.0, 100.0), 30.0, @color.red())
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
     .render_text(
       "OO-Style SVG",
-      @vg.Point::new(150.0, 40.0),
+      @vg.Point::Point(150.0, 40.0),
       16.0,
       @color.black(),
     )
     .render_line(
-      @vg.Point::new(50.0, 160.0),
-      @vg.Point::new(250.0, 160.0),
+      @vg.Point::Point(50.0, 160.0),
+      @vg.Point::Point(250.0, 160.0),
       @color.blue(),
       2.0,
     )
@@ -29,17 +29,17 @@ test "canvas oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for Canvas
   let doc = @canvas.new_canvas(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_circle(@vg.Point::Point(80.0, 100.0), 30.0, @color.red())
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
     .render_text(
       "OO-Style Canvas",
-      @vg.Point::new(150.0, 40.0),
+      @vg.Point::Point(150.0, 40.0),
       16.0,
       @color.black(),
     )
     .render_line(
-      @vg.Point::new(50.0, 160.0),
-      @vg.Point::new(250.0, 160.0),
+      @vg.Point::Point(50.0, 160.0),
+      @vg.Point::Point(250.0, 160.0),
       @color.blue(),
       2.0,
     )
@@ -53,17 +53,17 @@ test "pdf oo-style api" (it : @test.Test) {
   // Demonstrate fluent OO-style API for PDF
   let doc = @pdf.PdfDocument::new(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.gray(0.95))
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_circle(@vg.Point::Point(80.0, 100.0), 30.0, @color.red())
     .render_rectangle(150.0, 70.0, 60.0, 60.0, @color.green())
     .render_text(
       "OO-Style PDF",
-      @vg.Point::new(150.0, 40.0),
+      @vg.Point::Point(150.0, 40.0),
       16.0,
       @color.black(),
     )
     .render_line(
-      @vg.Point::new(50.0, 160.0),
-      @vg.Point::new(250.0, 160.0),
+      @vg.Point::Point(50.0, 160.0),
+      @vg.Point::Point(250.0, 160.0),
       @color.blue(),
       2.0,
     )
@@ -76,10 +76,13 @@ test "pdf oo-style api" (it : @test.Test) {
 test "oo-style path with document integration" (it : @test.Test) {
   // Demonstrate how OO-style paths work with OO-style documents
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(50.0, 50.0))
-    .line_to(@vg.Point::new(150.0, 50.0))
-    .qcurve_to(@vg.Point::new(200.0, 75.0), @vg.Point::new(150.0, 100.0))
-    .smooth_ccurve_to(@vg.Point::new(75.0, 125.0), @vg.Point::new(50.0, 100.0))
+    .move_to(@vg.Point::Point(50.0, 50.0))
+    .line_to(@vg.Point::Point(150.0, 50.0))
+    .qcurve_to(@vg.Point::Point(200.0, 75.0), @vg.Point::Point(150.0, 100.0))
+    .smooth_ccurve_to(
+      @vg.Point::Point(75.0, 125.0),
+      @vg.Point::Point(50.0, 100.0),
+    )
     .close_path()
 
   // Use the same path across all OO-style renderers
@@ -88,7 +91,7 @@ test "oo-style path with document integration" (it : @test.Test) {
     .render_path(custom_path, @color.purple())
     .render_text(
       "OO Path + SVG",
-      @vg.Point::new(125.0, 30.0),
+      @vg.Point::Point(125.0, 30.0),
       14.0,
       @color.black(),
     )
@@ -97,7 +100,7 @@ test "oo-style path with document integration" (it : @test.Test) {
     .render_path(custom_path, @color.purple())
     .render_text(
       "OO Path + Canvas",
-      @vg.Point::new(125.0, 30.0),
+      @vg.Point::Point(125.0, 30.0),
       14.0,
       @color.black(),
     )
@@ -106,7 +109,7 @@ test "oo-style path with document integration" (it : @test.Test) {
     .render_path(custom_path, @color.purple())
     .render_text(
       "OO Path + PDF",
-      @vg.Point::new(125.0, 30.0),
+      @vg.Point::Point(125.0, 30.0),
       14.0,
       @color.black(),
     )
@@ -126,18 +129,23 @@ test "oo-style api comparison" (it : @test.Test) {
 
   // Functional style (original)
   let svg_functional = @svg.new_svg(200.0, 100.0)
-    .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @color.red())
+    .render_circle(@vg.Point::Point(100.0, 50.0), 25.0, @color.red())
     .render_text(
       "Functional Style",
-      @vg.Point::new(100.0, 80.0),
+      @vg.Point::Point(100.0, 80.0),
       12.0,
       @color.black(),
     )
 
   // OO style (new)  
   let svg_oo = @svg.new_svg(200.0, 100.0)
-    .render_circle(@vg.Point::new(100.0, 50.0), 25.0, @color.red())
-    .render_text("OO Style", @vg.Point::new(100.0, 80.0), 12.0, @color.black())
+    .render_circle(@vg.Point::Point(100.0, 50.0), 25.0, @color.red())
+    .render_text(
+      "OO Style",
+      @vg.Point::Point(100.0, 80.0),
+      12.0,
+      @color.black(),
+    )
 
   // Get outputs for comparison
   let functional_output = svg_functional.to_string()
@@ -170,40 +178,43 @@ test "oo-style api comparison" (it : @test.Test) {
 test "complete oo-style showcase" (it : @test.Test) {
   // Create a comprehensive demo using only OO-style APIs
   let advanced_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(50.0, 75.0))
-    .qcurve_to(@vg.Point::new(100.0, 25.0), @vg.Point::new(150.0, 75.0))
-    .smooth_ccurve_to(@vg.Point::new(225.0, 125.0), @vg.Point::new(275.0, 75.0))
-    .earc_to(25.0, 15.0, 0.0, false, true, @vg.Point::new(225.0, 100.0))
+    .move_to(@vg.Point::Point(50.0, 75.0))
+    .qcurve_to(@vg.Point::Point(100.0, 25.0), @vg.Point::Point(150.0, 75.0))
+    .smooth_ccurve_to(
+      @vg.Point::Point(225.0, 125.0),
+      @vg.Point::Point(275.0, 75.0),
+    )
+    .earc_to(25.0, 15.0, 0.0, false, true, @vg.Point::Point(225.0, 100.0))
     .close_path()
   let svg_showcase = @svg.new_svg(350.0, 200.0)
     .render_rectangle(0.0, 0.0, 350.0, 200.0, @color.gray(0.98))
     .render_text(
       "Complete OO-Style API Showcase",
-      @vg.Point::new(175.0, 30.0),
+      @vg.Point::Point(175.0, 30.0),
       18.0,
       @color.black(),
     )
     .render_path(advanced_path, @color.blue())
-    .render_circle(@vg.Point::new(100.0, 150.0), 20.0, @color.red())
+    .render_circle(@vg.Point::Point(100.0, 150.0), 20.0, @color.red())
     .render_polygon(
       [
-        @vg.Point::new(250.0, 130.0),
-        @vg.Point::new(270.0, 140.0),
-        @vg.Point::new(265.0, 160.0),
-        @vg.Point::new(235.0, 160.0),
-        @vg.Point::new(230.0, 140.0),
+        @vg.Point::Point(250.0, 130.0),
+        @vg.Point::Point(270.0, 140.0),
+        @vg.Point::Point(265.0, 160.0),
+        @vg.Point::Point(235.0, 160.0),
+        @vg.Point::Point(230.0, 140.0),
       ],
       @color.green(),
     )
     .render_line(
-      @vg.Point::new(50.0, 180.0),
-      @vg.Point::new(300.0, 180.0),
+      @vg.Point::Point(50.0, 180.0),
+      @vg.Point::Point(300.0, 180.0),
       @color.purple(),
       2.0,
     )
     .render_text(
       "Fluent • Modern • Type-Safe",
-      @vg.Point::new(175.0, 170.0),
+      @vg.Point::Point(175.0, 170.0),
       12.0,
       @color.gray(0.6),
     )

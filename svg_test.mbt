@@ -24,7 +24,7 @@ test "adding elements to SVG" {
 ///|
 test "circle rendering" (it : @test.Test) {
   let doc = @svg.new_svg(100.0, 100.0).render_circle(
-    @vg.Point::new(50.0, 50.0),
+    @vg.Point::Point(50.0, 50.0),
     25.0,
     @color.red(),
   )
@@ -72,8 +72,8 @@ test "path rendering" {
 
 ///|
 test "line rendering" {
-  let start = @vg.Point::new(0.0, 0.0)
-  let end = @vg.Point::new(100.0, 50.0)
+  let start = @vg.Point::Point(0.0, 0.0)
+  let end = @vg.Point::Point(100.0, 50.0)
   let doc = @svg.new_svg(150.0, 100.0).render_line(
     start,
     end,
@@ -93,7 +93,7 @@ test "line rendering" {
 test "text rendering" {
   let doc = @svg.new_svg(200.0, 100.0).render_text(
     "Hello World",
-    @vg.Point::new(50.0, 30.0),
+    @vg.Point::Point(50.0, 30.0),
     16.0,
     @color.black(),
   )
@@ -109,7 +109,7 @@ test "text rendering" {
 ///|
 test "SVG string generation" {
   let doc = @svg.new_svg(100.0, 100.0).render_circle(
-    @vg.Point::new(50.0, 50.0),
+    @vg.Point::Point(50.0, 50.0),
     25.0,
     @color.red(),
   )
@@ -135,14 +135,14 @@ test "SVG string generation" {
 test "complex SVG document" {
   let doc = @svg.new_svg(200.0, 200.0)
     .render_rectangle(10.0, 10.0, 180.0, 180.0, @color.gray(0.9))
-    .render_circle(@vg.Point::new(100.0, 100.0), 50.0, @color.red())
+    .render_circle(@vg.Point::Point(100.0, 100.0), 50.0, @color.red())
     .render_line(
-      @vg.Point::new(50.0, 50.0),
-      @vg.Point::new(150.0, 150.0),
+      @vg.Point::Point(50.0, 50.0),
+      @vg.Point::Point(150.0, 150.0),
       @color.blue(),
       3.0,
     )
-    .render_text("Test", @vg.Point::new(100.0, 180.0), 14.0, @color.black())
+    .render_text("Test", @vg.Point::Point(100.0, 180.0), 14.0, @color.black())
   if doc.elements.length() != 4 {
     fail("Complex document should have 4 elements")
   }
@@ -171,7 +171,7 @@ test "image to SVG rendering" {
 test "color with alpha in SVG" {
   let semi_transparent = @color.rgba(1.0, 0.0, 0.0, 0.5)
   let doc = @svg.new_svg(100.0, 100.0).render_circle(
-    @vg.Point::new(50.0, 50.0),
+    @vg.Point::Point(50.0, 50.0),
     25.0,
     semi_transparent,
   )
@@ -191,18 +191,18 @@ test "color with alpha in SVG" {
 test "comprehensive svg rendering" (it : @test.Test) {
   let complex_doc = @svg.new_svg(300.0, 200.0)
     .render_rectangle(10.0, 10.0, 280.0, 180.0, @color.gray(0.95)) // Background
-    .render_circle(@vg.Point::new(80.0, 60.0), 30.0, @color.red()) // Red circle
-    .render_ellipse(@vg.Point::new(150.0, 60.0), 25.0, 15.0, @color.blue()) // Blue ellipse
+    .render_circle(@vg.Point::Point(80.0, 60.0), 30.0, @color.red()) // Red circle
+    .render_ellipse(@vg.Point::Point(150.0, 60.0), 25.0, 15.0, @color.blue()) // Blue ellipse
     .render_rectangle(200.0, 30.0, 40.0, 60.0, @color.green()) // Green rectangle
     .render_line(
-      @vg.Point::new(20.0, 120.0),
-      @vg.Point::new(280.0, 120.0),
+      @vg.Point::Point(20.0, 120.0),
+      @vg.Point::Point(280.0, 120.0),
       @color.black(),
       2.0,
     ) // Divider line
     .render_text(
       "VG Graphics Demo",
-      @vg.Point::new(150.0, 150.0),
+      @vg.Point::Point(150.0, 150.0),
       16.0,
       @color.purple(),
     ) // Title text
@@ -231,7 +231,7 @@ test "comprehensive svg rendering" (it : @test.Test) {
 ///|
 test "svg string generation" (it : @test.Test) {
   let doc = @svg.new_svg(100.0, 100.0).render_circle(
-    @vg.Point::new(50.0, 50.0),
+    @vg.Point::Point(50.0, 50.0),
     25.0,
     @color.red(),
   )
@@ -252,14 +252,14 @@ test "svg string generation" (it : @test.Test) {
 ///|
 test "path rendering to svg" (it : @test.Test) {
   let custom_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(10.0, 10.0))
-    .line_to(@vg.Point::new(90.0, 10.0))
+    .move_to(@vg.Point::Point(10.0, 10.0))
+    .line_to(@vg.Point::Point(90.0, 10.0))
     .curve_to(
-      @vg.Point::new(110.0, 10.0),
-      @vg.Point::new(110.0, 30.0),
-      @vg.Point::new(90.0, 30.0),
+      @vg.Point::Point(110.0, 10.0),
+      @vg.Point::Point(110.0, 30.0),
+      @vg.Point::Point(90.0, 30.0),
     )
-    .line_to(@vg.Point::new(10.0, 30.0))
+    .line_to(@vg.Point::Point(10.0, 30.0))
     .close_path()
   let doc = @svg.new_svg(120.0, 50.0).render_path(custom_path, @color.magenta())
   debug_inspect(
@@ -283,14 +283,14 @@ test "gradient showcase" (it : @test.Test) {
   let gradient_img = @vg.Image::linear_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::new(-50.0, 0.0),
-    @vg.Point::new(50.0, 0.0),
+    @vg.Point::Point(-50.0, 0.0),
+    @vg.Point::Point(50.0, 0.0),
   )
   let gradient_svg = gradient_img.render_image_to_svg(100.0, 50.0, 20)
   let radial_img = @vg.Image::radial_gradient(
     @color.yellow(),
     @color.purple(),
-    @vg.Point::new(0.0, 0.0),
+    @vg.Point::Point(0.0, 0.0),
     25.0,
   )
   let radial_svg = radial_img.render_image_to_svg(100.0, 50.0, 20)
@@ -309,72 +309,87 @@ test "shape gallery" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 500.0, 400.0, @color.gray(0.98)) // Light background
     .render_text(
       "VG Shape Gallery",
-      @vg.Point::new(250.0, 30.0),
+      @vg.Point::Point(250.0, 30.0),
       24.0,
       @color.black(),
     )
 
     // Row 1: Basic shapes
-    .render_circle(@vg.Point::new(80.0, 100.0), 30.0, @color.red())
+    .render_circle(@vg.Point::Point(80.0, 100.0), 30.0, @color.red())
     .render_rectangle(130.0, 70.0, 60.0, 60.0, @color.green())
-    .render_ellipse(@vg.Point::new(250.0, 100.0), 40.0, 25.0, @color.blue())
+    .render_ellipse(@vg.Point::Point(250.0, 100.0), 40.0, 25.0, @color.blue())
 
     // Row 2: Complex shapes
     .render_polygon(
       [
-        @vg.Point::new(325.0, 80.0),
-        @vg.Point::new(375.0, 80.0),
-        @vg.Point::new(385.0, 110.0),
-        @vg.Point::new(350.0, 125.0),
-        @vg.Point::new(315.0, 110.0),
+        @vg.Point::Point(325.0, 80.0),
+        @vg.Point::Point(375.0, 80.0),
+        @vg.Point::Point(385.0, 110.0),
+        @vg.Point::Point(350.0, 125.0),
+        @vg.Point::Point(315.0, 110.0),
       ],
       @color.orange(),
     )
     .render_polygon(
       [
-        @vg.Point::new(420.0, 75.0),
-        @vg.Point::new(395.0, 125.0),
-        @vg.Point::new(445.0, 125.0),
+        @vg.Point::Point(420.0, 75.0),
+        @vg.Point::Point(395.0, 125.0),
+        @vg.Point::Point(445.0, 125.0),
       ],
       @color.purple(),
     )
 
     // Row 3: Lines and text
     .render_line(
-      @vg.Point::new(50.0, 180.0),
-      @vg.Point::new(450.0, 180.0),
+      @vg.Point::Point(50.0, 180.0),
+      @vg.Point::Point(450.0, 180.0),
       @color.black(),
       3.0,
     )
     .render_line(
-      @vg.Point::new(50.0, 200.0),
-      @vg.Point::new(450.0, 220.0),
+      @vg.Point::Point(50.0, 200.0),
+      @vg.Point::Point(450.0, 220.0),
       @color.cyan(),
       2.0,
     )
     .render_line(
-      @vg.Point::new(50.0, 240.0),
-      @vg.Point::new(450.0, 200.0),
+      @vg.Point::Point(50.0, 240.0),
+      @vg.Point::Point(450.0, 200.0),
       @color.magenta(),
       2.0,
     )
 
     // Labels
-    .render_text("Circle", @vg.Point::new(80.0, 150.0), 12.0, @color.black())
+    .render_text("Circle", @vg.Point::Point(80.0, 150.0), 12.0, @color.black())
     .render_text(
       "Rectangle",
-      @vg.Point::new(160.0, 150.0),
+      @vg.Point::Point(160.0, 150.0),
       12.0,
       @color.black(),
     )
-    .render_text("Ellipse", @vg.Point::new(250.0, 150.0), 12.0, @color.black())
-    .render_text("Pentagon", @vg.Point::new(350.0, 150.0), 12.0, @color.black())
-    .render_text("Triangle", @vg.Point::new(420.0, 150.0), 12.0, @color.black())
+    .render_text(
+      "Ellipse",
+      @vg.Point::Point(250.0, 150.0),
+      12.0,
+      @color.black(),
+    )
+    .render_text(
+      "Pentagon",
+      @vg.Point::Point(350.0, 150.0),
+      12.0,
+      @color.black(),
+    )
+    .render_text(
+      "Triangle",
+      @vg.Point::Point(420.0, 150.0),
+      12.0,
+      @color.black(),
+    )
 
     // Footer
     .render_text(
       "Powered by MoonBit VG Library",
-      @vg.Point::new(250.0, 350.0),
+      @vg.Point::Point(250.0, 350.0),
       14.0,
       @color.gray(0.6),
     )
@@ -389,76 +404,76 @@ test "path showcase" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.gray(0.95))
     .render_text(
       "Path Construction Showcase",
-      @vg.Point::new(200.0, 30.0),
+      @vg.Point::Point(200.0, 30.0),
       18.0,
       @color.black(),
     )
 
   // Complex curved path
   let curved_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(50.0, 80.0))
+    .move_to(@vg.Point::Point(50.0, 80.0))
     .curve_to(
-      @vg.Point::new(100.0, 60.0),
-      @vg.Point::new(150.0, 100.0),
-      @vg.Point::new(200.0, 80.0),
+      @vg.Point::Point(100.0, 60.0),
+      @vg.Point::Point(150.0, 100.0),
+      @vg.Point::Point(200.0, 80.0),
     )
     .curve_to(
-      @vg.Point::new(250.0, 60.0),
-      @vg.Point::new(300.0, 100.0),
-      @vg.Point::new(350.0, 80.0),
+      @vg.Point::Point(250.0, 60.0),
+      @vg.Point::Point(300.0, 100.0),
+      @vg.Point::Point(350.0, 80.0),
     )
-    .line_to(@vg.Point::new(350.0, 120.0))
+    .line_to(@vg.Point::Point(350.0, 120.0))
     .curve_to(
-      @vg.Point::new(300.0, 140.0),
-      @vg.Point::new(250.0, 100.0),
-      @vg.Point::new(200.0, 120.0),
+      @vg.Point::Point(300.0, 140.0),
+      @vg.Point::Point(250.0, 100.0),
+      @vg.Point::Point(200.0, 120.0),
     )
     .curve_to(
-      @vg.Point::new(150.0, 140.0),
-      @vg.Point::new(100.0, 100.0),
-      @vg.Point::new(50.0, 120.0),
+      @vg.Point::Point(150.0, 140.0),
+      @vg.Point::Point(100.0, 100.0),
+      @vg.Point::Point(50.0, 120.0),
     )
     .close_path()
 
   // Heart shape
   let heart_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(100.0, 180.0))
+    .move_to(@vg.Point::Point(100.0, 180.0))
     .curve_to(
-      @vg.Point::new(85.0, 165.0),
-      @vg.Point::new(65.0, 165.0),
-      @vg.Point::new(50.0, 180.0),
+      @vg.Point::Point(85.0, 165.0),
+      @vg.Point::Point(65.0, 165.0),
+      @vg.Point::Point(50.0, 180.0),
     )
     .curve_to(
-      @vg.Point::new(35.0, 195.0),
-      @vg.Point::new(35.0, 215.0),
-      @vg.Point::new(50.0, 230.0),
+      @vg.Point::Point(35.0, 195.0),
+      @vg.Point::Point(35.0, 215.0),
+      @vg.Point::Point(50.0, 230.0),
     )
-    .line_to(@vg.Point::new(100.0, 280.0))
-    .line_to(@vg.Point::new(150.0, 230.0))
+    .line_to(@vg.Point::Point(100.0, 280.0))
+    .line_to(@vg.Point::Point(150.0, 230.0))
     .curve_to(
-      @vg.Point::new(165.0, 215.0),
-      @vg.Point::new(165.0, 195.0),
-      @vg.Point::new(150.0, 180.0),
+      @vg.Point::Point(165.0, 215.0),
+      @vg.Point::Point(165.0, 195.0),
+      @vg.Point::Point(150.0, 180.0),
     )
     .curve_to(
-      @vg.Point::new(135.0, 165.0),
-      @vg.Point::new(115.0, 165.0),
-      @vg.Point::new(100.0, 180.0),
+      @vg.Point::Point(135.0, 165.0),
+      @vg.Point::Point(115.0, 165.0),
+      @vg.Point::Point(100.0, 180.0),
     )
     .close_path()
 
   // Star path
   let star_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(300.0, 170.0))
-    .line_to(@vg.Point::new(310.0, 200.0))
-    .line_to(@vg.Point::new(340.0, 200.0))
-    .line_to(@vg.Point::new(318.0, 218.0))
-    .line_to(@vg.Point::new(328.0, 248.0))
-    .line_to(@vg.Point::new(300.0, 230.0))
-    .line_to(@vg.Point::new(272.0, 248.0))
-    .line_to(@vg.Point::new(282.0, 218.0))
-    .line_to(@vg.Point::new(260.0, 200.0))
-    .line_to(@vg.Point::new(290.0, 200.0))
+    .move_to(@vg.Point::Point(300.0, 170.0))
+    .line_to(@vg.Point::Point(310.0, 200.0))
+    .line_to(@vg.Point::Point(340.0, 200.0))
+    .line_to(@vg.Point::Point(318.0, 218.0))
+    .line_to(@vg.Point::Point(328.0, 248.0))
+    .line_to(@vg.Point::Point(300.0, 230.0))
+    .line_to(@vg.Point::Point(272.0, 248.0))
+    .line_to(@vg.Point::Point(282.0, 218.0))
+    .line_to(@vg.Point::Point(260.0, 200.0))
+    .line_to(@vg.Point::Point(290.0, 200.0))
     .close_path()
   let final_doc = doc
     .render_path(curved_path, @color.blue())
@@ -466,12 +481,12 @@ test "path showcase" (it : @test.Test) {
     .render_path(star_path, @color.gold())
     .render_text(
       "Curved Path",
-      @vg.Point::new(200.0, 150.0),
+      @vg.Point::Point(200.0, 150.0),
       12.0,
       @color.blue(),
     )
-    .render_text("Heart", @vg.Point::new(100.0, 160.0), 12.0, @color.red())
-    .render_text("Star", @vg.Point::new(300.0, 160.0), 12.0, @color.gold())
+    .render_text("Heart", @vg.Point::Point(100.0, 160.0), 12.0, @color.red())
+    .render_text("Star", @vg.Point::Point(300.0, 160.0), 12.0, @color.gold())
   let svg_string = final_doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="path_showcase.svg")
@@ -482,11 +497,16 @@ test "svg rendering validation" (it : @test.Test) {
   // Create a simple test to validate SVG structure
   let doc = @svg.new_svg(200.0, 100.0)
     .render_rectangle(10.0, 10.0, 180.0, 80.0, @color.gray(0.95))
-    .render_circle(@vg.Point::new(100.0, 50.0), 20.0, @color.red())
-    .render_text("SVG Test", @vg.Point::new(100.0, 30.0), 14.0, @color.black())
+    .render_circle(@vg.Point::Point(100.0, 50.0), 20.0, @color.red())
+    .render_text(
+      "SVG Test",
+      @vg.Point::Point(100.0, 30.0),
+      14.0,
+      @color.black(),
+    )
     .render_line(
-      @vg.Point::new(20.0, 80.0),
-      @vg.Point::new(180.0, 80.0),
+      @vg.Point::Point(20.0, 80.0),
+      @vg.Point::Point(180.0, 80.0),
       @color.blue(),
       2.0,
     )
@@ -514,11 +534,11 @@ test "minimal svg rendering test" (it : @test.Test) {
   // Create the simplest possible SVG to test basic rendering
   let doc = @svg.new_svg(300.0, 200.0)
     .render_rectangle(0.0, 0.0, 300.0, 200.0, @color.white()) // White background
-    .render_circle(@vg.Point::new(150.0, 100.0), 50.0, @color.red()) // Red circle in center
+    .render_circle(@vg.Point::Point(150.0, 100.0), 50.0, @color.red()) // Red circle in center
     .render_rectangle(50.0, 50.0, 200.0, 100.0, @color.rgba(0.0, 0.0, 1.0, 0.5)) // Semi-transparent blue rect
     .render_text(
       "Hello SVG",
-      @vg.Point::new(150.0, 100.0),
+      @vg.Point::Point(150.0, 100.0),
       16.0,
       @color.black(),
     ) // Centered text
@@ -531,7 +551,7 @@ test "minimal svg rendering test" (it : @test.Test) {
 test "simple rendering test" (it : @test.Test) {
   // Ultra-simple SVG that should definitely render
   let doc = @svg.new_svg(100.0, 100.0).render_circle(
-    @vg.Point::new(50.0, 50.0),
+    @vg.Point::Point(50.0, 50.0),
     30.0,
     @color.red(),
   )
@@ -545,7 +565,7 @@ test "html wrapped svg test" (it : @test.Test) {
   // Create an HTML file with embedded SVG for testing in browsers
   let doc = @svg.new_svg(400.0, 300.0)
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.white())
-    .render_circle(@vg.Point::new(200.0, 150.0), 50.0, @color.red())
+    .render_circle(@vg.Point::Point(200.0, 150.0), 50.0, @color.red())
     .render_rectangle(
       100.0,
       100.0,
@@ -555,13 +575,13 @@ test "html wrapped svg test" (it : @test.Test) {
     )
     .render_text(
       "VG Library Test",
-      @vg.Point::new(200.0, 50.0),
+      @vg.Point::Point(200.0, 50.0),
       18.0,
       @color.black(),
     )
     .render_line(
-      @vg.Point::new(50.0, 250.0),
-      @vg.Point::new(350.0, 250.0),
+      @vg.Point::Point(50.0, 250.0),
+      @vg.Point::Point(350.0, 250.0),
       @color.blue(),
       3.0,
     )
