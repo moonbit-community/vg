@@ -2,7 +2,8 @@
 
 ///|
 /// Create a point
-pub fn Point::new(x : Double, y : Double) -> Point {
+#alias(new, deprecated="Use Point::Point instead")
+pub fn Point::Point(x : Double, y : Double) -> Point {
   { x, y }
 }
 
