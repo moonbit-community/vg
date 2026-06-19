@@ -69,7 +69,6 @@ pub struct Point {
   x : Double
   y : Double
 } derive(Eq, @debug.Debug)
-#alias(new, deprecated)
 pub fn Point::Point(Double, Double) -> Self
 pub fn Point::add(Self, Self) -> Self
 pub fn Point::distance(Self, Self) -> Double
