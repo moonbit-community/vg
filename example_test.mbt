@@ -66,14 +66,10 @@ test "complete workflow - create and render image" {
 test "path to SVG integration" {
   // Create a complex path
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::Point(50.0, 50.0))
-    .line_to(@vg.Point::Point(100.0, 50.0))
-    .curve_to(
-      @vg.Point::Point(125.0, 50.0),
-      @vg.Point::Point(125.0, 75.0),
-      @vg.Point::Point(100.0, 75.0),
-    )
-    .line_to(@vg.Point::Point(50.0, 75.0))
+    .move_to(Point(50.0, 50.0))
+    .line_to(Point(100.0, 50.0))
+    .curve_to(Point(125.0, 50.0), Point(125.0, 75.0), Point(100.0, 75.0))
+    .line_to(Point(50.0, 75.0))
     .close_path()
 
   // Render to SVG
@@ -92,14 +88,14 @@ test "gradient rendering" {
   let gradient_img = @vg.Image::linear_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::Point(-50.0, 0.0),
-    @vg.Point::Point(50.0, 0.0),
+    Point(-50.0, 0.0),
+    Point(50.0, 0.0),
   )
 
   // Test gradient at different points
-  let left = gradient_img(@vg.Point::Point(-50.0, 0.0))
-  let center = gradient_img(@vg.Point::Point(0.0, 0.0))
-  let right = gradient_img(@vg.Point::Point(50.0, 0.0))
+  let left = gradient_img(Point(-50.0, 0.0))
+  let center = gradient_img(Point(0.0, 0.0))
+  let right = gradient_img(Point(50.0, 0.0))
   if left != @color.red() {
     fail("Gradient left should be red")
   }
@@ -123,8 +119,8 @@ test "transformation chain" {
   let transformed = rotated.translate_img(20.0, 10.0)
 
   // Test that transformations work
-  let origin_color = transformed(@vg.Point::Point(0.0, 0.0))
-  let translated_center = transformed(@vg.Point::Point(20.0, 10.0))
+  let origin_color = transformed(Point(0.0, 0.0))
+  let translated_center = transformed(Point(20.0, 10.0))
   if origin_color.a > 0.1 {
     fail("Origin should be mostly transparent after transformation")
   }
@@ -166,133 +162,70 @@ test "complete vg library showcase" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 600.0, 500.0, @color.gray(0.97)) // Light background
     .render_text(
       "MoonBit VG Library - Complete Showcase",
-      @vg.Point::Point(300.0, 40.0),
+      Point(300.0, 40.0),
       20.0,
       @color.black(),
     )
 
     // Section 1: Basic Shapes
-    .render_text(
-      "Basic Shapes",
-      @vg.Point::Point(100.0, 70.0),
-      16.0,
-      @color.black(),
-    )
-    .render_circle(@vg.Point::Point(80.0, 110.0), 25.0, @color.red())
+    .render_text("Basic Shapes", Point(100.0, 70.0), 16.0, @color.black())
+    .render_circle(Point(80.0, 110.0), 25.0, @color.red())
     .render_rectangle(130.0, 85.0, 50.0, 50.0, @color.green())
-    .render_ellipse(@vg.Point::Point(230.0, 110.0), 35.0, 20.0, @color.blue())
+    .render_ellipse(Point(230.0, 110.0), 35.0, 20.0, @color.blue())
 
     // Section 2: Complex Shapes (Polygons)
-    .render_text(
-      "Polygons",
-      @vg.Point::Point(350.0, 70.0),
-      16.0,
-      @color.black(),
-    )
+    .render_text("Polygons", Point(350.0, 70.0), 16.0, @color.black())
     .render_polygon(
       [ // Pentagon
-        @vg.Point::Point(330.0, 95.0),
-        @vg.Point::Point(370.0, 95.0),
-        @vg.Point::Point(375.0, 118.0),
-        @vg.Point::Point(350.0, 130.0),
-        @vg.Point::Point(325.0, 118.0),
+        Point(330.0, 95.0),
+        Point(370.0, 95.0),
+        Point(375.0, 118.0),
+        Point(350.0, 130.0),
+        Point(325.0, 118.0),
       ],
       @color.orange(),
     )
     .render_polygon(
       [ // Triangle
-        @vg.Point::Point(420.0, 90.0),
-        @vg.Point::Point(400.0, 130.0),
-        @vg.Point::Point(440.0, 130.0),
+        Point(420.0, 90.0),
+        Point(400.0, 130.0),
+        Point(440.0, 130.0),
       ],
       @color.purple(),
     )
     .render_polygon(
       [ // Diamond
-        @vg.Point::Point(490.0, 90.0),
-        @vg.Point::Point(505.0, 110.0),
-        @vg.Point::Point(490.0, 130.0),
-        @vg.Point::Point(475.0, 110.0),
+        Point(490.0, 90.0),
+        Point(505.0, 110.0),
+        Point(490.0, 130.0),
+        Point(475.0, 110.0),
       ],
       @color.cyan(),
     )
 
     // Section 3: Lines and Strokes
-    .render_text(
-      "Lines & Strokes",
-      @vg.Point::Point(100.0, 180.0),
-      16.0,
-      @color.black(),
-    )
-    .render_line(
-      @vg.Point::Point(50.0, 210.0),
-      @vg.Point::Point(250.0, 210.0),
-      @color.black(),
-      3.0,
-    )
-    .render_line(
-      @vg.Point::Point(50.0, 230.0),
-      @vg.Point::Point(200.0, 250.0),
-      @color.red(),
-      2.0,
-    )
-    .render_line(
-      @vg.Point::Point(50.0, 270.0),
-      @vg.Point::Point(150.0, 230.0),
-      @color.blue(),
-      4.0,
-    )
+    .render_text("Lines & Strokes", Point(100.0, 180.0), 16.0, @color.black())
+    .render_line(Point(50.0, 210.0), Point(250.0, 210.0), @color.black(), 3.0)
+    .render_line(Point(50.0, 230.0), Point(200.0, 250.0), @color.red(), 2.0)
+    .render_line(Point(50.0, 270.0), Point(150.0, 230.0), @color.blue(), 4.0)
 
     // Section 4: Complex Paths
-    .render_text(
-      "Custom Paths",
-      @vg.Point::Point(350.0, 180.0),
-      16.0,
-      @color.black(),
-    )
+    .render_text("Custom Paths", Point(350.0, 180.0), 16.0, @color.black())
 
   // Create complex paths
   let wave_path = @vg.Path::empty()
-    .move_to(@vg.Point::Point(300.0, 220.0))
-    .curve_to(
-      @vg.Point::Point(320.0, 200.0),
-      @vg.Point::Point(340.0, 240.0),
-      @vg.Point::Point(360.0, 220.0),
-    )
-    .curve_to(
-      @vg.Point::Point(380.0, 200.0),
-      @vg.Point::Point(400.0, 240.0),
-      @vg.Point::Point(420.0, 220.0),
-    )
-    .curve_to(
-      @vg.Point::Point(440.0, 200.0),
-      @vg.Point::Point(460.0, 240.0),
-      @vg.Point::Point(480.0, 220.0),
-    )
+    .move_to(Point(300.0, 220.0))
+    .curve_to(Point(320.0, 200.0), Point(340.0, 240.0), Point(360.0, 220.0))
+    .curve_to(Point(380.0, 200.0), Point(400.0, 240.0), Point(420.0, 220.0))
+    .curve_to(Point(440.0, 200.0), Point(460.0, 240.0), Point(480.0, 220.0))
   let heart_path = @vg.Path::empty()
-    .move_to(@vg.Point::Point(380.0, 270.0))
-    .curve_to(
-      @vg.Point::Point(370.0, 260.0),
-      @vg.Point::Point(355.0, 260.0),
-      @vg.Point::Point(345.0, 270.0),
-    )
-    .curve_to(
-      @vg.Point::Point(335.0, 280.0),
-      @vg.Point::Point(335.0, 295.0),
-      @vg.Point::Point(345.0, 305.0),
-    )
-    .line_to(@vg.Point::Point(380.0, 340.0))
-    .line_to(@vg.Point::Point(415.0, 305.0))
-    .curve_to(
-      @vg.Point::Point(425.0, 295.0),
-      @vg.Point::Point(425.0, 280.0),
-      @vg.Point::Point(415.0, 270.0),
-    )
-    .curve_to(
-      @vg.Point::Point(405.0, 260.0),
-      @vg.Point::Point(390.0, 260.0),
-      @vg.Point::Point(380.0, 270.0),
-    )
+    .move_to(Point(380.0, 270.0))
+    .curve_to(Point(370.0, 260.0), Point(355.0, 260.0), Point(345.0, 270.0))
+    .curve_to(Point(335.0, 280.0), Point(335.0, 295.0), Point(345.0, 305.0))
+    .line_to(Point(380.0, 340.0))
+    .line_to(Point(415.0, 305.0))
+    .curve_to(Point(425.0, 295.0), Point(425.0, 280.0), Point(415.0, 270.0))
+    .curve_to(Point(405.0, 260.0), Point(390.0, 260.0), Point(380.0, 270.0))
     .close_path()
   let final_doc = doc
     .render_path(wave_path, @color.magenta())
@@ -301,51 +234,26 @@ test "complete vg library showcase" (it : @test.Test) {
     // Section 5: Text and Typography
     .render_text(
       "Typography Examples",
-      @vg.Point::Point(100.0, 320.0),
+      Point(100.0, 320.0),
       16.0,
       @color.black(),
     )
-    .render_text(
-      "Regular Text",
-      @vg.Point::Point(100.0, 350.0),
-      12.0,
-      @color.black(),
-    )
-    .render_text(
-      "Colored Text",
-      @vg.Point::Point(200.0, 350.0),
-      12.0,
-      @color.blue(),
-    )
-    .render_text(
-      "Large Text",
-      @vg.Point::Point(100.0, 380.0),
-      18.0,
-      @color.green(),
-    )
-    .render_text(
-      "Purple Text",
-      @vg.Point::Point(250.0, 380.0),
-      14.0,
-      @color.purple(),
-    )
+    .render_text("Regular Text", Point(100.0, 350.0), 12.0, @color.black())
+    .render_text("Colored Text", Point(200.0, 350.0), 12.0, @color.blue())
+    .render_text("Large Text", Point(100.0, 380.0), 18.0, @color.green())
+    .render_text("Purple Text", Point(250.0, 380.0), 14.0, @color.purple())
 
     // Footer
-    .render_line(
-      @vg.Point::Point(50.0, 420.0),
-      @vg.Point::Point(550.0, 420.0),
-      @color.gray(0.7),
-      1.0,
-    )
+    .render_line(Point(50.0, 420.0), Point(550.0, 420.0), @color.gray(0.7), 1.0)
     .render_text(
       "Generated by MoonBit VG - Declarative 2D Vector Graphics",
-      @vg.Point::Point(300.0, 450.0),
+      Point(300.0, 450.0),
       12.0,
       @color.gray(0.5),
     )
     .render_text(
       "Snapshot Testing Showcase",
-      @vg.Point::Point(300.0, 470.0),
+      Point(300.0, 470.0),
       10.0,
       @color.gray(0.6),
     )

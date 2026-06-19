@@ -12,4 +12,4 @@ keywords = [ "graphics", "vector", "2d", "svg", "canvas" ]
 
 description = "Declarative 2D vector graphics library for MoonBit"
 
-warnings = "-unused_constructor-struct_never_constructed"
+warnings = "-unused_constructor-struct_never_constructed+unnecessary_annotation"

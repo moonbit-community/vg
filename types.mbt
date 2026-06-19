@@ -38,19 +38,19 @@ pub enum Primitive {
 ///|
 /// Create a circle primitive
 pub fn primitive_circle(center : Point, radius : Double) -> Primitive {
-  Primitive::Circle(center, radius)
+  Circle(center, radius)
 }
 
 ///|
 /// Create a rectangle primitive
 pub fn primitive_rectangle(top_left : Point, bottom_right : Point) -> Primitive {
-  Primitive::Rectangle(top_left, bottom_right)
+  Rectangle(top_left, bottom_right)
 }
 
 ///|
 /// Create a path primitive
 pub fn primitive_path(path : Path) -> Primitive {
-  Primitive::Path(path)
+  Path(path)
 }
 
 ///|
@@ -60,7 +60,7 @@ pub fn primitive_text(
   position : Point,
   size : Double,
 ) -> Primitive {
-  Primitive::Text(text, position, size)
+  Text(text, position, size)
 }
 
 ///|
@@ -76,29 +76,29 @@ pub enum ImageOp {
 ///|
 /// Create a constant color image operation
 pub fn imageop_const(color : Color) -> ImageOp {
-  ImageOp::Const(color)
+  Const(color)
 }
 
 ///|
 /// Create a primitive image operation
 pub fn imageop_primitive(primitive : Primitive, color : Color) -> ImageOp {
-  ImageOp::Primitive(primitive, color)
+  Primitive(primitive, color)
 }
 
 ///|
 /// Create a transform image operation
 pub fn imageop_transform(transform : Transform, image : Image) -> ImageOp {
-  ImageOp::Transform(transform, image)
+  Transform(transform, image)
 }
 
 ///|
 /// Create a compose image operation
 pub fn imageop_compose(image1 : Image, image2 : Image) -> ImageOp {
-  ImageOp::Compose(image1, image2)
+  Compose(image1, image2)
 }
 
 ///|
 /// Create a cut image operation
 pub fn imageop_cut(image : Image, mask : Image) -> ImageOp {
-  ImageOp::Cut(image, mask)
+  Cut(image, mask)
 }

@@ -139,8 +139,8 @@ test "linear gradient" {
   let gradient = @vg.Image::linear_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::Point(-5.0, 0.0),
-    @vg.Point::Point(5.0, 0.0),
+    Point(-5.0, 0.0),
+    Point(5.0, 0.0),
   )
   let left = @vg.Point::Point(-5.0, 0.0) // Should be red
   let right = @vg.Point::Point(5.0, 0.0) // Should be blue
@@ -166,7 +166,7 @@ test "radial gradient" {
   let gradient = @vg.Image::radial_gradient(
     @color.white(),
     @color.black(),
-    @vg.Point::Point(0.0, 0.0),
+    Point(0.0, 0.0),
     5.0,
   )
   let center = @vg.Point::Point(0.0, 0.0) // Should be white
@@ -230,8 +230,8 @@ test "ellipse image" {
 test "polygon image" {
   let triangle_points = [
     @vg.Point::Point(0.0, -2.0),
-    @vg.Point::Point(-2.0, 2.0),
-    @vg.Point::Point(2.0, 2.0),
+    Point(-2.0, 2.0),
+    Point(2.0, 2.0),
   ]
   let triangle_img = @vg.Image::polygon(@color.blue(), triangle_points)
   let inside = @vg.Point::Point(0.0, 0.0) // Inside triangle
@@ -287,33 +287,33 @@ test "gradient images showcase" (it : @test.Test) {
   let horizontal_gradient = @vg.Image::linear_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::Point(-50.0, 0.0),
-    @vg.Point::Point(50.0, 0.0),
+    Point(-50.0, 0.0),
+    Point(50.0, 0.0),
   )
   let vertical_gradient = @vg.Image::linear_gradient(
     @color.green(),
     @color.yellow(),
-    @vg.Point::Point(0.0, -40.0),
-    @vg.Point::Point(0.0, 40.0),
+    Point(0.0, -40.0),
+    Point(0.0, 40.0),
   )
   let diagonal_gradient = @vg.Image::linear_gradient(
     @color.purple(),
     @color.cyan(),
-    @vg.Point::Point(-35.0, -35.0),
-    @vg.Point::Point(35.0, 35.0),
+    Point(-35.0, -35.0),
+    Point(35.0, 35.0),
   )
 
   // Radial gradients
   let radial1 = @vg.Image::radial_gradient(
     @color.white(),
     @color.red(),
-    @vg.Point::Point(0.0, 0.0),
+    Point(0.0, 0.0),
     30.0,
   )
   let radial2 = @vg.Image::radial_gradient(
     @color.yellow(),
     @color.purple(),
-    @vg.Point::Point(0.0, 0.0),
+    Point(0.0, 0.0),
     25.0,
   )
 

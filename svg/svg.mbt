@@ -48,20 +48,20 @@ fn path_to_svg_data(path : @geometry.Path) -> String {
   let mut data = ""
   for segment in path.0 {
     match segment {
-      @geometry.MoveTo(p) => data = data + "M \{point_to_svg(p)} "
-      @geometry.LineTo(p) => data = data + "L \{point_to_svg(p)} "
-      @geometry.CurveTo(cp1, cp2, end) =>
+      MoveTo(p) => data = data + "M \{point_to_svg(p)} "
+      LineTo(p) => data = data + "L \{point_to_svg(p)} "
+      CurveTo(cp1, cp2, end) =>
         data = data +
           "C \{point_to_svg(cp1)} \{point_to_svg(cp2)} \{point_to_svg(end)} "
-      @geometry.QCurveTo(cp, end) =>
+      QCurveTo(cp, end) =>
         data = data + "Q \{point_to_svg(cp)} \{point_to_svg(end)} "
-      @geometry.EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+      EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
         let large_flag = if large_arc { "1" } else { "0" }
         let sweep_flag = if sweep { "1" } else { "0" }
         data = data +
           "A \{rx} \{ry} \{rotation} \{large_flag} \{sweep_flag} \{point_to_svg(end)} "
       }
-      @geometry.Close => data = data + "Z "
+      Close => data = data + "Z "
     }
   }
   data

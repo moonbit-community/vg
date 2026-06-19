@@ -36,13 +36,13 @@ fn path_to_pdf_commands(
   let commands = Array::new()
   for segment in path.0 {
     match segment {
-      @geometry.MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")
-      @geometry.LineTo(p) => commands.push("\{point_to_pdf(p, height)} l")
-      @geometry.CurveTo(cp1, cp2, end) =>
+      MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")
+      LineTo(p) => commands.push("\{point_to_pdf(p, height)} l")
+      CurveTo(cp1, cp2, end) =>
         commands.push(
           "\{point_to_pdf(cp1, height)} \{point_to_pdf(cp2, height)} \{point_to_pdf(end, height)} c",
         )
-      @geometry.QCurveTo(cp, end) => {
+      QCurveTo(cp, end) => {
         // Convert quadratic to cubic Bézier for PDF
         // PDF doesn't support quadratic curves natively
         commands.push("% Quadratic curve converted to cubic")
@@ -50,12 +50,12 @@ fn path_to_pdf_commands(
           "\{point_to_pdf(cp, height)} \{point_to_pdf(cp, height)} \{point_to_pdf(end, height)} c",
         )
       }
-      @geometry.EArcTo(_, _, _, _, _, end) => {
+      EArcTo(_, _, _, _, _, end) => {
         // Simplified arc for PDF - just line to end point
         commands.push("% Elliptical arc simplified")
         commands.push("\{point_to_pdf(end, height)} l")
       }
-      @geometry.Close => commands.push("h") // Close path
+      Close => commands.push("h") // Close path
     }
   }
   commands
@@ -91,53 +91,26 @@ pub fn PdfDocument::render_circle(
   let offset = radius * kappa
   let content = "q\n" + // Save graphics state
     "\{color_to_pdf(color)}\n" +
-    "\{point_to_pdf(@geometry.Point::Point(center.x, center.y - radius), self.height)} m\n" + // Move to top
+    "\{point_to_pdf(Point(center.x, center.y - radius), self.height)} m\n" + // Move to top
     // Four cubic curves to approximate circle
-    "\{point_to_pdf(@geometry.Point::Point(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(@geometry.Point::Point(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(@geometry.Point::Point(center.x + radius, center.y), self.height)} c\n" +
-    point_to_pdf(
-      @geometry.Point::Point(center.x + radius, center.y + offset),
-      self.height,
-    ) +
+    "\{point_to_pdf(Point(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(Point(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(Point(center.x + radius, center.y), self.height)} c\n" +
+    point_to_pdf(Point(center.x + radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::Point(center.x + offset, center.y + radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x + offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::Point(center.x, center.y + radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x, center.y + radius), self.height) +
     " c\n" +
-    point_to_pdf(
-      @geometry.Point::Point(center.x - offset, center.y + radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::Point(center.x - radius, center.y + offset),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::Point(center.x - radius, center.y),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - radius, center.y), self.height) +
     " c\n" +
-    point_to_pdf(
-      @geometry.Point::Point(center.x - radius, center.y - offset),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - radius, center.y - offset), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::Point(center.x - offset, center.y - radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - offset, center.y - radius), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::Point(center.x, center.y - radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x, center.y - radius), self.height) +
     " c\n" +
     "f\n" + // Fill
     "Q" // Restore graphics state
