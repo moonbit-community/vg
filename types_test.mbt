@@ -53,7 +53,6 @@ test "Path construction" {
 
 ///|
 test "PathSegment variants" {
-  // Test using path construction functions instead of direct enum construction
   let path = @vg.Path::empty()
     .move_to(Point(1.0, 2.0))
     .line_to(Point(3.0, 4.0))
@@ -62,8 +61,6 @@ test "PathSegment variants" {
   if path.0.length() != 4 {
     fail("Path should have 4 segments")
   }
-
-  // Test that we can match on the segments
   let segments = path.0
   match segments[0] {
     MoveTo(p) => if p.x != 1.0 || p.y != 2.0 { fail("MoveTo point incorrect") }
@@ -87,178 +84,79 @@ test "PathSegment variants" {
 }
 
 ///|
-test "Primitive constructors and equality" {
-  let center = @vg.Point::Point(5.0, 5.0)
-  let circle = @vg.primitive_circle(center, 10.0)
-
-  // Test circle primitive
-  match circle {
-    Circle(c, r) => {
-      if c.x != 5.0 || c.y != 5.0 {
-        fail("Circle center should be (5.0, 5.0)")
-      }
-      if r != 10.0 {
-        fail("Circle radius should be 10.0")
-      }
-    }
-    _ => fail("Expected Circle primitive")
-  }
-
-  // Test rectangle primitive
-  let top_left = @vg.Point::Point(0.0, 0.0)
-  let bottom_right = @vg.Point::Point(10.0, 10.0)
-  let rect = @vg.primitive_rectangle(top_left, bottom_right)
-  match rect {
-    Rectangle(tl, br) => {
-      if tl.x != 0.0 || tl.y != 0.0 {
-        fail("Rectangle top-left should be (0.0, 0.0)")
-      }
-      if br.x != 10.0 || br.y != 10.0 {
-        fail("Rectangle bottom-right should be (10.0, 10.0)")
-      }
-    }
-    _ => fail("Expected Rectangle primitive")
-  }
-
-  // Test path primitive
-  let path = @vg.Path::empty().move_to(Point(1.0, 1.0)).line_to(Point(2.0, 2.0))
-  let path_prim = @vg.primitive_path(path)
-  match path_prim {
-    Path(p) => if p.0.length() != 2 { fail("Path should have 2 segments") }
-    _ => fail("Expected Path primitive")
-  }
-
-  // Test text primitive
-  let text_pos = @vg.Point::Point(100.0, 200.0)
-  let text_prim = @vg.primitive_text("Hello World", text_pos, 14.0)
-  match text_prim {
-    Text(text, pos, size) => {
-      if text != "Hello World" {
-        fail("Text content should be 'Hello World'")
-      }
-      if pos.x != 100.0 || pos.y != 200.0 {
-        fail("Text position should be (100.0, 200.0)")
-      }
-      if size != 14.0 {
-        fail("Text size should be 14.0")
-      }
-    }
-    _ => fail("Expected Text primitive")
-  }
-
-  // Test equality
-  let circle1 = @vg.primitive_circle(center, 10.0)
-  let circle2 = @vg.primitive_circle(center, 10.0)
-  let circle3 = @vg.primitive_circle(center, 20.0)
-  if circle1 != circle2 {
-    fail("Identical circles should be equal")
-  }
-  if circle1 == circle3 {
-    fail("Different circles should not be equal")
-  }
-}
-
-///|
-test "ImageOp constructors and variants" {
-  // Test constant color operation
+test "Image AST: const colour evaluates to the colour everywhere" {
   let red = @color.red()
-  let const_op = @vg.imageop_const(red)
-  match const_op {
-    Const(_color) => () // Successfully created const operation
-    _ => fail("Expected Const operation")
+  let img = @vg.Image::const_color(red)
+  if img.eval(Point(0.0, 0.0)) != red || img.eval(Point(100.0, -50.0)) != red {
+    fail("const_color should be the colour at every point")
   }
-
-  // Test primitive operation
-  let circle = @vg.primitive_circle(@vg.Point::origin(), 5.0)
-  let blue = @color.blue()
-  let prim_op = @vg.imageop_primitive(circle, blue)
-  match prim_op {
-    Primitive(prim, _color) =>
-      match prim {
-        Circle(center, radius) => {
-          if center.x != 0.0 || center.y != 0.0 {
-            fail("Circle center should be origin")
-          }
-          if radius != 5.0 {
-            fail("Circle radius should be 5.0")
-          }
-        }
-        _ => fail("Expected Circle primitive")
-      }
-    _ => fail("Expected Primitive operation")
-  }
-
-  // Test transform operation
-  let identity_transform = @geometry.identity()
-  let dummy_image = fn(_p) { red }
-  let transform_op = @vg.imageop_transform(identity_transform, dummy_image)
-  match transform_op {
-    Transform(_transform, _image) => () // Successfully created transform operation
-    _ => fail("Expected Transform operation")
-  }
-
-  // Test compose operation
-  let image1 = fn(_p) { red }
-  let image2 = fn(_p) { blue }
-  let compose_op = @vg.imageop_compose(image1, image2)
-  match compose_op {
-    Compose(_img1, _img2) => () // Successfully created compose operation
-    _ => fail("Expected Compose operation")
-  }
-
-  // Test cut operation
-  let mask_image = fn(_p) { @color.gray(0.5) }
-  let cut_op = @vg.imageop_cut(image1, mask_image)
-  match cut_op {
-    Cut(_img, _mask) => () // Successfully created cut operation
-    _ => fail("Expected Cut operation")
+  match img {
+    Primitive(Const(c)) => if c != red { fail("expected Const(red)") }
+    _ => fail("expected Primitive(Const _)")
   }
 }
 
 ///|
-test "Primitive and ImageOp integration" {
-  // Test creating a complex scene using primitives and image operations
-  let red_color = @color.red()
-  let green_color = @color.green()
-  let blue_color = @color.blue()
-
-  // Create primitives
-  let circle = @vg.primitive_circle(Point(50.0, 50.0), 25.0)
-  let rect = @vg.primitive_rectangle(Point(0.0, 0.0), Point(100.0, 20.0))
-  let text = @vg.primitive_text("Test", Point(10.0, 80.0), 12.0)
-
-  // Create image operations
-  let circle_op = @vg.imageop_primitive(circle, red_color)
-  let rect_op = @vg.imageop_primitive(rect, green_color)
-  let text_op = @vg.imageop_primitive(text, blue_color)
-
-  // Verify the operations work correctly
-  match circle_op {
-    Primitive(Circle(center, radius), _color) =>
-      if center.x != 50.0 || center.y != 50.0 || radius != 25.0 {
-        fail("Circle primitive data incorrect")
-      }
-    _ => fail("Expected circle primitive operation")
+test "Image AST: a circle is a path cut from a colour field" {
+  let red = @color.red()
+  let c = @vg.Image::circle(red, 10.0)
+  if c.eval(Point(0.0, 0.0)) != red {
+    fail("centre of the circle should be red")
   }
-  match rect_op {
-    Primitive(Rectangle(tl, br), _color) =>
-      if tl.x != 0.0 || br.x != 100.0 {
-        fail("Rectangle primitive data incorrect")
-      }
-    _ => fail("Expected rectangle primitive operation")
+  if c.eval(Point(100.0, 100.0)).a != 0.0 {
+    fail("outside the circle should be transparent")
   }
-  match text_op {
-    Primitive(Text(content, pos, size), _color) => {
-      if content != "Test" {
-        fail("Text content incorrect")
+  match c {
+    Cut(Anz, _, Primitive(Const(col))) =>
+      if col != red {
+        fail("expected a red fill")
       }
-      if pos.x != 10.0 || pos.y != 80.0 {
-        fail("Text position incorrect")
-      }
-      if size != 12.0 {
-        fail("Text size incorrect")
-      }
-    }
-    _ => fail("Expected text primitive operation")
+    _ => fail("circle should be Cut(Anz, path, Const)")
+  }
+}
+
+///|
+test "Image AST: over compositing" {
+  let red = @color.rgba(1.0, 0.0, 0.0, 1.0)
+  let half_blue = @color.rgba(0.0, 0.0, 1.0, 0.5)
+  let img = @vg.Image::const_color(half_blue).over(@vg.Image::const_color(red))
+  let out = img.eval(Point(0.0, 0.0))
+  if out.a != 1.0 {
+    fail("opaque-over should be opaque")
+  }
+  // half-blue (alpha 0.5) over opaque red is an even 50/50 mix
+  if (out.r - 0.5).abs() > 0.01 || (out.b - 0.5).abs() > 0.01 {
+    fail("half-blue over opaque red should blend to 50/50 red/blue")
+  }
+}
+
+///|
+test "Image AST: a linear gradient evaluates along its axis" {
+  let black = @color.black()
+  let white = @color.white()
+  let g = @vg.Image::linear_gradient(
+    black,
+    white,
+    Point(0.0, 0.0),
+    Point(10.0, 0.0),
+  )
+  let mid = g.eval(Point(5.0, 0.0))
+  if (mid.r - 0.5).abs() > 0.05 {
+    fail("midpoint of a black->white gradient should be ~0.5 grey")
+  }
+  if g.eval(Point(0.0, 0.0)) != black {
+    fail("start of the gradient should be black")
+  }
+}
+
+///|
+test "Image AST: transform relocates the image" {
+  let red = @color.red()
+  let moved = @vg.Image::circle(red, 10.0).translate_img(100.0, 0.0)
+  if moved.eval(Point(100.0, 0.0)) != red {
+    fail("translated circle centre should be red")
+  }
+  if moved.eval(Point(0.0, 0.0)).a != 0.0 {
+    fail("the original centre should now be transparent")
   }
 }
