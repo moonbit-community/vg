@@ -87,17 +87,41 @@ The output is rendered like this
 
 ## Architecture
 
-The library is organized into several modules:
+An `Image` is a declarative tree (faithful to OCaml [Vg](https://github.com/dbuenzli/vg)) — *not* a pixel function:
 
-- **`types.mbt`**: Core type definitions (Point, Color, Transform, etc.)
-- **`color.mbt`**: Color utilities and predefined colors
-- **`point.mbt`**: Point operations and vector math
-- **`transform.mbt`**: 2D transformation matrices
-- **`image.mbt`**: Image combinators and shape primitives
-- **`path.mbt`**: Path construction and manipulation with OO-style API
-- **`svg.mbt`**: SVG rendering backend with fluent document API
-- **`canvas.mbt`**: HTML5 Canvas rendering backend
-- **`pdf.mbt`**: PDF document generation backend
+```mbt nocheck
+///|
+enum Image {
+  Primitive(Primitive) // Const | Axial | Radial | Raster (colour fields)
+  Cut(Area, Path, Image) // clip to a path: non-zero / even-odd / Outline(stroke)
+  Blend(Blender, Double?, Image, Image)
+  Tr(Transform, Image)
+  Text(String, Double, Color)
+}
+```
+
+- **`eval`** (`eval.mbt`) is the *denotation* — the colour at a point (point-in-path, gradient sampling, source-over, stroke distance). It is the raster ground truth and the fallback for procedural `Raster` images.
+- **`to_draw_list`** (`draw.mbt`) folds the tree *once* into a flat, transform-baked `DrawCmd` IR.
+- Each backend interprets that one IR into **compact native vector output**: `Image::to_svg` (`svg_fold.mbt`), `to_pdf` (`pdf_fold.mbt`), and `to_js` for canvas (`canvas_fold.mbt`). A circle is a single `<circle>`/`<path>`, not thousands of sampled rects.
+
+Supporting packages: `geometry` (Point, Path, Transform, Box), `color`, and the `svg`/`pdf`/`canvas` backend document builders.
+
+### Declarative vector rendering
+
+Build an `Image`, then render it to compact native vector output — one element per shape, resolution-independent:
+
+```mbt check
+///|
+test "vector rendering" {
+  let scene = @vg.Image::rectangle(@color.gray(0.95), 200.0, 120.0)
+    .compose(@vg.Image::circle(@color.red(), 40.0).translate_img(-50.0, 0.0))
+    .compose(@vg.Image::circle(@color.blue(), 40.0).translate_img(50.0, 0.0))
+  let svg = scene.to_svg(200.0, 120.0)
+  // each shape is a single <path> element — no grid of sampled <rect>s
+  inspect(svg.contains("<path"), content="true")
+  inspect(svg.contains("<rect"), content="false")
+}
+```
 
 ## Examples
 
