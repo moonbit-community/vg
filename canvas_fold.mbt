@@ -30,11 +30,22 @@ fn canvas_cmd(
   match cmd {
     FillPath(path, paint, area) => {
       canvas_path(path, js)
-      canvas_set_fill(paint, js, id)
-      js.push("ctx.fill('\{canvas_rule(area)}');")
+      match area {
+        Outline(w) => {
+          canvas_set_paint(paint, "strokeStyle", js, id)
+          js.push("ctx.lineWidth = \{w};")
+          js.push("ctx.lineCap = 'round';")
+          js.push("ctx.lineJoin = 'round';")
+          js.push("ctx.stroke();")
+        }
+        _ => {
+          canvas_set_paint(paint, "fillStyle", js, id)
+          js.push("ctx.fill('\{canvas_rule(area)}');")
+        }
+      }
     }
     FillViewport(paint) => {
-      canvas_set_fill(paint, js, id)
+      canvas_set_paint(paint, "fillStyle", js, id)
       js.push("ctx.fillRect(0, 0, \{width}, \{height});")
     }
     RasterCell(x, y, w, h, c) => {
@@ -60,14 +71,21 @@ fn canvas_rule(area : Area) -> String {
   match area {
     Anz => "nonzero"
     Aeo => "evenodd"
+    Outline(_) => "nonzero" // strokes are handled before canvas_rule
   }
 }
 
 ///|
-/// Set `ctx.fillStyle` from a paint, creating a gradient object if needed.
-fn canvas_set_fill(paint : Paint, js : Array[String], id : Array[Int]) -> Unit {
+/// Set `ctx.<prop>` ("fillStyle" or "strokeStyle") from a paint, creating a
+/// gradient object if needed.
+fn canvas_set_paint(
+  paint : Paint,
+  prop : String,
+  js : Array[String],
+  id : Array[Int],
+) -> Unit {
   match paint {
-    Solid(c) => js.push("ctx.fillStyle = '\{canvas_color(c)}';")
+    Solid(c) => js.push("ctx.\{prop} = '\{canvas_color(c)}';")
     Linear(stops, p0, p1) => {
       let g = "grad\{id[0]}"
       id[0] = id[0] + 1
@@ -75,7 +93,7 @@ fn canvas_set_fill(paint : Paint, js : Array[String], id : Array[Int]) -> Unit {
         "const \{g} = ctx.createLinearGradient(\{p0.x}, \{p0.y}, \{p1.x}, \{p1.y});",
       )
       canvas_stops(g, stops, js)
-      js.push("ctx.fillStyle = \{g};")
+      js.push("ctx.\{prop} = \{g};")
     }
     Radial(stops, c, r) => {
       let g = "grad\{id[0]}"
@@ -84,7 +102,7 @@ fn canvas_set_fill(paint : Paint, js : Array[String], id : Array[Int]) -> Unit {
         "const \{g} = ctx.createRadialGradient(\{c.x}, \{c.y}, 0, \{c.x}, \{c.y}, \{r});",
       )
       canvas_stops(g, stops, js)
-      js.push("ctx.fillStyle = \{g};")
+      js.push("ctx.\{prop} = \{g};")
     }
   }
 }

@@ -15,10 +15,19 @@ fn svg_of(cmds : Array[DrawCmd], width : Double, height : Double) -> String {
   let id = [0] // shared counter for gradient/clip ids
   for cmd in cmds {
     match cmd {
-      FillPath(path, paint, area) =>
-        body.write_string(
-          "<path d=\"\{svg_path_d(path)}\" fill=\"\{paint_svg(paint, defs, id)}\" fill-rule=\"\{svg_rule(area)}\"/>",
-        )
+      FillPath(path, paint, area) => {
+        let paint_str = paint_svg(paint, defs, id)
+        match area {
+          Outline(w) =>
+            body.write_string(
+              "<path d=\"\{svg_path_d(path)}\" fill=\"none\" stroke=\"\{paint_str}\" stroke-width=\"\{w}\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+            )
+          _ =>
+            body.write_string(
+              "<path d=\"\{svg_path_d(path)}\" fill=\"\{paint_str}\" fill-rule=\"\{svg_rule(area)}\"/>",
+            )
+        }
+      }
       FillViewport(paint) =>
         body.write_string(
           "<rect x=\"0\" y=\"0\" width=\"\{width}\" height=\"\{height}\" fill=\"\{paint_svg(paint, defs, id)}\"/>",
@@ -58,6 +67,7 @@ fn svg_rule(area : Area) -> String {
   match area {
     Anz => "nonzero"
     Aeo => "evenodd"
+    Outline(_) => "nonzero" // strokes are handled before svg_rule
   }
 }
 

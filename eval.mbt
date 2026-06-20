@@ -114,29 +114,66 @@ fn blend_colors(
 /// exactly on the boundary count as inside (matching the old shape fills).
 fn point_in_path(path : Path, pt : Point, area : Area) -> Bool {
   let subs = flatten_path(path)
-  for poly in subs {
-    if on_boundary(poly, pt) {
-      return true
-    }
-  }
   match area {
-    Aeo => {
-      let mut inside = false
+    // a stroke: within half the width of the path
+    Outline(w) => near_path(subs, pt, w / 2.0)
+    // a fill: boundary counts as inside
+    _ => {
       for poly in subs {
-        if crossings_odd(poly, pt) {
-          inside = !inside
+        if on_boundary(poly, pt) {
+          return true
         }
       }
-      inside
-    }
-    Anz => {
-      let mut wind = 0
-      for poly in subs {
-        wind = wind + winding(poly, pt)
+      match area {
+        Aeo => {
+          let mut inside = false
+          for poly in subs {
+            if crossings_odd(poly, pt) {
+              inside = !inside
+            }
+          }
+          inside
+        }
+        Anz => {
+          let mut wind = 0
+          for poly in subs {
+            wind = wind + winding(poly, pt)
+          }
+          wind != 0
+        }
+        Outline(_) => false
       }
-      wind != 0
     }
   }
+}
+
+///|
+/// Whether `pt` is within `r` of any segment of the (flattened) path.
+fn near_path(subs : Array[Array[Point]], pt : Point, r : Double) -> Bool {
+  for poly in subs {
+    let n = poly.length()
+    for i in 0..<(n - 1) {
+      if dist_point_segment(pt, poly[i], poly[i + 1]) <= r {
+        return true
+      }
+    }
+  }
+  false
+}
+
+///|
+fn dist_point_segment(p : Point, a : Point, b : Point) -> Double {
+  let dx = b.x - a.x
+  let dy = b.y - a.y
+  let len_sq = dx * dx + dy * dy
+  let (cx, cy) = if len_sq == 0.0 {
+    (a.x, a.y)
+  } else {
+    let t0 = ((p.x - a.x) * dx + (p.y - a.y) * dy) / len_sq
+    let t = if t0 < 0.0 { 0.0 } else if t0 > 1.0 { 1.0 } else { t0 }
+    (a.x + t * dx, a.y + t * dy)
+  }
+  ((p.x - cx) * (p.x - cx) + (p.y - cy) * (p.y - cy)).sqrt()
 }
 
 ///|

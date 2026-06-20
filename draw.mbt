@@ -52,7 +52,15 @@ fn fold_into(
     Cut(_, _, Primitive(Raster(_))) | Primitive(Raster(_)) =>
       rasterize_into(img, acc, width, height, cmds)
     Cut(area, path, Primitive(prim)) =>
-      cmds.push(FillPath(path.transform(acc), paint_of(prim, acc), area))
+      cmds.push(
+        FillPath(
+          path.transform(acc),
+          paint_of(prim, acc),
+          scale_area(area, acc),
+        ),
+      )
+    // an outline cut of a non-primitive image: rasterise (stroke-clip is hard)
+    Cut(Outline(_), _, _) => rasterize_into(img, acc, width, height, cmds)
     Cut(area, path, inner) => {
       cmds.push(PushClip(path.transform(acc), area))
       fold_into(inner, acc, width, height, cmds)
@@ -106,6 +114,16 @@ fn rasterize_into(
         cmds.push(RasterCell(cx, cy, sx, sy, c))
       }
     }
+  }
+}
+
+///|
+/// Scale an `Outline` width by the transform's average magnitude (sqrt|det|), so
+/// a native stroke matches `eval` under uniform scales. Fills are unchanged.
+fn scale_area(area : Area, acc : Transform) -> Area {
+  match area {
+    Outline(w) => Outline(w * @geometry.determinant(acc).abs().sqrt())
+    _ => area
   }
 }
 
