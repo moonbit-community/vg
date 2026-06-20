@@ -18,10 +18,16 @@ pub fn Image::empty() -> Image {
 }
 
 ///|
-/// Cut image `img` to the inside of `path` (default non-zero winding). Outside
-/// the path the result is transparent.
+/// Clip `self` to the inside of `path` (default non-zero winding). Outside the
+/// path the result is transparent.
+pub fn Image::cut(self : Image, path : Path, area? : Area = Anz) -> Image {
+  Cut(area, path, self)
+}
+
+///|
+#deprecated("Use `image.cut(path)` instead")
 pub fn cut(path : Path, img : Image, area? : Area = Anz) -> Image {
-  Cut(area, path, img)
+  img.cut(path, area~)
 }
 
 ///|
@@ -31,14 +37,16 @@ pub fn Image::over(self : Image, bottom : Image) -> Image {
 }
 
 ///|
-/// Blend `top` with `bottom` using an explicit operator and optional top alpha.
-pub fn blend(
-  top : Image,
+/// Blend `self` (the top layer) with `bottom` using an explicit operator and an
+/// optional top alpha.
+#as_free_fn(blend, deprecated="Use `top.blend(bottom)` instead")
+pub fn Image::blend(
+  self : Image,
   bottom : Image,
   op? : Blender = Over,
   alpha? : Double,
 ) -> Image {
-  Blend(op, alpha, top, bottom)
+  Blend(op, alpha, self, bottom)
 }
 
 // ----- transforms -----

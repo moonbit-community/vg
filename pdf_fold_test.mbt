@@ -20,9 +20,8 @@ test "pdf fold: rectangle path is y-flipped" {
 
 ///|
 test "pdf fold: even-odd fill uses f*" {
-  let img = @vg.cut(
+  let img = @vg.Image::const_color(@color.blue()).cut(
     @vg.Path::rect(-10.0, -10.0, 20.0, 20.0),
-    @vg.Image::const_color(@color.blue()),
     area=Aeo,
   )
   assert_true(img.to_pdf(50.0, 50.0).contains("f*"))
@@ -30,9 +29,8 @@ test "pdf fold: even-odd fill uses f*" {
 
 ///|
 test "pdf fold: clip emits W n" {
-  let img = @vg.cut(
+  let img = @vg.Image::circle(@color.red(), 5.0).cut(
     @vg.Path::circle(Point(0.0, 0.0), 10.0),
-    @vg.Image::circle(@color.red(), 5.0),
   )
   assert_true(img.to_pdf(50.0, 50.0).contains("W n"))
 }

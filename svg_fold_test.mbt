@@ -25,15 +25,12 @@ test "vector fold: rectangle SVG markup" {
 
 ///|
 test "vector fold: gradient becomes a <defs> entry referenced by fill" {
-  let g = @vg.cut(
-    @vg.Path::rect(-50.0, -50.0, 100.0, 100.0),
-    @vg.Image::linear_gradient(
-      @color.red(),
-      @color.blue(),
-      Point(-50.0, 0.0),
-      Point(50.0, 0.0),
-    ),
-  )
+  let g = @vg.Image::linear_gradient(
+    @color.red(),
+    @color.blue(),
+    Point(-50.0, 0.0),
+    Point(50.0, 0.0),
+  ).cut(@vg.Path::rect(-50.0, -50.0, 100.0, 100.0))
   let svg = g.to_svg(100.0, 100.0)
   assert_true(svg.contains("<linearGradient"))
   assert_true(svg.contains("fill=\"url(#grad0)\""))

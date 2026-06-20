@@ -11,15 +11,12 @@ test "canvas fold: a circle produces a path and fill" {
 
 ///|
 test "canvas fold: gradients are native (createLinearGradient)" {
-  let img = @vg.cut(
-    @vg.Path::rect(-10.0, -10.0, 20.0, 20.0),
-    @vg.Image::linear_gradient(
-      @color.red(),
-      @color.blue(),
-      Point(-10.0, 0.0),
-      Point(10.0, 0.0),
-    ),
-  )
+  let img = @vg.Image::linear_gradient(
+    @color.red(),
+    @color.blue(),
+    Point(-10.0, 0.0),
+    Point(10.0, 0.0),
+  ).cut(@vg.Path::rect(-10.0, -10.0, 20.0, 20.0))
   let js = img.to_js(50.0, 50.0)
   assert_true(js.contains("ctx.createLinearGradient("))
   assert_true(js.contains(".addColorStop("))
@@ -27,9 +24,8 @@ test "canvas fold: gradients are native (createLinearGradient)" {
 
 ///|
 test "canvas fold: clip uses save/clip/restore" {
-  let img = @vg.cut(
+  let img = @vg.Image::circle(@color.red(), 5.0).cut(
     @vg.Path::circle(Point(0.0, 0.0), 10.0),
-    @vg.Image::circle(@color.red(), 5.0),
   )
   let js = img.to_js(50.0, 50.0)
   assert_true(js.contains("ctx.save();"))
@@ -39,9 +35,8 @@ test "canvas fold: clip uses save/clip/restore" {
 
 ///|
 test "canvas fold: even-odd fill rule" {
-  let img = @vg.cut(
+  let img = @vg.Image::const_color(@color.blue()).cut(
     @vg.Path::rect(-10.0, -10.0, 20.0, 20.0),
-    @vg.Image::const_color(@color.blue()),
     area=Aeo,
   )
   assert_true(img.to_js(50.0, 50.0).contains("ctx.fill('evenodd');"))
@@ -53,7 +48,7 @@ test "elliptical arc renders consistently across backends" {
     .move_to(Point(-20.0, 0.0))
     .earc_to(20.0, 20.0, 0.0, false, true, Point(20.0, 0.0))
     .close_path()
-  let img = @vg.cut(arc, @vg.Image::const_color(@color.red()))
+  let img = @vg.Image::const_color(@color.red()).cut(arc)
   // SVG keeps the native arc; canvas/eval flatten it (not a chord)
   assert_true(img.to_svg(60.0, 60.0).contains("A 20 20"))
   assert_true(img.to_js(60.0, 60.0).contains("ctx.lineTo"))
