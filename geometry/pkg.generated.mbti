@@ -40,7 +40,7 @@ pub struct Box {
   max_y : Double
 } derive(Eq, @debug.Debug)
 
-pub struct Path(Array[PathSegment]) derive(Eq, @debug.Debug)
+pub(all) struct Path(Array[PathSegment]) derive(Eq, @debug.Debug)
 pub fn Path::bounds(Self) -> Box?
 pub fn Path::circle(Point, Double) -> Self
 pub fn Path::close_path(Self) -> Self
@@ -56,7 +56,7 @@ pub fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
 pub fn Path::smooth_qcurve_to(Self, Point) -> Self
 pub fn Path::transform(Self, Transform) -> Self
 
-pub enum PathSegment {
+pub(all) enum PathSegment {
   MoveTo(Point)
   LineTo(Point)
   CurveTo(Point, Point, Point)

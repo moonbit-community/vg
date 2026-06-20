@@ -20,7 +20,7 @@ pub struct Box {
 
 ///|
 /// Path segment types
-pub enum PathSegment {
+pub(all) enum PathSegment {
   MoveTo(Point)
   LineTo(Point)
   CurveTo(Point, Point, Point) // control1, control2, end (cubic Bézier)
@@ -30,8 +30,9 @@ pub enum PathSegment {
 } derive(Eq, Debug)
 
 ///|
-/// A path is a sequence of segments
-pub struct Path(Array[PathSegment]) derive(Eq, Debug)
+/// A path is a sequence of segments. `pub(all)` so downstream packages can build
+/// a segment array in one pass instead of through the copying builders.
+pub(all) struct Path(Array[PathSegment]) derive(Eq, Debug)
 
 ///|
 /// 2D transformation matrix
