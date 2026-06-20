@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "bobzhang/vg/turtle"
+
+import {
+  "bobzhang/vg",
+  "bobzhang/vg/color",
+  "bobzhang/vg/geometry",
+}
+
+// Values
+pub fn render(String, angle~ : Double, step? : Double, start? : @geometry.Point, heading? : Double, color? : @color.Color, thickness? : Double) -> @vg.Image
+
+// Errors
+
+// Types and methods
+pub struct LSystem {
+  axiom : String
+  rules : Map[Char, String]
+}
+pub fn LSystem::expand(Self, Int) -> String
+pub fn LSystem::new(String, Array[(Char, String)]) -> Self
+
+// Type aliases
+
+// Traits
+
