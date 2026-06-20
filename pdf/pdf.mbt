@@ -64,6 +64,15 @@ fn path_to_pdf_commands(
 // ===== OBJECT-ORIENTED API METHODS =====
 
 ///|
+/// Append a raw content-stream fragment (used by the vector fold).
+pub fn PdfDocument::add_raw(
+  self : PdfDocument,
+  content : String,
+) -> PdfDocument {
+  self.add_object(content)
+}
+
+///|
 /// Add an object to the PDF document (OO-style)
 fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
   let new_objects = Array::new()
