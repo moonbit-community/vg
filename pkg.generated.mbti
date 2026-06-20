@@ -18,6 +18,7 @@ pub fn cut(@geometry.Path, Image, area? : Area) -> Image
 pub(all) enum Area {
   Anz
   Aeo
+  Outline(Double)
 } derive(Eq, @debug.Debug)
 
 pub(all) enum Blender {

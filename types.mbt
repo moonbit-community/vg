@@ -34,10 +34,12 @@ pub(all) enum Primitive {
 }
 
 ///|
-/// Fill rule used when cutting an image with a path.
+/// How a path delimits an area when cutting an image: a non-zero or even-odd
+/// fill of its interior, or a stroke of its outline with the given width.
 pub(all) enum Area {
-  Anz // non-zero winding
-  Aeo // even-odd
+  Anz // non-zero winding fill
+  Aeo // even-odd fill
+  Outline(Double) // stroke the path with this width
 } derive(Eq, Debug)
 
 ///|

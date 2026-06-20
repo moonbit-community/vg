@@ -29,12 +29,24 @@ fn pdf_cmd(
   match cmd {
     // a fully transparent fill paints nothing (this basic backend renders
     // partial alpha as opaque)
-    FillPath(path, paint, area) =>
-      if paint_color(paint).a > 0.0 {
-        sb.write_string("q\n\{pdf_fill_color(paint)}\n")
-        sb.write_string(pdf_path(path, height))
-        sb.write_string("\{pdf_fill_op(area)}\nQ\n")
+    FillPath(path, paint, area) => {
+      let c = paint_color(paint)
+      if c.a > 0.0 {
+        match area {
+          // stroke the outline with width w (round caps/joins)
+          Outline(w) => {
+            sb.write_string("q\n\{c.r} \{c.g} \{c.b} RG\n\{w} w\n1 J\n1 j\n")
+            sb.write_string(pdf_path(path, height))
+            sb.write_string("S\nQ\n")
+          }
+          _ => {
+            sb.write_string("q\n\{pdf_color(c)}\n")
+            sb.write_string(pdf_path(path, height))
+            sb.write_string("\{pdf_fill_op(area)}\nQ\n")
+          }
+        }
       }
+    }
     FillViewport(paint) =>
       // an infinite colour field fills the whole page
       if paint_color(paint).a > 0.0 {
@@ -53,6 +65,7 @@ fn pdf_cmd(
       let clip = match area {
         Anz => "W n"
         Aeo => "W* n"
+        Outline(_) => "W n" // outline cuts are stroked/rasterised, not clipped
       }
       sb.write_string("q\n\{pdf_path(path, height)}\{clip}\n")
     }
@@ -68,6 +81,7 @@ fn pdf_fill_op(area : Area) -> String {
   match area {
     Anz => "f"
     Aeo => "f*"
+    Outline(_) => "f" // strokes are handled before pdf_fill_op
   }
 }
 

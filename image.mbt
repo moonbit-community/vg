@@ -109,29 +109,16 @@ pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
 }
 
 ///|
-/// A straight line segment of the given thickness, as a filled quad.
+/// A straight line segment stroked with the given thickness (round caps). A
+/// zero-length segment renders as a dot.
 pub fn Image::line(
   color : Color,
   start : Point,
   end : Point,
   thickness : Double,
 ) -> Image {
-  let dx = end.x - start.x
-  let dy = end.y - start.y
-  let len = (dx * dx + dy * dy).sqrt()
-  // a zero-length thick segment still renders as a dot
-  guard len > 0.0 else {
-    Cut(Anz, Path::circle(start, thickness / 2.0), Primitive(Const(color)))
-  }
-  let nx = -dy / len * thickness / 2.0
-  let ny = dx / len * thickness / 2.0
-  let pts = [
-    Point(start.x + nx, start.y + ny),
-    Point(end.x + nx, end.y + ny),
-    Point(end.x - nx, end.y - ny),
-    Point(start.x - nx, start.y - ny),
-  ]
-  Cut(Anz, polygon_path(pts), Primitive(Const(color)))
+  let path = Path::empty().move_to(start).line_to(end)
+  Cut(Outline(thickness), path, Primitive(Const(color)))
 }
 
 ///|
