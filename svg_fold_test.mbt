@@ -18,7 +18,8 @@ test "vector fold: rectangle SVG markup" {
     svg,
     content=(
       #|<?xml version="1.0" encoding="UTF-8"?>
-      #|<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><g transform="translate(100,100)"><path d="M -50,-30 L 50,-30 L 50,30 L -50,30 Z" fill="#FF0000" fill-rule="nonzero"/></g></svg>
+      #|<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M 50,70 L 150,70 L 150,130 L 50,130 Z" fill="#FF0000" fill-rule="nonzero"/></svg>
+
     ),
   )
 }
@@ -40,11 +41,20 @@ test "vector fold: gradient becomes a <defs> entry referenced by fill" {
 }
 
 ///|
-test "vector fold: transform becomes a <g matrix>" {
-  let svg = @vg.Image::circle(@color.red(), 10.0)
-    .translate_img(20.0, 0.0)
+test "vector fold: transforms bake into coordinates" {
+  // a 20x20 rect translated by (30,0); origin is centred at (50,50), so the
+  // rect spans canvas x in [70,90], y in [40,60]. No <g transform> wrappers.
+  let svg = @vg.Image::rectangle(@color.red(), 20.0, 20.0)
+    .translate_img(30.0, 0.0)
     .to_svg(100.0, 100.0)
-  assert_true(svg.contains("<g transform=\"matrix(1,0,0,1,20,0)\">"))
+  assert_true(!svg.contains("<g transform"))
+  inspect(
+    svg,
+    content=(
+      #|<?xml version="1.0" encoding="UTF-8"?>
+      #|<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M 70,40 L 90,40 L 90,60 L 70,60 Z" fill="#FF0000" fill-rule="nonzero"/></svg>
+    ),
+  )
 }
 
 ///|
