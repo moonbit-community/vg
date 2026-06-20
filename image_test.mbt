@@ -34,8 +34,6 @@ test "circle image" {
     (circle_img.eval(Point(3.0, 0.0)), circle_img.eval(Point(10.0, 0.0))),
     content=(
       #|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-
-
     ),
   )
 }
@@ -48,8 +46,6 @@ test "rectangle image" {
     (rect_img.eval(Point(2.0, 1.0)), rect_img.eval(Point(8.0, 1.0))),
     content=(
       #|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-
-
     ),
   )
 }
@@ -62,8 +58,6 @@ test "image translation" {
     (translated.eval(Point(0.0, 0.0)), translated.eval(Point(5.0, 0.0))),
     content=(
       #|({ r: 0, g: 0, b: 0, a: 0 }, { r: 1, g: 0, b: 0, a: 1 })
-
-
     ),
   )
 }
@@ -101,8 +95,6 @@ test "image composition is source-over" {
       #|  { r: 0, g: 0, b: 1, a: 1 },
       #|  { r: 0, g: 0, b: 1, a: 1 },
       #|)
-
-
     ),
   )
 }
@@ -118,8 +110,6 @@ test "path cut" {
     (img.eval(Point(0.0, 0.0)), img.eval(Point(8.0, 0.0))),
     content=(
       #|({ r: 1, g: 0, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-
-
     ),
   )
 }
@@ -182,8 +172,6 @@ test "ellipse image" {
     (ellipse_img.eval(Point(2.0, 1.0)), ellipse_img.eval(Point(5.0, 0.0))),
     content=(
       #|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-
-
     ),
   )
 }
@@ -201,8 +189,6 @@ test "polygon image" {
     (triangle_img.eval(Point(0.0, 0.0)), triangle_img.eval(Point(0.0, -3.0))),
     content=(
       #|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-
-
     ),
   )
 }
@@ -222,8 +208,12 @@ test "opacity application" {
 test "path boundary samples count as inside" {
   // (5,0) is exactly on the r=5 circle boundary -> filled, not transparent
   let c = @vg.Image::circle(@color.red(), 5.0)
-  debug_inspect(c.eval(Point(5.0, 0.0)), content=(#|{ r: 1, g: 0, b: 0, a: 1 }
-  ))
+  debug_inspect(
+    c.eval(Point(5.0, 0.0)),
+    content=(
+      #|{ r: 1, g: 0, b: 0, a: 1 }
+    ),
+  )
 }
 
 ///|
@@ -235,8 +225,12 @@ test "plus blend respects top opacity" {
     op=Plus,
     alpha=0.0,
   )
-  debug_inspect(faded.eval(Point(0.0, 0.0)), content=(#|{ r: 0, g: 0, b: 0, a: 1 }
-  ))
+  debug_inspect(
+    faded.eval(Point(0.0, 0.0)),
+    content=(
+      #|{ r: 0, g: 0, b: 0, a: 1 }
+    ),
+  )
 }
 
 ///|

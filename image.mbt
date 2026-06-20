@@ -202,15 +202,16 @@ pub fn Image::render_image_to_svg(
   samples : Int,
 ) -> String {
   let mut doc = @svg.new_svg(width, height)
-  let step = width / samples.to_double()
+  let step_x = width / samples.to_double()
+  let step_y = height / samples.to_double()
   for i in 0..<samples {
     for j in 0..<samples {
-      let x = i.to_double() * step
-      let y = j.to_double() * step
+      let x = i.to_double() * step_x
+      let y = j.to_double() * step_y
       let p = Point(x - width / 2.0, y - height / 2.0)
       let color = self.eval(p)
       if color.a > 0.0 {
-        doc = doc.render_rectangle(x, y, step, step, color)
+        doc = doc.render_rectangle(x, y, step_x, step_y, color)
       }
     }
   }
