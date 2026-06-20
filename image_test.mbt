@@ -101,9 +101,8 @@ test "image composition is source-over" {
 
 ///|
 test "path cut" {
-  let img = @vg.cut(
+  let img = @vg.Image::const_color(@color.red()).cut(
     @vg.Path::circle(Point(0.0, 0.0), 3.0),
-    @vg.Image::const_color(@color.red()),
   )
   // inside the cut path, then outside
   debug_inspect(
@@ -219,8 +218,7 @@ test "path boundary samples count as inside" {
 ///|
 test "plus blend respects top opacity" {
   // a fully-transparent top adds nothing under Plus -> the black bottom shows
-  let faded = @vg.blend(
-    @vg.Image::const_color(@color.red()),
+  let faded = @vg.Image::const_color(@color.red()).blend(
     @vg.Image::const_color(@color.black()),
     op=Plus,
     alpha=0.0,

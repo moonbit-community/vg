@@ -102,15 +102,12 @@ centre is offset up-left, giving a lit-from-above look.
 ///|
 test "demo: glossy spheres" (it : @test.Test) {
   fn sphere(cx : Double, cy : Double, r : Double, hue : Double) -> @vg.Image {
-    @vg.cut(
-      @vg.Path::circle(Point(cx, cy), r),
-      @vg.Image::radial_gradient(
-        @color.white(),
-        @color.hsv(hue, 0.9, 0.6),
-        Point(cx - r * 0.35, cy - r * 0.35),
-        r * 1.45,
-      ),
-    )
+    @vg.Image::radial_gradient(
+      @color.white(),
+      @color.hsv(hue, 0.9, 0.6),
+      Point(cx - r * 0.35, cy - r * 0.35),
+      r * 1.45,
+    ).cut(@vg.Path::circle(Point(cx, cy), r))
   }
 
   let bg = @vg.Image::linear_gradient(
@@ -139,15 +136,12 @@ centre by a transform.
 ```mbt check
 ///|
 test "demo: gradient mandala" (it : @test.Test) {
-  let petal = @vg.cut(
-    @vg.Path::ellipse(Point(0.0, -70.0), 20.0, 58.0),
-    @vg.Image::linear_gradient(
-      @color.hsv(285.0, 0.85, 1.0),
-      @color.hsv(185.0, 0.9, 1.0),
-      Point(0.0, -128.0),
-      Point(0.0, -12.0),
-    ),
-  )
+  let petal = @vg.Image::linear_gradient(
+    @color.hsv(285.0, 0.85, 1.0),
+    @color.hsv(185.0, 0.9, 1.0),
+    Point(0.0, -128.0),
+    Point(0.0, -12.0),
+  ).cut(@vg.Path::ellipse(Point(0.0, -70.0), 20.0, 58.0))
   let two_pi = 2.0 * 3.14159265358979
   let mut art = @vg.Image::const_color(@color.rgb(0.07, 0.05, 0.12))
   for i in 0..<16 {
