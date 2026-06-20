@@ -47,6 +47,10 @@ fn svg_of(cmds : Array[DrawCmd], width : Double, height : Double) -> String {
       PopClip => body.write_string("</g>")
       PushOpacity(a) => body.write_string("<g opacity=\"\{a}\">")
       PopOpacity => body.write_string("</g>")
+      DrawText(content, x, y, size, color) =>
+        body.write_string(
+          "<text x=\"\{x}\" y=\"\{y}\" font-size=\"\{size}\" font-family=\"Arial, sans-serif\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"\{svg_color(color)}\">\{svg_xml_escape(content)}</text>",
+        )
     }
   }
   let defs_str = defs.to_string()
@@ -143,4 +147,23 @@ fn svg_path_d(path : Path) -> String {
     }
   }
   parts.join(" ")
+}
+
+///|
+/// Escape text for XML content/attributes.
+fn svg_xml_escape(s : String) -> String {
+  let parts : Array[String] = []
+  for ch in s {
+    parts.push(
+      match ch {
+        '&' => "&amp;"
+        '<' => "&lt;"
+        '>' => "&gt;"
+        '"' => "&quot;"
+        '\'' => "&apos;"
+        _ => ch.to_string()
+      },
+    )
+  }
+  parts.join("")
 }

@@ -23,6 +23,7 @@ pub(all) enum DrawCmd {
   PopClip
   PushOpacity(Double)
   PopOpacity
+  DrawText(String, Double, Double, Double, Color) // content, x, y, size, colour
 } derive(Eq, Debug)
 
 ///|
@@ -88,6 +89,12 @@ fn fold_into(
     // operators other than source-over have no faithful native form: rasterise
     Blend(_, _, _, _) => rasterize_into(img, acc, width, height, cmds)
     Primitive(prim) => cmds.push(FillViewport(paint_of(prim, acc)))
+    // text is anchored at the origin, baked through `acc`; size scales with it
+    Text(content, size, color) => {
+      let p = @geometry.apply(acc, Point(0.0, 0.0))
+      let s = size * @geometry.determinant(acc).abs().sqrt()
+      cmds.push(DrawText(content, p.x, p.y, s, color))
+    }
   }
 }
 

@@ -73,7 +73,33 @@ fn pdf_cmd(
     // group opacity is not expressed by this basic backend; keep q/Q balanced
     PushOpacity(_) => sb.write_string("q\n")
     PopOpacity => sb.write_string("Q\n")
+    DrawText(content, x, y, size, color) => {
+      // approximate centre alignment to match SVG/canvas (Helvetica is ~0.5em
+      // per glyph; vertical centre ~0.35em above the baseline)
+      let tx = x - content.length().to_double() * size * 0.5 / 2.0
+      let ty = height - y - size * 0.35
+      sb.write_string(
+        "q\nBT\n/F1 \{size} Tf\n\{color.r} \{color.g} \{color.b} rg\n\{tx} \{ty} Td\n(\{pdf_text_escape(content)}) Tj\nET\nQ\n",
+      )
+    }
   }
+}
+
+///|
+/// Escape a string for a PDF literal string `( ... )`.
+fn pdf_text_escape(s : String) -> String {
+  let parts : Array[String] = []
+  for ch in s {
+    parts.push(
+      match ch {
+        '\\' => "\\\\"
+        '(' => "\\("
+        ')' => "\\)"
+        _ => ch.to_string()
+      },
+    )
+  }
+  parts.join("")
 }
 
 ///|

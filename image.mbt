@@ -262,3 +262,13 @@ pub fn Image::conic_gradient(
     @color.lerp_color(color1, color2, normalized / two_pi)
   })
 }
+
+// ----- text (draw-only) -----
+
+///|
+/// A text label anchored at the origin (centre-aligned). Position it with
+/// transforms. Text is draw-only: `eval` is transparent for it, but the
+/// SVG/PDF/canvas backends render it.
+pub fn Image::text(content : String, size : Double, color : Color) -> Image {
+  Text(content, size, color)
+}
