@@ -64,4 +64,6 @@ pub(all) enum Image {
   Cut(Area, Path, Image)
   Blend(Blender, Double?, Image, Image) // operator, alpha, top, bottom
   Tr(Transform, Image)
+  // text anchored at the origin; draw-only (eval is transparent for it)
+  Text(String, Double, Color) // content, size, colour
 }

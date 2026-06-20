@@ -63,7 +63,30 @@ fn canvas_cmd(
       js.push("ctx.globalAlpha = \{a};")
     }
     PopOpacity => js.push("ctx.restore();")
+    DrawText(content, x, y, size, color) => {
+      js.push("ctx.font = '\{size}px Arial, sans-serif';")
+      js.push("ctx.fillStyle = '\{canvas_color(color)}';")
+      js.push("ctx.textAlign = 'center';")
+      js.push("ctx.textBaseline = 'middle';")
+      js.push("ctx.fillText('\{js_text_escape(content)}', \{x}, \{y});")
+    }
   }
+}
+
+///|
+/// Escape a string for a single-quoted JavaScript literal.
+fn js_text_escape(s : String) -> String {
+  let parts : Array[String] = []
+  for ch in s {
+    parts.push(
+      match ch {
+        '\\' => "\\\\"
+        '\'' => "\\'"
+        _ => ch.to_string()
+      },
+    )
+  }
+  parts.join("")
 }
 
 ///|

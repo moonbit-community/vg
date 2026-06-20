@@ -39,6 +39,7 @@ pub(all) enum DrawCmd {
   PopClip
   PushOpacity(Double)
   PopOpacity
+  DrawText(String, Double, Double, Double, @color.Color)
 } derive(Eq, @debug.Debug)
 
 pub(all) enum Image {
@@ -46,6 +47,7 @@ pub(all) enum Image {
   Cut(Area, @geometry.Path, Image)
   Blend(Blender, Double?, Image, Image)
   Tr(@geometry.Transform, Image)
+  Text(String, Double, @color.Color)
 }
 pub fn Image::axial_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
 pub fn Image::checkerboard(@color.Color, @color.Color, Double) -> Self
@@ -66,6 +68,7 @@ pub fn Image::rectangle(@color.Color, Double, Double) -> Self
 pub fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
 pub fn Image::rotate(Self, Double) -> Self
 pub fn Image::scale(Self, Double, Double) -> Self
+pub fn Image::text(String, Double, @color.Color) -> Self
 pub fn Image::tile(Self, Double, Double) -> Self
 pub fn Image::to_draw_list(Self, Double, Double) -> Array[DrawCmd]
 pub fn Image::to_js(Self, Double, Double) -> String

@@ -9,6 +9,8 @@
 /// The colour of image `self` at point `pt`.
 pub fn Image::eval(self : Image, pt : Point) -> Color {
   match self {
+    // text is draw-only: it has no point -> colour denotation
+    Text(_, _, _) => @color.transparent()
     Primitive(prim) => eval_primitive(prim, pt)
     Cut(area, path, img) =>
       if point_in_path(path, pt, area) {
