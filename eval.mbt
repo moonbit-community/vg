@@ -30,6 +30,7 @@ pub fn Image::eval(self : Image, pt : Point) -> Color {
 fn eval_primitive(prim : Primitive, pt : Point) -> Color {
   match prim {
     Const(c) => c
+    Raster(f) => f(pt)
     Axial(stops, p0, p1) => {
       let dx = p1.x - p0.x
       let dy = p1.y - p0.y

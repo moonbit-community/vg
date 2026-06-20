@@ -217,3 +217,61 @@ pub fn Image::render_image_to_svg(
   }
   doc.to_string()
 }
+
+// ----- procedural images (a Raster colour field sampled by eval) -----
+
+///|
+/// An image from an arbitrary point -> colour function.
+pub fn Image::of_fn(f : (Point) -> Color) -> Image {
+  Primitive(Raster(f))
+}
+
+///|
+/// A checkerboard of two colours with the given cell `size`.
+pub fn Image::checkerboard(
+  color1 : Color,
+  color2 : Color,
+  size : Double,
+) -> Image {
+  Image::of_fn(fn(p) {
+    let x_cell = (p.x / size).floor().to_int()
+    let y_cell = (p.y / size).floor().to_int()
+    if (x_cell + y_cell) % 2 == 0 {
+      color1
+    } else {
+      color2
+    }
+  })
+}
+
+///|
+/// Tile `self` into `tile_width` x `tile_height` cells.
+pub fn Image::tile(
+  self : Image,
+  tile_width : Double,
+  tile_height : Double,
+) -> Image {
+  Image::of_fn(fn(p) {
+    let tx = p.x % tile_width
+    let ty = p.y % tile_height
+    let nx = if tx < 0.0 { tx + tile_width } else { tx }
+    let ny = if ty < 0.0 { ty + tile_height } else { ty }
+    self.eval(Point(nx - tile_width / 2.0, ny - tile_height / 2.0))
+  })
+}
+
+///|
+/// An angular (conic) gradient around `center`, starting at `start_angle`.
+pub fn Image::conic_gradient(
+  color1 : Color,
+  color2 : Color,
+  center : Point,
+  start_angle : Double,
+) -> Image {
+  Image::of_fn(fn(p) {
+    let two_pi = 2.0 * 3.14159265358979
+    let angle = @math.atan2(p.y - center.y, p.x - center.x)
+    let normalized = ((angle - start_angle) % two_pi + two_pi) % two_pi
+    @color.lerp_color(color1, color2, normalized / two_pi)
+  })
+}

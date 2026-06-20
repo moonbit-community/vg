@@ -19,6 +19,7 @@ pub struct PdfDocument {
   object_count : Int
 } derive(@debug.Debug)
 pub fn PdfDocument::PdfDocument(Double, Double) -> Self
+pub fn PdfDocument::add_raw(Self, String) -> Self
 pub fn PdfDocument::render_circle(Self, @geometry.Point, Double, @color.Color) -> Self
 pub fn PdfDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.Color, Double) -> Self
 pub fn PdfDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
