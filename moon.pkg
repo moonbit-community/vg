@@ -3,11 +3,11 @@ import {
   "bobzhang/vg/color",
   "bobzhang/vg/svg",
   "bobzhang/vg/pdf",
+  "bobzhang/vg/canvas",
   "moonbitlang/core/math",
 }
 
 import {
-  "bobzhang/vg/canvas",
   "moonbitlang/core/test",
 } for "test"
 

@@ -101,22 +101,42 @@ fn avg_stops(stops : Array[Stop]) -> Color {
 /// A (baked) path as PDF path-construction operators, with y flipped.
 fn pdf_path(path : Path, height : Double) -> String {
   let parts : Array[String] = []
+  let mut cur = Point(0.0, 0.0)
+  let mut start = Point(0.0, 0.0)
   for seg in path.0 {
     match seg {
-      MoveTo(p) => parts.push("\{p.x} \{height - p.y} m")
-      LineTo(p) => parts.push("\{p.x} \{height - p.y} l")
-      CurveTo(c1, c2, e) =>
+      MoveTo(p) => {
+        parts.push("\{p.x} \{height - p.y} m")
+        cur = p
+        start = p
+      }
+      LineTo(p) => {
+        parts.push("\{p.x} \{height - p.y} l")
+        cur = p
+      }
+      CurveTo(c1, c2, e) => {
         parts.push(
           "\{c1.x} \{height - c1.y} \{c2.x} \{height - c2.y} \{e.x} \{height - e.y} c",
         )
+        cur = e
+      }
       // quadratic -> cubic by repeating the control point (approximation)
-      QCurveTo(c, e) =>
+      QCurveTo(c, e) => {
         parts.push(
           "\{c.x} \{height - c.y} \{c.x} \{height - c.y} \{e.x} \{height - e.y} c",
         )
-      // arcs are approximated by a straight line to the endpoint
-      EArcTo(_, _, _, _, _, e) => parts.push("\{e.x} \{height - e.y} l")
-      Close => parts.push("h")
+        cur = e
+      }
+      EArcTo(rx, ry, rot, la, sw, e) => {
+        for pt in flatten_arc(cur, rx, ry, rot, la, sw, e) {
+          parts.push("\{pt.x} \{height - pt.y} l")
+        }
+        cur = e
+      }
+      Close => {
+        parts.push("h")
+        cur = start
+      }
     }
   }
   parts.join("\n") + "\n"

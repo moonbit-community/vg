@@ -192,9 +192,10 @@ fn flatten_path(path : Path) -> Array[Array[Point]] {
         flatten_quad(current, cur, c, e)
         cur = e
       }
-      // Arcs are approximated by a straight chord in the raster semantics.
-      EArcTo(_, _, _, _, _, e) => {
-        current.push(e)
+      EArcTo(rx, ry, rot, la, sw, e) => {
+        for pt in flatten_arc(cur, rx, ry, rot, la, sw, e) {
+          current.push(pt)
+        }
         cur = e
       }
       Close => {
