@@ -17,82 +17,48 @@ pub using @geometry {
 pub using @color {type Color}
 
 ///|
-/// An image is a function from points to colors
-pub(all) struct Image((Point) -> Color)
-
-///|
-/// Primitive shapes (reserved for future rendering backends)
-pub enum Primitive {
-  Circle(Point, Double) // center, radius
-  Rectangle(Point, Point) // top-left, bottom-right
-  Path(Path)
-  Text(String, Point, Double) // text, position, size
+/// A gradient colour stop: `offset` in [0, 1] paired with a `color`.
+pub struct Stop {
+  offset : Double
+  color : Color
 } derive(Eq, Debug)
 
 ///|
-/// Create a circle primitive
-pub fn primitive_circle(center : Point, radius : Double) -> Primitive {
-  Circle(center, radius)
-}
-
-///|
-/// Create a rectangle primitive
-pub fn primitive_rectangle(top_left : Point, bottom_right : Point) -> Primitive {
-  Rectangle(top_left, bottom_right)
-}
-
-///|
-/// Create a path primitive
-pub fn primitive_path(path : Path) -> Primitive {
-  Path(path)
-}
-
-///|
-/// Create a text primitive
-pub fn primitive_text(
-  text : String,
-  position : Point,
-  size : Double,
-) -> Primitive {
-  Text(text, position, size)
-}
-
-///|
-/// Image operations for declarative composition (reserved for future optimization)
-pub enum ImageOp {
+/// A *primitive* is an infinite colour field. Concrete shapes are obtained by
+/// cutting a primitive with a path (see `Cut`). Mirrors `Vg`'s `primitive`.
+pub enum Primitive {
   Const(Color)
-  Primitive(Primitive, Color)
-  Transform(Transform, Image)
-  Compose(Image, Image)
-  Cut(Image, Image) // Cut first image with second as mask
-}
+  Axial(Array[Stop], Point, Point) // stops, p0, p1 (linear gradient axis)
+  Radial(Array[Stop], Point, Point, Double) // stops, focus, centre, radius
+} derive(Eq, Debug)
 
 ///|
-/// Create a constant color image operation
-pub fn imageop_const(color : Color) -> ImageOp {
-  Const(color)
-}
+/// Fill rule used when cutting an image with a path.
+pub enum Area {
+  Anz // non-zero winding
+  Aeo // even-odd
+} derive(Eq, Debug)
 
 ///|
-/// Create a primitive image operation
-pub fn imageop_primitive(primitive : Primitive, color : Color) -> ImageOp {
-  Primitive(primitive, color)
-}
+/// Compositing operator for `Blend`.
+pub enum Blender {
+  Over
+  Plus
+  Copy
+  In
+  Out
+  Atop
+  Xor
+} derive(Eq, Debug)
 
 ///|
-/// Create a transform image operation
-pub fn imageop_transform(transform : Transform, image : Image) -> ImageOp {
-  Transform(transform, image)
-}
-
-///|
-/// Create a compose image operation
-pub fn imageop_compose(image1 : Image, image2 : Image) -> ImageOp {
-  Compose(image1, image2)
-}
-
-///|
-/// Create a cut image operation
-pub fn imageop_cut(image : Image, mask : Image) -> ImageOp {
-  Cut(image, mask)
-}
+/// An image is a declarative value. Its *denotation* is a function from points
+/// of the plane to colours (see `Image::eval`), but it is *represented* as a
+/// tree so that backends can render it as native, compact vector graphics.
+/// Mirrors `Vg.image`.
+pub enum Image {
+  Primitive(Primitive)
+  Cut(Area, Path, Image)
+  Blend(Blender, Double?, Image, Image) // operator, alpha, top, bottom
+  Tr(Transform, Image)
+} derive(Eq, Debug)

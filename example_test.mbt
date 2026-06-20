@@ -16,9 +16,9 @@ test "example image creation" {
   let center = @vg.Point::Point(0.0, 0.0)
   let right = @vg.Point::Point(50.0, 0.0)
   let far_right = @vg.Point::Point(100.0, 0.0)
-  let c_center = img(center)
-  let c_right = img(right)
-  let c_far_right = img(far_right)
+  let c_center = img.eval(center)
+  let c_right = img.eval(right)
+  let c_far_right = img.eval(far_right)
 
   // Center should have red from the circle
   if c_center.r <= 0.5 {
@@ -93,9 +93,9 @@ test "gradient rendering" {
   )
 
   // Test gradient at different points
-  let left = gradient_img(Point(-50.0, 0.0))
-  let center = gradient_img(Point(0.0, 0.0))
-  let right = gradient_img(Point(50.0, 0.0))
+  let left = gradient_img.eval(Point(-50.0, 0.0))
+  let center = gradient_img.eval(Point(0.0, 0.0))
+  let right = gradient_img.eval(Point(50.0, 0.0))
   if left != @color.red() {
     fail("Gradient left should be red")
   }
@@ -119,8 +119,8 @@ test "transformation chain" {
   let transformed = rotated.translate_img(20.0, 10.0)
 
   // Test that transformations work
-  let origin_color = transformed(Point(0.0, 0.0))
-  let translated_center = transformed(Point(20.0, 10.0))
+  let origin_color = transformed.eval(Point(0.0, 0.0))
+  let translated_center = transformed.eval(Point(20.0, 10.0))
   if origin_color.a > 0.1 {
     fail("Origin should be mostly transparent after transformation")
   }

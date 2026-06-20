@@ -8,63 +8,63 @@ import {
 }
 
 // Values
-pub fn imageop_compose(Image, Image) -> ImageOp
+pub fn blend(Image, Image, op? : Blender, alpha? : Double) -> Image
 
-pub fn imageop_const(@color.Color) -> ImageOp
-
-pub fn imageop_cut(Image, Image) -> ImageOp
-
-pub fn imageop_primitive(Primitive, @color.Color) -> ImageOp
-
-pub fn imageop_transform(@geometry.Transform, Image) -> ImageOp
-
-pub fn primitive_circle(@geometry.Point, Double) -> Primitive
-
-pub fn primitive_path(@geometry.Path) -> Primitive
-
-pub fn primitive_rectangle(@geometry.Point, @geometry.Point) -> Primitive
-
-pub fn primitive_text(String, @geometry.Point, Double) -> Primitive
+pub fn cut(@geometry.Path, Image, area? : Area) -> Image
 
 // Errors
 
 // Types and methods
-pub(all) struct Image((@geometry.Point) -> @color.Color)
+pub enum Area {
+  Anz
+  Aeo
+} derive(Eq, @debug.Debug)
+
+pub enum Blender {
+  Over
+  Plus
+  Copy
+  In
+  Out
+  Atop
+  Xor
+} derive(Eq, @debug.Debug)
+
+pub enum Image {
+  Primitive(Primitive)
+  Cut(Area, @geometry.Path, Image)
+  Blend(Blender, Double?, Image, Image)
+  Tr(@geometry.Transform, Image)
+} derive(Eq, @debug.Debug)
 pub fn Image::axial_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
-pub fn Image::checkerboard(@color.Color, @color.Color, Double) -> Self
 pub fn Image::circle(@color.Color, Double) -> Self
 pub fn Image::compose(Self, Self) -> Self
-pub fn Image::conic_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
 pub fn Image::const_color(@color.Color) -> Self
-pub fn Image::cut(Self, Self) -> Self
 pub fn Image::ellipse(@color.Color, Double, Double) -> Self
 pub fn Image::empty() -> Self
+pub fn Image::eval(Self, @geometry.Point) -> @color.Color
 pub fn Image::line(@color.Color, @geometry.Point, @geometry.Point, Double) -> Self
 pub fn Image::linear_gradient(@color.Color, @color.Color, @geometry.Point, @geometry.Point) -> Self
+pub fn Image::over(Self, Self) -> Self
 pub fn Image::polygon(@color.Color, Array[@geometry.Point]) -> Self
 pub fn Image::radial_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
 pub fn Image::rectangle(@color.Color, Double, Double) -> Self
 pub fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
 pub fn Image::rotate(Self, Double) -> Self
 pub fn Image::scale(Self, Double, Double) -> Self
-pub fn Image::tile(Self, Double, Double) -> Self
 pub fn Image::transform(Self, @geometry.Transform) -> Self
 pub fn Image::translate_img(Self, Double, Double) -> Self
 pub fn Image::with_opacity(Self, Double) -> Self
 
-pub enum ImageOp {
-  Const(@color.Color)
-  Primitive(Primitive, @color.Color)
-  Transform(@geometry.Transform, Image)
-  Compose(Image, Image)
-  Cut(Image, Image)
-}
-
 pub enum Primitive {
-  Circle(@geometry.Point, Double)
-  Rectangle(@geometry.Point, @geometry.Point)
-  Path(@geometry.Path)
-  Text(String, @geometry.Point, Double)
+  Const(@color.Color)
+  Axial(Array[Stop], @geometry.Point, @geometry.Point)
+  Radial(Array[Stop], @geometry.Point, @geometry.Point, Double)
+} derive(Eq, @debug.Debug)
+
+pub struct Stop {
+  offset : Double
+  color : @color.Color
 } derive(Eq, @debug.Debug)
 
 // Type aliases
