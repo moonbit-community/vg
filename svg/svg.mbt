@@ -134,8 +134,27 @@ pub fn SvgDocument::render_text(
   color : @color.Color,
 ) -> SvgDocument {
   let element =
-    $|<text x="\{pos.x}" y="\{pos.y}" font-size="\{size}" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="\{color_to_svg(color)}">\{text}</text>
+    $|<text x="\{pos.x}" y="\{pos.y}" font-size="\{size}" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="\{color_to_svg(color)}">\{xml_escape(text)}</text>
   self.add_element(element)
+}
+
+///|
+/// Escape text for inclusion in XML/SVG content or attribute values.
+fn xml_escape(s : String) -> String {
+  let parts : Array[String] = []
+  for ch in s {
+    parts.push(
+      match ch {
+        '&' => "&amp;"
+        '<' => "&lt;"
+        '>' => "&gt;"
+        '"' => "&quot;"
+        '\'' => "&apos;"
+        _ => ch.to_string()
+      },
+    )
+  }
+  parts.join("")
 }
 
 ///|
