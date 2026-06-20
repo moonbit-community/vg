@@ -1,96 +1,90 @@
 // Tests for image combinators (new declarative AST; `eval` is the denotation).
+//
+// Behavioural tests `debug_inspect` the colour `eval` produces at chosen points
+// (run `moon test --update` to refresh the pinned values); a few keep an
+// explicit assertion where the test is a relation rather than a fixed value.
 
 ///|
 test "constant image" {
   let red_img = @vg.Image::const_color(@color.red())
-  if red_img.eval(Point(0.0, 0.0)) != @color.red() ||
-    red_img.eval(Point(100.0, -50.0)) != @color.red() {
-    fail("Constant image should return same color everywhere")
-  }
+  debug_inspect((red_img.eval(Point(0.0, 0.0)), red_img.eval(Point(100.0, -50.0))), content=(#|({ r: 1, g: 0, b: 0, a: 1 }, { r: 1, g: 0, b: 0, a: 1 })
+  ))
 }
 
 ///|
 test "empty image" {
   let empty_img = @vg.Image::empty()
-  if empty_img.eval(Point(5.0, 10.0)) != @color.transparent() {
-    fail("Empty image should be transparent everywhere")
-  }
+  debug_inspect(empty_img.eval(Point(5.0, 10.0)), content=(#|{ r: 0, g: 0, b: 0, a: 0 }
+  ))
 }
 
 ///|
 test "circle image" {
   let circle_img = @vg.Image::circle(@color.blue(), 5.0)
-  if circle_img.eval(Point(3.0, 0.0)) != @color.blue() {
-    fail("Point inside circle should be blue")
-  }
-  if circle_img.eval(Point(10.0, 0.0)) != @color.transparent() {
-    fail("Point outside circle should be transparent")
-  }
+  // inside, then outside
+  debug_inspect((
+    circle_img.eval(Point(3.0, 0.0)),
+    circle_img.eval(Point(10.0, 0.0)),
+  ), content=(#|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+  ))
 }
 
 ///|
 test "rectangle image" {
   let rect_img = @vg.Image::rectangle(@color.green(), 10.0, 6.0)
-  if rect_img.eval(Point(2.0, 1.0)) != @color.green() {
-    fail("Point inside rectangle should be green")
-  }
-  if rect_img.eval(Point(8.0, 1.0)) != @color.transparent() {
-    fail("Point outside rectangle should be transparent")
-  }
+  // inside, then outside
+  debug_inspect((rect_img.eval(Point(2.0, 1.0)), rect_img.eval(Point(8.0, 1.0))), content=(#|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+  ))
 }
 
 ///|
 test "image translation" {
   let translated = @vg.Image::circle(@color.red(), 3.0).translate_img(5.0, 0.0)
-  if translated.eval(Point(0.0, 0.0)) != @color.transparent() {
-    fail("Original center should be transparent after translation")
-  }
-  if translated.eval(Point(5.0, 0.0)) != @color.red() {
-    fail("New center should be red after translation")
-  }
+  // original centre (now transparent), new centre (red)
+  debug_inspect((
+    translated.eval(Point(0.0, 0.0)),
+    translated.eval(Point(5.0, 0.0)),
+  ), content=(#|({ r: 0, g: 0, b: 0, a: 0 }, { r: 1, g: 0, b: 0, a: 1 })
+  ))
 }
 
 ///|
 test "image scaling" {
-  let scaled = @vg.Image::circle(@color.blue(), 2.0).scale(2.0, 2.0)
   // (3,0) is outside the original r=2 circle but inside the scaled r=4 one
-  if scaled.eval(Point(3.0, 0.0)) != @color.blue() {
-    fail("Scaled image should be larger")
-  }
+  let scaled = @vg.Image::circle(@color.blue(), 2.0).scale(2.0, 2.0)
+  debug_inspect(scaled.eval(Point(3.0, 0.0)), content=(#|{ r: 0, g: 0, b: 1, a: 1 }
+  ))
 }
 
 ///|
 test "image composition is source-over" {
   let red_circle = @vg.Image::circle(@color.red(), 3.0)
-  let blue_circle = @vg.Image::circle(@color.blue(), 3.0).translate_img(
-    2.0, 0.0,
-  )
-  // base.compose(overlay) paints the overlay (blue) on top via source-over
+  let blue_circle = @vg.Image::circle(@color.blue(), 3.0).translate_img(2.0, 0.0)
+  // base.compose(overlay) paints the overlay (blue) on top
   let composed = red_circle.compose(blue_circle)
-  if composed.eval(Point(-2.0, 0.0)) != @color.red() {
-    fail("Red-only area should be red")
-  }
-  if composed.eval(Point(4.0, 0.0)) != @color.blue() {
-    fail("Blue-only area should be blue")
-  }
-  if composed.eval(Point(1.0, 0.0)) != @color.blue() {
-    fail("Overlap should show the top (blue) layer")
-  }
+  // red-only area, blue-only area, overlap (top = blue)
+  debug_inspect((
+    composed.eval(Point(-2.0, 0.0)),
+    composed.eval(Point(4.0, 0.0)),
+    composed.eval(Point(1.0, 0.0)),
+  ), content=(
+    #|(
+    #|  { r: 1, g: 0, b: 0, a: 1 },
+    #|  { r: 0, g: 0, b: 1, a: 1 },
+    #|  { r: 0, g: 0, b: 1, a: 1 },
+    #|)
+  ))
 }
 
 ///|
 test "path cut" {
-  let red = @color.red()
   let img = @vg.cut(
     @vg.Path::circle(Point(0.0, 0.0), 3.0),
-    @vg.Image::const_color(red),
+    @vg.Image::const_color(@color.red()),
   )
-  if img.eval(Point(0.0, 0.0)) != red {
-    fail("Inside the cut path should show the colour field")
-  }
-  if img.eval(Point(8.0, 0.0)).a != 0.0 {
-    fail("Outside the cut path should be transparent")
-  }
+  // inside the cut path, then outside
+  debug_inspect((img.eval(Point(0.0, 0.0)), img.eval(Point(8.0, 0.0))), content=(#|({ r: 1, g: 0, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+  ))
 }
 
 ///|
@@ -101,16 +95,18 @@ test "linear gradient" {
     Point(-5.0, 0.0),
     Point(5.0, 0.0),
   )
-  if gradient.eval(Point(-5.0, 0.0)) != @color.red() {
-    fail("Gradient start should be red")
-  }
-  if gradient.eval(Point(5.0, 0.0)) != @color.blue() {
-    fail("Gradient end should be blue")
-  }
-  let center = gradient.eval(Point(0.0, 0.0))
-  if center == @color.red() || center == @color.blue() {
-    fail("Gradient center should be interpolated")
-  }
+  // start (red), centre (mix), end (blue)
+  debug_inspect((
+    gradient.eval(Point(-5.0, 0.0)),
+    gradient.eval(Point(0.0, 0.0)),
+    gradient.eval(Point(5.0, 0.0)),
+  ), content=(
+    #|(
+    #|  { r: 1, g: 0, b: 0, a: 1 },
+    #|  { r: 0.5, g: 0, b: 0.5, a: 1 },
+    #|  { r: 0, g: 0, b: 1, a: 1 },
+    #|)
+  ))
 }
 
 ///|
@@ -121,27 +117,29 @@ test "radial gradient" {
     Point(0.0, 0.0),
     5.0,
   )
-  if gradient.eval(Point(0.0, 0.0)) != @color.white() {
-    fail("Radial gradient center should be white")
-  }
-  if gradient.eval(Point(5.0, 0.0)) != @color.black() {
-    fail("Radial gradient edge should be black")
-  }
-  let middle = gradient.eval(Point(2.5, 0.0))
-  if middle == @color.white() || middle == @color.black() {
-    fail("Radial gradient middle should be interpolated")
-  }
+  // centre (white), middle (grey), edge (black)
+  debug_inspect((
+    gradient.eval(Point(0.0, 0.0)),
+    gradient.eval(Point(2.5, 0.0)),
+    gradient.eval(Point(5.0, 0.0)),
+  ), content=(
+    #|(
+    #|  { r: 1, g: 1, b: 1, a: 1 },
+    #|  { r: 0.5, g: 0.5, b: 0.5, a: 1 },
+    #|  { r: 0, g: 0, b: 0, a: 1 },
+    #|)
+  ))
 }
 
 ///|
 test "ellipse image" {
   let ellipse_img = @vg.Image::ellipse(@color.green(), 4.0, 2.0)
-  if ellipse_img.eval(Point(2.0, 1.0)) != @color.green() {
-    fail("Point inside ellipse should be green")
-  }
-  if ellipse_img.eval(Point(5.0, 0.0)) != @color.transparent() {
-    fail("Point outside ellipse should be transparent")
-  }
+  // inside, then outside
+  debug_inspect((
+    ellipse_img.eval(Point(2.0, 1.0)),
+    ellipse_img.eval(Point(5.0, 0.0)),
+  ), content=(#|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+  ))
 }
 
 ///|
@@ -152,24 +150,19 @@ test "polygon image" {
     Point(2.0, 2.0),
   ]
   let triangle_img = @vg.Image::polygon(@color.blue(), triangle_points)
-  if triangle_img.eval(Point(0.0, 0.0)) != @color.blue() {
-    fail("Point inside triangle should be blue")
-  }
-  if triangle_img.eval(Point(0.0, -3.0)) != @color.transparent() {
-    fail("Point outside triangle should be transparent")
-  }
+  // inside, then outside
+  debug_inspect((
+    triangle_img.eval(Point(0.0, 0.0)),
+    triangle_img.eval(Point(0.0, -3.0)),
+  ), content=(#|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+  ))
 }
 
 ///|
 test "opacity application" {
   let semi = @vg.Image::circle(@color.red(), 5.0).with_opacity(0.5)
-  let color = semi.eval(Point(0.0, 0.0))
-  if color.r != 1.0 || color.g != 0.0 || color.b != 0.0 {
-    fail("Color components should remain unchanged")
-  }
-  if color.a != 0.5 {
-    fail("Alpha should be reduced to 0.5")
-  }
+  debug_inspect(semi.eval(Point(0.0, 0.0)), content=(#|{ r: 1, g: 0, b: 0, a: 0.5 }
+  ))
 }
 
 ///|
