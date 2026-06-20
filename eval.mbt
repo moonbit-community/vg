@@ -94,12 +94,13 @@ fn blend_colors(
   }
   match op {
     Copy => top
+    // additive, premultiplied by alpha so a faded/transparent top adds nothing
     Plus =>
       @color.clamp(
         @color.rgba(
-          top.r + bottom.r,
-          top.g + bottom.g,
-          top.b + bottom.b,
+          top.r * top.a + bottom.r * bottom.a,
+          top.g * top.a + bottom.g * bottom.a,
+          top.b * top.a + bottom.b * bottom.a,
           top.a + bottom.a,
         ),
       )
@@ -108,9 +109,15 @@ fn blend_colors(
 }
 
 ///|
-/// Whether `pt` lies inside `path` under the given fill `area` rule.
+/// Whether `pt` lies inside `path` under the given fill `area` rule. Points
+/// exactly on the boundary count as inside (matching the old shape fills).
 fn point_in_path(path : Path, pt : Point, area : Area) -> Bool {
   let subs = flatten_path(path)
+  for poly in subs {
+    if on_boundary(poly, pt) {
+      return true
+    }
+  }
   match area {
     Aeo => {
       let mut inside = false
@@ -129,6 +136,31 @@ fn point_in_path(path : Path, pt : Point, area : Area) -> Bool {
       wind != 0
     }
   }
+}
+
+///|
+/// Whether `pt` lies on any edge of the closed polyline.
+fn on_boundary(poly : Array[Point], pt : Point) -> Bool {
+  let n = poly.length()
+  guard n >= 2 else { false }
+  for i in 0..<n {
+    if point_on_segment(poly[i], poly[(i + 1) % n], pt) {
+      return true
+    }
+  }
+  false
+}
+
+///|
+/// Whether `p` lies on the segment a-b (collinear and within its extent).
+fn point_on_segment(a : Point, b : Point, p : Point) -> Bool {
+  let len_sq = (b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y)
+  // skip degenerate (zero-length) edges, else any point looks "collinear"
+  guard len_sq > 1.0e-18 else { false }
+  let cross = (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)
+  guard cross.abs() <= 1.0e-9 else { false }
+  let dot = (p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)
+  dot >= -1.0e-9 && dot <= len_sq + 1.0e-9
 }
 
 ///|
