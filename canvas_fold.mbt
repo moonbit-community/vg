@@ -74,7 +74,8 @@ fn canvas_cmd(
 }
 
 ///|
-/// Escape a string for a single-quoted JavaScript literal.
+/// Escape a string for a single-quoted JavaScript literal, including line
+/// terminators (a raw newline in a JS string literal is a syntax error).
 fn js_text_escape(s : String) -> String {
   let parts : Array[String] = []
   for ch in s {
@@ -82,6 +83,9 @@ fn js_text_escape(s : String) -> String {
       match ch {
         '\\' => "\\\\"
         '\'' => "\\'"
+        '\n' => "\\n"
+        '\r' => "\\r"
+        '\t' => "\\t"
         _ => ch.to_string()
       },
     )

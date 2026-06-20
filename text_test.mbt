@@ -18,3 +18,12 @@ test "text: draw-only, escaped, rendered by every backend" {
   assert_true(t.to_js(100.0, 100.0).contains("ctx.fillText('Hi <&>'"))
   assert_true(t.to_pdf(100.0, 100.0).contains(") Tj"))
 }
+
+///|
+test "text: newlines are escaped in canvas JS output" {
+  let t = @vg.Image::text("a\nb", 12.0, @color.black())
+  let js = t.to_js(100.0, 100.0)
+  // the literal must contain an escaped \n, not a raw line break
+  assert_true(js.contains("'a\\nb'"))
+  assert_true(!js.contains("'a\nb'"))
+}
