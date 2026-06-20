@@ -9,23 +9,13 @@ pub fn Path::empty() -> Path {
 ///|
 /// Move to a point
 pub fn Path::move_to(self : Path, p : Point) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
-  }
-  new_path.push(MoveTo(p))
-  Path(new_path)
+  Path([..self.0, MoveTo(p)])
 }
 
 ///|
 /// Line to a point
 pub fn Path::line_to(self : Path, p : Point) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
-  }
-  new_path.push(LineTo(p))
-  Path(new_path)
+  Path([..self.0, LineTo(p)])
 }
 
 ///|
@@ -36,23 +26,13 @@ pub fn Path::curve_to(
   cp2 : Point,
   end : Point,
 ) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
-  }
-  new_path.push(CurveTo(cp1, cp2, end))
-  Path(new_path)
+  Path([..self.0, CurveTo(cp1, cp2, end)])
 }
 
 ///|
 /// Quadratic bezier curve to a point
 pub fn Path::qcurve_to(self : Path, cp : Point, end : Point) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
-  }
-  new_path.push(QCurveTo(cp, end))
-  Path(new_path)
+  Path([..self.0, QCurveTo(cp, end)])
 }
 
 ///|
@@ -66,23 +46,13 @@ pub fn Path::earc_to(
   sweep : Bool,
   end : Point,
 ) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
-  }
-  new_path.push(EArcTo(rx, ry, rotation, large_arc, sweep, end))
-  Path(new_path)
+  Path([..self.0, EArcTo(rx, ry, rotation, large_arc, sweep, end)])
 }
 
 ///|
 /// Close the path
 pub fn Path::close_path(self : Path) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
-  }
-  new_path.push(Close)
-  Path(new_path)
+  Path([..self.0, Close])
 }
 
 ///|
@@ -224,71 +194,44 @@ pub fn Path::bounds(self : Path) -> Box? {
 ///|
 /// Create a smooth cubic curve that connects smoothly to the previous segment
 pub fn Path::smooth_ccurve_to(self : Path, cp2 : Point, end : Point) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
+  // reflect the previous cubic control point for a smooth join
+  let cp1 = match self.0 {
+    [.., CurveTo(_, prev_cp2, prev_end)] =>
+      Point(2.0 * prev_end.x - prev_cp2.x, 2.0 * prev_end.y - prev_cp2.y)
+    _ => cp2
   }
-
-  // Calculate smooth control point based on previous segment
-  let cp1 = match self.0.length() {
-    0 => cp2 // No previous segment, use cp2
-    _ =>
-      match self.0[self.0.length() - 1] {
-        CurveTo(_, prev_cp2, prev_end) => {
-          // Reflect the previous control point
-          let reflected_x = 2.0 * prev_end.x - prev_cp2.x
-          let reflected_y = 2.0 * prev_end.y - prev_cp2.y
-          Point(reflected_x, reflected_y)
-        }
-        _ => cp2 // Not a curve, use cp2
-      }
-  }
-  new_path.push(CurveTo(cp1, cp2, end))
-  Path(new_path)
+  Path([..self.0, CurveTo(cp1, cp2, end)])
 }
 
 ///|
 /// Create a smooth quadratic curve that connects smoothly to the previous segment
 pub fn Path::smooth_qcurve_to(self : Path, end : Point) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    new_path.push(segment)
+  // reflect the previous quadratic control point for a smooth join
+  let cp = match self.0 {
+    [.., QCurveTo(prev_cp, prev_end)] =>
+      Point(2.0 * prev_end.x - prev_cp.x, 2.0 * prev_end.y - prev_cp.y)
+    _ => end
   }
-
-  // Calculate smooth control point based on previous segment
-  let cp = match self.0.length() {
-    0 => end // No previous segment, use end point
-    _ =>
-      match self.0[self.0.length() - 1] {
-        QCurveTo(prev_cp, prev_end) => {
-          // Reflect the previous control point
-          let reflected_x = 2.0 * prev_end.x - prev_cp.x
-          let reflected_y = 2.0 * prev_end.y - prev_cp.y
-          Point(reflected_x, reflected_y)
-        }
-        _ => end // Not a quadratic curve, use end point
-      }
-  }
-  new_path.push(QCurveTo(cp, end))
-  Path(new_path)
+  Path([..self.0, QCurveTo(cp, end)])
 }
 
 ///|
 /// Transform a path using a transformation matrix
 pub fn Path::transform(self : Path, t : Transform) -> Path {
-  let new_path = Array::new()
-  for segment in self.0 {
-    let transformed_segment = match segment {
-      MoveTo(p) => MoveTo(apply(t, p))
-      LineTo(p) => LineTo(apply(t, p))
-      CurveTo(cp1, cp2, end) =>
-        CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
-      QCurveTo(cp, end) => QCurveTo(apply(t, cp), apply(t, end))
-      EArcTo(rx, ry, rotation, large_arc, sweep, end) =>
-        EArcTo(rx, ry, rotation, large_arc, sweep, apply(t, end))
-      Close => Close
-    }
-    new_path.push(transformed_segment)
-  }
-  Path(new_path)
+  Path(
+    [
+      for segment in self.0 => {
+        match segment {
+          MoveTo(p) => MoveTo(apply(t, p))
+          LineTo(p) => LineTo(apply(t, p))
+          CurveTo(cp1, cp2, end) =>
+            CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
+          QCurveTo(cp, end) => QCurveTo(apply(t, cp), apply(t, end))
+          EArcTo(rx, ry, rotation, large_arc, sweep, end) =>
+            EArcTo(rx, ry, rotation, large_arc, sweep, apply(t, end))
+          Close => Close
+        }
+      }
+    ],
+  )
 }

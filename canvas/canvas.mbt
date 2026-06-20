@@ -75,12 +75,7 @@ pub fn CanvasDocument::add_command(
   self : CanvasDocument,
   command : String,
 ) -> CanvasDocument {
-  let new_commands = Array::new()
-  for cmd in self.commands {
-    new_commands.push(cmd)
-  }
-  new_commands.push(command)
-  { width: self.width, height: self.height, commands: new_commands }
+  { ..self, commands: [..self.commands, command] }
 }
 
 ///|
