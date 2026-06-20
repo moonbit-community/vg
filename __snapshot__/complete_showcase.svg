@@ -10,7 +10,7 @@
   <polygon points="330,95 370,95 375,118 350,130 325,118" fill="#FFA400"/>
   <polygon points="420,90 400,130 440,130" fill="#7F007F"/>
   <polygon points="490,90 505,110 490,130 475,110" fill="#00FFFF"/>
-  <text x="100" y="180" font-size="16" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">Lines & Strokes</text>
+  <text x="100" y="180" font-size="16" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#000000">Lines &amp; Strokes</text>
   <line x1="50" y1="210" x2="250" y2="210" stroke="#000000" stroke-width="3" stroke-linecap="round" fill="none"/>
   <line x1="50" y1="230" x2="200" y2="250" stroke="#FF0000" stroke-width="2" stroke-linecap="round" fill="none"/>
   <line x1="50" y1="270" x2="150" y2="230" stroke="#0000FF" stroke-width="4" stroke-linecap="round" fill="none"/>

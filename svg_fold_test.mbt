@@ -19,7 +19,6 @@ test "vector fold: rectangle SVG markup" {
     content=(
       #|<?xml version="1.0" encoding="UTF-8"?>
       #|<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M 50,70 L 150,70 L 150,130 L 50,130 Z" fill="#FF0000" fill-rule="nonzero"/></svg>
-
     ),
   )
 }
@@ -66,4 +65,27 @@ test "vector fold: composition stacks bottom then top" {
   // both layers are emitted: the gray background and the red circle on top
   assert_true(svg.contains("#E5E5E5"))
   assert_true(svg.contains("#FF0000"))
+}
+
+///|
+test "draw list: a circle folds to a single FillPath" {
+  let cmds = @vg.Image::circle(@color.red(), 5.0).to_draw_list(100.0, 100.0)
+  inspect(cmds.length(), content="1")
+  match cmds[0] {
+    FillPath(_, Solid(_), Anz) => ()
+    _ => fail("expected FillPath(_, Solid, Anz)")
+  }
+}
+
+///|
+test "render_text escapes XML special characters" {
+  let doc = @svg.new_svg(100.0, 100.0).render_text(
+    "a < b & \"c\"",
+    Point(10.0, 10.0),
+    12.0,
+    @color.black(),
+  )
+  let s = doc.to_string()
+  assert_true(s.contains("a &lt; b &amp; &quot;c&quot;"))
+  assert_true(!s.contains(">a < b"))
 }
