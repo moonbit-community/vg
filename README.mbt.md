@@ -85,6 +85,119 @@ The output is rendered like this
 
 ![Vg Demo Output](./__snapshot__/basic_shapes.svg)
 
+## Gallery
+
+Each image below is a declarative `Image` value rendered to **compact,
+resolution-independent SVG** — native gradients, real transforms, and recursion
+that the old per-pixel-sampling model could not express at any reasonable size.
+
+### Glossy spheres — native radial gradients (~1.7 KB)
+
+![Glossy spheres](./__snapshot__/demo_spheres.svg)
+
+Each sphere is a circle cut from a radial-gradient colour field whose bright
+centre is offset up-left, giving a lit-from-above look.
+
+```mbt check
+///|
+test "demo: glossy spheres" (it : @test.Test) {
+  fn sphere(cx : Double, cy : Double, r : Double, hue : Double) -> @vg.Image {
+    @vg.cut(
+      @vg.Path::circle(Point(cx, cy), r),
+      @vg.Image::radial_gradient(
+        @color.white(),
+        @color.hsv(hue, 0.9, 0.6),
+        Point(cx - r * 0.35, cy - r * 0.35),
+        r * 1.45,
+      ),
+    )
+  }
+
+  let bg = @vg.Image::linear_gradient(
+    @color.rgb(0.09, 0.09, 0.16),
+    @color.rgb(0.27, 0.23, 0.38),
+    Point(0.0, -200.0),
+    Point(0.0, 200.0),
+  )
+  let svg = bg
+    .compose(sphere(-85.0, -45.0, 60.0, 205.0))
+    .compose(sphere(75.0, 35.0, 85.0, 340.0))
+    .compose(sphere(5.0, 120.0, 42.0, 105.0))
+    .to_svg(400.0, 400.0)
+  it.write(svg)
+  it.snapshot(filename="demo_spheres.svg")
+}
+```
+
+### Gradient mandala — rotated transforms (~12 KB)
+
+![Gradient mandala](./__snapshot__/demo_mandala.svg)
+
+Sixteen gradient-filled petals: the *same* `Image`, each rotated around the
+centre by a transform.
+
+```mbt check
+///|
+test "demo: gradient mandala" (it : @test.Test) {
+  let petal = @vg.cut(
+    @vg.Path::ellipse(Point(0.0, -70.0), 20.0, 58.0),
+    @vg.Image::linear_gradient(
+      @color.hsv(285.0, 0.85, 1.0),
+      @color.hsv(185.0, 0.9, 1.0),
+      Point(0.0, -128.0),
+      Point(0.0, -12.0),
+    ),
+  )
+  let two_pi = 2.0 * 3.14159265358979
+  let mut art = @vg.Image::const_color(@color.rgb(0.07, 0.05, 0.12))
+  for i in 0..<16 {
+    art = art.compose(petal.rotate(i.to_double() * two_pi / 16.0))
+  }
+  art = art.compose(@vg.Image::circle(@color.hsv(48.0, 0.9, 1.0), 26.0))
+  it.write(art.to_svg(400.0, 400.0))
+  it.snapshot(filename="demo_mandala.svg")
+}
+```
+
+### Fractal tree — recursion + strokes
+
+![Fractal tree](./__snapshot__/demo_tree.svg)
+
+A tree built by recursively composing two transformed copies of itself; every
+branch is a real vector stroke, every leaf a small circle.
+
+```mbt check
+///|
+test "demo: fractal tree" (it : @test.Test) {
+  fn branch(depth : Int, len : Double, width : Double) -> @vg.Image {
+    if depth <= 0 {
+      @vg.Image::circle(@color.rgb(0.2, 0.7, 0.3), width * 1.6) // a leaf
+    } else {
+      let trunk = @vg.Image::line(
+        @color.rgb(0.42, 0.27, 0.14),
+        Point(0.0, 0.0),
+        Point(0.0, -len),
+        width,
+      )
+      let child = branch(depth - 1, len * 0.72, width * 0.68)
+      trunk
+      .compose(child.rotate(-0.5).translate_img(0.0, -len))
+      .compose(child.rotate(0.5).translate_img(0.0, -len))
+    }
+  }
+
+  let sky = @vg.Image::linear_gradient(
+    @color.rgb(0.55, 0.78, 1.0),
+    @color.rgb(0.96, 0.98, 1.0),
+    Point(0.0, -200.0),
+    Point(0.0, 200.0),
+  )
+  let tree = branch(8, 74.0, 9.0).translate_img(0.0, 150.0)
+  it.write(sky.compose(tree).to_svg(400.0, 400.0))
+  it.snapshot(filename="demo_tree.svg")
+}
+```
+
 ## Architecture
 
 An `Image` is a declarative tree (faithful to OCaml [Vg](https://github.com/dbuenzli/vg)) — *not* a pixel function:
