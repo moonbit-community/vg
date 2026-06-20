@@ -30,7 +30,8 @@ pub(all) enum Primitive {
   Const(Color)
   Axial(Array[Stop], Point, Point) // stops, p0, p1 (linear gradient axis)
   Radial(Array[Stop], Point, Point, Double) // stops, focus, centre, radius
-} derive(Eq, Debug)
+  Raster((Point) -> Color) // a procedural / sampled colour field
+}
 
 ///|
 /// Fill rule used when cutting an image with a path.
@@ -61,4 +62,4 @@ pub(all) enum Image {
   Cut(Area, Path, Image)
   Blend(Blender, Double?, Image, Image) // operator, alpha, top, bottom
   Tr(Transform, Image)
-} derive(Eq, Debug)
+}

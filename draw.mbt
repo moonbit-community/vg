@@ -48,6 +48,9 @@ fn fold_into(
   cmds : Array[DrawCmd],
 ) -> Unit {
   match img {
+    // a raster (procedural) primitive has no native vector form: sample it
+    Cut(_, _, Primitive(Raster(_))) | Primitive(Raster(_)) =>
+      rasterize_into(img, acc, width, height, cmds)
     Cut(area, path, Primitive(prim)) =>
       cmds.push(FillPath(path.transform(acc), paint_of(prim, acc), area))
     Cut(area, path, inner) => {
@@ -111,6 +114,8 @@ fn rasterize_into(
 fn paint_of(prim : Primitive, acc : Transform) -> Paint {
   match prim {
     Const(c) => Solid(c)
+    // raster nodes are rasterised by the fold, never painted as a solid
+    Raster(_) => Solid(@color.transparent())
     Axial(stops, p0, p1) =>
       Linear(stops, @geometry.apply(acc, p0), @geometry.apply(acc, p1))
     // radius scaled by sqrt|det| (approximate for non-uniform scales)

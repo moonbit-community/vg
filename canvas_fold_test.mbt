@@ -58,6 +58,10 @@ test "elliptical arc renders consistently across backends" {
   assert_true(img.to_svg(60.0, 60.0).contains("A 20 20"))
   assert_true(img.to_js(60.0, 60.0).contains("ctx.lineTo"))
   // the two sides of the chord differ now that the arc bulge is traced
-  debug_inspect((img.eval(Point(0.0, 10.0)), img.eval(Point(0.0, -10.0))), content=(#|({ r: 0, g: 0, b: 0, a: 0 }, { r: 1, g: 0, b: 0, a: 1 })
-  ))
+  debug_inspect(
+    (img.eval(Point(0.0, 10.0)), img.eval(Point(0.0, -10.0))),
+    content=(
+      #|({ r: 0, g: 0, b: 0, a: 0 }, { r: 1, g: 0, b: 0, a: 1 })
+    ),
+  )
 }

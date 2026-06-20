@@ -297,11 +297,10 @@ test "pdf generation examples" {
 #### Mandelbrot Set
 The famous Mandelbrot set fractal - a stunning example of mathematical beauty rendered as an image.
 
-> Note: a procedural image (a raw point→colour function) is represented by a
-> `Raster` primitive in the faithful model; this sampled example is restored in
-> a later step once `Raster` lands.
+> A procedural image is a point→colour function wrapped with `Image::of_fn`
+> (a `Raster` primitive in the AST), then sampled to SVG.
 
-```mbt nocheck
+```mbt check
 ///|
 test "mandelbrot set" (it : @test.Test) {
   // Mandelbrot set parameters
@@ -309,8 +308,8 @@ test "mandelbrot set" (it : @test.Test) {
   let width = 400.0
   let height = 400.0
 
-  // Create Mandelbrot set as a functional image
-  let mandelbrot : @vg.Image = fn(p : @vg.Point) -> @color.Color {
+  // Create Mandelbrot set as a procedural image
+  let mandelbrot = @vg.Image::of_fn(fn(p : @vg.Point) -> @color.Color {
     // Map pixel coordinates to complex plane [-2.5, 1] x [-1.5, 1.5]
     let x0 = p.x / width * 3.5 - 2.5
     let y0 = p.y / height * 3.0 - 1.5
@@ -331,7 +330,7 @@ test "mandelbrot set" (it : @test.Test) {
       let hue = 240.0 + t * 120.0 // Blue to purple gradient
       @color.hsv(hue, 0.8, 0.9)
     }
-  }
+  })
 
   // Render to SVG by sampling
   let svg = mandelbrot.render_image_to_svg(width, height, 100)
@@ -344,7 +343,7 @@ test "mandelbrot set" (it : @test.Test) {
 #### Julia Set
 A related fractal with equally mesmerizing patterns.
 
-```mbt nocheck
+```mbt check
 ///|
 test "julia set" (it : @test.Test) {
   let max_iter = 100
@@ -355,7 +354,7 @@ test "julia set" (it : @test.Test) {
   // Try: (-0.7, 0.27015), (0.355, 0.355), (-0.8, 0.156)
   let cx = -0.7
   let cy = 0.27015
-  let julia : @vg.Image = fn(p : @vg.Point) -> @color.Color {
+  let julia = @vg.Image::of_fn(fn(p : @vg.Point) -> @color.Color {
     let mut x = p.x / width * 4.0 - 2.0
     let mut y = p.y / height * 4.0 - 2.0
     let mut iteration = 0
@@ -379,7 +378,7 @@ test "julia set" (it : @test.Test) {
       }
       @color.rgba(t_clamped_r, t_clamped_g, t_clamped_b, 1.0)
     }
-  }
+  })
   let svg = julia.render_image_to_svg(width, height, 100)
   it.write(svg)
   it.snapshot(filename="julia.svg")

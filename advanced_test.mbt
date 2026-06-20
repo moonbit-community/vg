@@ -97,7 +97,18 @@ test "axial gradients" (it : @test.Test) {
   it.snapshot(filename="axial_gradient.svg")
 }
 
-// NOTE: conic gradients are procedural; reintroduced in C6 as a Raster primitive.
+///|
+test "conic gradients" (it : @test.Test) {
+  let conic_img = @vg.Image::conic_gradient(
+    @color.red(),
+    @color.blue(),
+    Point(0.0, 0.0),
+    0.0,
+  )
+  let conic_svg = conic_img.render_image_to_svg(100.0, 100.0, 30)
+  it.write(conic_svg)
+  it.snapshot(filename="conic_gradient.svg")
+}
 
 ///|
 test "advanced blend modes" {
@@ -129,7 +140,22 @@ test "advanced blend modes" {
   )
 }
 
-// NOTE: tiled and checkerboard patterns are procedural; reintroduced in C6 as Raster primitives.
+///|
+test "tiled images" (it : @test.Test) {
+  let base_pattern = @vg.Image::circle(@color.red(), 8.0)
+  let tiled = @vg.Image::tile(base_pattern, 20.0, 20.0)
+  let tiled_svg = tiled.render_image_to_svg(100.0, 80.0, 25)
+  it.write(tiled_svg)
+  it.snapshot(filename="tiled_pattern.svg")
+}
+
+///|
+test "checkerboard pattern" (it : @test.Test) {
+  let checker = @vg.Image::checkerboard(@color.black(), @color.white(), 10.0)
+  let checker_svg = checker.render_image_to_svg(80.0, 80.0, 20)
+  it.write(checker_svg)
+  it.snapshot(filename="checkerboard.svg")
+}
 
 ///|
 test "advanced path showcase" (it : @test.Test) {
