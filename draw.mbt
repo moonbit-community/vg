@@ -122,3 +122,72 @@ fn paint_of(prim : Primitive, acc : Transform) -> Paint {
       )
   }
 }
+
+///|
+/// Approximate an SVG endpoint-parameterised elliptical arc (from `p0` to `p1`)
+/// as a polyline of points along the arc (excluding `p0`). Shared by the
+/// backends so arcs render consistently; SVG keeps its native `A` command.
+fn flatten_arc(
+  p0 : Point,
+  rx0 : Double,
+  ry0 : Double,
+  phi_deg : Double,
+  large : Bool,
+  sweep : Bool,
+  p1 : Point,
+) -> Array[Point] {
+  let out : Array[Point] = []
+  let mut rx = rx0.abs()
+  let mut ry = ry0.abs()
+  guard rx > 0.0 && ry > 0.0 else {
+    out.push(p1)
+    return out
+  }
+  let pi = 3.141592653589793
+  let phi = phi_deg * pi / 180.0
+  let cphi = @math.cos(phi)
+  let sphi = @math.sin(phi)
+  let dx = (p0.x - p1.x) / 2.0
+  let dy = (p0.y - p1.y) / 2.0
+  let x1 = cphi * dx + sphi * dy
+  let y1 = -sphi * dx + cphi * dy
+  let lam = x1 * x1 / (rx * rx) + y1 * y1 / (ry * ry)
+  if lam > 1.0 {
+    let s = lam.sqrt()
+    rx = rx * s
+    ry = ry * s
+  }
+  let num0 = rx * rx * ry * ry - rx * rx * y1 * y1 - ry * ry * x1 * x1
+  let den = rx * rx * y1 * y1 + ry * ry * x1 * x1
+  let num = if num0 < 0.0 { 0.0 } else { num0 }
+  let mut co = if den == 0.0 { 0.0 } else { (num / den).sqrt() }
+  if large == sweep {
+    co = -co
+  }
+  let cxp = co * rx * y1 / ry
+  let cyp = -co * ry * x1 / rx
+  let cx = cphi * cxp - sphi * cyp + (p0.x + p1.x) / 2.0
+  let cy = sphi * cxp + cphi * cyp + (p0.y + p1.y) / 2.0
+  let theta1 = @math.atan2((y1 - cyp) / ry, (x1 - cxp) / rx)
+  let two_pi = 2.0 * pi
+  let mut dtheta = @math.atan2((-y1 - cyp) / ry, (-x1 - cxp) / rx) - theta1
+  if !sweep && dtheta > 0.0 {
+    dtheta = dtheta - two_pi
+  }
+  if sweep && dtheta < 0.0 {
+    dtheta = dtheta + two_pi
+  }
+  let steps = 24
+  for i in 1..<=steps {
+    let t = theta1 + dtheta * i.to_double() / steps.to_double()
+    let ct = @math.cos(t)
+    let st = @math.sin(t)
+    out.push(
+      Point(
+        cx + rx * ct * cphi - ry * st * sphi,
+        cy + rx * ct * sphi + ry * st * cphi,
+      ),
+    )
+  }
+  out
+}
