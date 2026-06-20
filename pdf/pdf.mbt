@@ -75,15 +75,9 @@ pub fn PdfDocument::add_raw(
 ///|
 /// Add an object to the PDF document (OO-style)
 fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
-  let new_objects = Array::new()
-  for o in self.objects {
-    new_objects.push(o)
-  }
-  new_objects.push(obj)
   {
-    width: self.width,
-    height: self.height,
-    objects: new_objects,
+    ..self,
+    objects: [..self.objects, obj],
     object_count: self.object_count + 1,
   }
 }

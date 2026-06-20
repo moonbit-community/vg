@@ -45,26 +45,23 @@ fn point_to_svg(p : @geometry.Point) -> String {
 ///|
 /// Convert a path to SVG path data
 fn path_to_svg_data(path : @geometry.Path) -> String {
-  let mut data = ""
-  for segment in path.0 {
-    match segment {
-      MoveTo(p) => data = data + "M \{point_to_svg(p)} "
-      LineTo(p) => data = data + "L \{point_to_svg(p)} "
-      CurveTo(cp1, cp2, end) =>
-        data = data +
+  [
+    for segment in path.0 => {
+      match segment {
+        MoveTo(p) => "M \{point_to_svg(p)} "
+        LineTo(p) => "L \{point_to_svg(p)} "
+        CurveTo(cp1, cp2, end) =>
           "C \{point_to_svg(cp1)} \{point_to_svg(cp2)} \{point_to_svg(end)} "
-      QCurveTo(cp, end) =>
-        data = data + "Q \{point_to_svg(cp)} \{point_to_svg(end)} "
-      EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
-        let large_flag = if large_arc { "1" } else { "0" }
-        let sweep_flag = if sweep { "1" } else { "0" }
-        data = data +
+        QCurveTo(cp, end) => "Q \{point_to_svg(cp)} \{point_to_svg(end)} "
+        EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+          let large_flag = if large_arc { "1" } else { "0" }
+          let sweep_flag = if sweep { "1" } else { "0" }
           "A \{rx} \{ry} \{rotation} \{large_flag} \{sweep_flag} \{point_to_svg(end)} "
+        }
+        Close => "Z "
       }
-      Close => data = data + "Z "
     }
-  }
-  data
+  ].join("")
 }
 
 ///|
@@ -181,14 +178,7 @@ pub fn SvgDocument::render_polygon(
   if points.length() < 3 {
     self // Can't render polygon with less than 3 points
   } else {
-    let mut points_str = ""
-    for i = 0; i < points.length(); i = i + 1 {
-      let p = points[i]
-      points_str = points_str + "\{p.x},\{p.y}"
-      if i < points.length() - 1 {
-        points_str = points_str + " "
-      }
-    }
+    let points_str = [ for p in points => "\{p.x},\{p.y}" ].join(" ")
     let element =
       $|<polygon points="\{points_str}" fill="\{color_to_svg(color)}"/>
     self.add_element(element)
