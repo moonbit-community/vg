@@ -7,73 +7,104 @@
 ///|
 test "constant image" {
   let red_img = @vg.Image::const_color(@color.red())
-  debug_inspect((red_img.eval(Point(0.0, 0.0)), red_img.eval(Point(100.0, -50.0))), content=(#|({ r: 1, g: 0, b: 0, a: 1 }, { r: 1, g: 0, b: 0, a: 1 })
-  ))
+  debug_inspect(
+    (red_img.eval(Point(0.0, 0.0)), red_img.eval(Point(100.0, -50.0))),
+    content=(
+      #|({ r: 1, g: 0, b: 0, a: 1 }, { r: 1, g: 0, b: 0, a: 1 })
+    ),
+  )
 }
 
 ///|
 test "empty image" {
   let empty_img = @vg.Image::empty()
-  debug_inspect(empty_img.eval(Point(5.0, 10.0)), content=(#|{ r: 0, g: 0, b: 0, a: 0 }
-  ))
+  debug_inspect(
+    empty_img.eval(Point(5.0, 10.0)),
+    content=(
+      #|{ r: 0, g: 0, b: 0, a: 0 }
+    ),
+  )
 }
 
 ///|
 test "circle image" {
   let circle_img = @vg.Image::circle(@color.blue(), 5.0)
   // inside, then outside
-  debug_inspect((
-    circle_img.eval(Point(3.0, 0.0)),
-    circle_img.eval(Point(10.0, 0.0)),
-  ), content=(#|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-  ))
+  debug_inspect(
+    (circle_img.eval(Point(3.0, 0.0)), circle_img.eval(Point(10.0, 0.0))),
+    content=(
+      #|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+
+
+    ),
+  )
 }
 
 ///|
 test "rectangle image" {
   let rect_img = @vg.Image::rectangle(@color.green(), 10.0, 6.0)
   // inside, then outside
-  debug_inspect((rect_img.eval(Point(2.0, 1.0)), rect_img.eval(Point(8.0, 1.0))), content=(#|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-  ))
+  debug_inspect(
+    (rect_img.eval(Point(2.0, 1.0)), rect_img.eval(Point(8.0, 1.0))),
+    content=(
+      #|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+
+
+    ),
+  )
 }
 
 ///|
 test "image translation" {
   let translated = @vg.Image::circle(@color.red(), 3.0).translate_img(5.0, 0.0)
   // original centre (now transparent), new centre (red)
-  debug_inspect((
-    translated.eval(Point(0.0, 0.0)),
-    translated.eval(Point(5.0, 0.0)),
-  ), content=(#|({ r: 0, g: 0, b: 0, a: 0 }, { r: 1, g: 0, b: 0, a: 1 })
-  ))
+  debug_inspect(
+    (translated.eval(Point(0.0, 0.0)), translated.eval(Point(5.0, 0.0))),
+    content=(
+      #|({ r: 0, g: 0, b: 0, a: 0 }, { r: 1, g: 0, b: 0, a: 1 })
+
+
+    ),
+  )
 }
 
 ///|
 test "image scaling" {
   // (3,0) is outside the original r=2 circle but inside the scaled r=4 one
   let scaled = @vg.Image::circle(@color.blue(), 2.0).scale(2.0, 2.0)
-  debug_inspect(scaled.eval(Point(3.0, 0.0)), content=(#|{ r: 0, g: 0, b: 1, a: 1 }
-  ))
+  debug_inspect(
+    scaled.eval(Point(3.0, 0.0)),
+    content=(
+      #|{ r: 0, g: 0, b: 1, a: 1 }
+    ),
+  )
 }
 
 ///|
 test "image composition is source-over" {
   let red_circle = @vg.Image::circle(@color.red(), 3.0)
-  let blue_circle = @vg.Image::circle(@color.blue(), 3.0).translate_img(2.0, 0.0)
+  let blue_circle = @vg.Image::circle(@color.blue(), 3.0).translate_img(
+    2.0, 0.0,
+  )
   // base.compose(overlay) paints the overlay (blue) on top
   let composed = red_circle.compose(blue_circle)
   // red-only area, blue-only area, overlap (top = blue)
-  debug_inspect((
-    composed.eval(Point(-2.0, 0.0)),
-    composed.eval(Point(4.0, 0.0)),
-    composed.eval(Point(1.0, 0.0)),
-  ), content=(
-    #|(
-    #|  { r: 1, g: 0, b: 0, a: 1 },
-    #|  { r: 0, g: 0, b: 1, a: 1 },
-    #|  { r: 0, g: 0, b: 1, a: 1 },
-    #|)
-  ))
+  debug_inspect(
+    (
+      composed.eval(Point(-2.0, 0.0)),
+      composed.eval(Point(4.0, 0.0)),
+      composed.eval(Point(1.0, 0.0)),
+    ),
+    content=(
+      #|(
+      #|  { r: 1, g: 0, b: 0, a: 1 },
+      #|  { r: 0, g: 0, b: 1, a: 1 },
+      #|  { r: 0, g: 0, b: 1, a: 1 },
+      #|)
+
+
+    ),
+  )
 }
 
 ///|
@@ -83,8 +114,14 @@ test "path cut" {
     @vg.Image::const_color(@color.red()),
   )
   // inside the cut path, then outside
-  debug_inspect((img.eval(Point(0.0, 0.0)), img.eval(Point(8.0, 0.0))), content=(#|({ r: 1, g: 0, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-  ))
+  debug_inspect(
+    (img.eval(Point(0.0, 0.0)), img.eval(Point(8.0, 0.0))),
+    content=(
+      #|({ r: 1, g: 0, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+
+
+    ),
+  )
 }
 
 ///|
@@ -96,17 +133,20 @@ test "linear gradient" {
     Point(5.0, 0.0),
   )
   // start (red), centre (mix), end (blue)
-  debug_inspect((
-    gradient.eval(Point(-5.0, 0.0)),
-    gradient.eval(Point(0.0, 0.0)),
-    gradient.eval(Point(5.0, 0.0)),
-  ), content=(
-    #|(
-    #|  { r: 1, g: 0, b: 0, a: 1 },
-    #|  { r: 0.5, g: 0, b: 0.5, a: 1 },
-    #|  { r: 0, g: 0, b: 1, a: 1 },
-    #|)
-  ))
+  debug_inspect(
+    (
+      gradient.eval(Point(-5.0, 0.0)),
+      gradient.eval(Point(0.0, 0.0)),
+      gradient.eval(Point(5.0, 0.0)),
+    ),
+    content=(
+      #|(
+      #|  { r: 1, g: 0, b: 0, a: 1 },
+      #|  { r: 0.5, g: 0, b: 0.5, a: 1 },
+      #|  { r: 0, g: 0, b: 1, a: 1 },
+      #|)
+    ),
+  )
 }
 
 ///|
@@ -118,28 +158,34 @@ test "radial gradient" {
     5.0,
   )
   // centre (white), middle (grey), edge (black)
-  debug_inspect((
-    gradient.eval(Point(0.0, 0.0)),
-    gradient.eval(Point(2.5, 0.0)),
-    gradient.eval(Point(5.0, 0.0)),
-  ), content=(
-    #|(
-    #|  { r: 1, g: 1, b: 1, a: 1 },
-    #|  { r: 0.5, g: 0.5, b: 0.5, a: 1 },
-    #|  { r: 0, g: 0, b: 0, a: 1 },
-    #|)
-  ))
+  debug_inspect(
+    (
+      gradient.eval(Point(0.0, 0.0)),
+      gradient.eval(Point(2.5, 0.0)),
+      gradient.eval(Point(5.0, 0.0)),
+    ),
+    content=(
+      #|(
+      #|  { r: 1, g: 1, b: 1, a: 1 },
+      #|  { r: 0.5, g: 0.5, b: 0.5, a: 1 },
+      #|  { r: 0, g: 0, b: 0, a: 1 },
+      #|)
+    ),
+  )
 }
 
 ///|
 test "ellipse image" {
   let ellipse_img = @vg.Image::ellipse(@color.green(), 4.0, 2.0)
   // inside, then outside
-  debug_inspect((
-    ellipse_img.eval(Point(2.0, 1.0)),
-    ellipse_img.eval(Point(5.0, 0.0)),
-  ), content=(#|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-  ))
+  debug_inspect(
+    (ellipse_img.eval(Point(2.0, 1.0)), ellipse_img.eval(Point(5.0, 0.0))),
+    content=(
+      #|({ r: 0, g: 1, b: 0, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+
+
+    ),
+  )
 }
 
 ///|
@@ -151,17 +197,45 @@ test "polygon image" {
   ]
   let triangle_img = @vg.Image::polygon(@color.blue(), triangle_points)
   // inside, then outside
-  debug_inspect((
-    triangle_img.eval(Point(0.0, 0.0)),
-    triangle_img.eval(Point(0.0, -3.0)),
-  ), content=(#|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
-  ))
+  debug_inspect(
+    (triangle_img.eval(Point(0.0, 0.0)), triangle_img.eval(Point(0.0, -3.0))),
+    content=(
+      #|({ r: 0, g: 0, b: 1, a: 1 }, { r: 0, g: 0, b: 0, a: 0 })
+
+
+    ),
+  )
 }
 
 ///|
 test "opacity application" {
   let semi = @vg.Image::circle(@color.red(), 5.0).with_opacity(0.5)
-  debug_inspect(semi.eval(Point(0.0, 0.0)), content=(#|{ r: 1, g: 0, b: 0, a: 0.5 }
+  debug_inspect(
+    semi.eval(Point(0.0, 0.0)),
+    content=(
+      #|{ r: 1, g: 0, b: 0, a: 0.5 }
+    ),
+  )
+}
+
+///|
+test "path boundary samples count as inside" {
+  // (5,0) is exactly on the r=5 circle boundary -> filled, not transparent
+  let c = @vg.Image::circle(@color.red(), 5.0)
+  debug_inspect(c.eval(Point(5.0, 0.0)), content=(#|{ r: 1, g: 0, b: 0, a: 1 }
+  ))
+}
+
+///|
+test "plus blend respects top opacity" {
+  // a fully-transparent top adds nothing under Plus -> the black bottom shows
+  let faded = @vg.blend(
+    @vg.Image::const_color(@color.red()),
+    @vg.Image::const_color(@color.black()),
+    op=Plus,
+    alpha=0.0,
+  )
+  debug_inspect(faded.eval(Point(0.0, 0.0)), content=(#|{ r: 0, g: 0, b: 0, a: 1 }
   ))
 }
 

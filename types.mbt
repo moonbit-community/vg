@@ -18,7 +18,7 @@ pub using @color {type Color}
 
 ///|
 /// A gradient colour stop: `offset` in [0, 1] paired with a `color`.
-pub struct Stop {
+pub(all) struct Stop {
   offset : Double
   color : Color
 } derive(Eq, Debug)
@@ -26,7 +26,7 @@ pub struct Stop {
 ///|
 /// A *primitive* is an infinite colour field. Concrete shapes are obtained by
 /// cutting a primitive with a path (see `Cut`). Mirrors `Vg`'s `primitive`.
-pub enum Primitive {
+pub(all) enum Primitive {
   Const(Color)
   Axial(Array[Stop], Point, Point) // stops, p0, p1 (linear gradient axis)
   Radial(Array[Stop], Point, Point, Double) // stops, focus, centre, radius
@@ -34,14 +34,14 @@ pub enum Primitive {
 
 ///|
 /// Fill rule used when cutting an image with a path.
-pub enum Area {
+pub(all) enum Area {
   Anz // non-zero winding
   Aeo // even-odd
 } derive(Eq, Debug)
 
 ///|
 /// Compositing operator for `Blend`.
-pub enum Blender {
+pub(all) enum Blender {
   Over
   Plus
   Copy
@@ -56,7 +56,7 @@ pub enum Blender {
 /// of the plane to colours (see `Image::eval`), but it is *represented* as a
 /// tree so that backends can render it as native, compact vector graphics.
 /// Mirrors `Vg.image`.
-pub enum Image {
+pub(all) enum Image {
   Primitive(Primitive)
   Cut(Area, Path, Image)
   Blend(Blender, Double?, Image, Image) // operator, alpha, top, bottom
