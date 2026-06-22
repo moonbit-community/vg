@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0
+
+OO-style API polish plus a new generative-art package.
+
+### Added
+
+- **`vg/turtle`** — an optional turtle-graphics + L-system package. `LSystem`
+  rewrites an axiom by per-symbol rules; `render` walks the result as turtle
+  commands (`F`/`f` forward, `+`/`-` turn, `[`/`]` branch) into one stroked
+  `@vg.Image`. Ships tested Koch-snowflake and branching-plant demos.
+
+### Changed
+
+- `cut` and `blend` are now **methods on `Image`** (`img.cut(path)`,
+  `top.blend(bottom)`) for a uniform, discoverable API. The free functions
+  remain as deprecated shims.
+- `geometry`'s `Path` and `PathSegment` are now `pub(all)`, so downstream
+  packages can build a segment array directly (the turtle backend uses this to
+  keep `render` linear rather than quadratic).
+
 ## 0.2.0
 
 Re-architected `Image` from a `(Point) -> Color` function into a declarative
