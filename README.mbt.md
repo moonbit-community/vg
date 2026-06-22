@@ -192,6 +192,24 @@ test "demo: fractal tree" (it : @test.Test) {
 }
 ```
 
+### L-systems via the `turtle` package
+
+The optional [`vg/turtle`](./turtle/) package turns
+[L-systems](https://en.wikipedia.org/wiki/L-system) into vector line art: an
+`LSystem` rewrites an axiom by per-symbol rules, and `render` walks the result
+as turtle commands into one stroked `@vg.Image`.
+
+| Koch snowflake | Branching plant |
+|---|---|
+| ![Koch snowflake](./turtle/__snapshot__/koch_snowflake.svg) | ![Plant](./turtle/__snapshot__/plant.svg) |
+
+```mbt nocheck
+let plant = @turtle.LSystem::new("X", [('X', "F+[[X]-X]-F[-FX]+X"), ('F', "FF")])
+let img = @turtle.render(plant.expand(5), angle=0.4363, step=3.5)
+```
+
+See [`turtle/README.md`](./turtle/README.md) for the full command set and tested demos.
+
 ## Architecture
 
 An `Image` is a declarative tree (faithful to OCaml [Vg](https://github.com/dbuenzli/vg)) — *not* a pixel function:
