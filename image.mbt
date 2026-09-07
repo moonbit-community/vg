@@ -150,7 +150,7 @@ pub fn Image::linear_gradient(
 ) -> Image {
   Primitive(
     Axial(
-      [{ offset: 0.0, color: color1 }, { offset: 1.0, color: color2 }],
+      [{ offset: 0.0, color: color1, }, { offset: 1.0, color: color2, }],
       start,
       end,
     ),
@@ -176,7 +176,7 @@ pub fn Image::radial_gradient(
 ) -> Image {
   Primitive(
     Radial(
-      [{ offset: 0.0, color: color1 }, { offset: 1.0, color: color2 }],
+      [{ offset: 0.0, color: color1, }, { offset: 1.0, color: color2, }],
       center,
       center,
       radius,

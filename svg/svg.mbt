@@ -14,7 +14,7 @@ pub extend SvgDocument with Debug::{to_repr}
 ///|
 /// Create a new SVG document
 pub fn new_svg(width : Double, height : Double) -> SvgDocument {
-  { width, height, elements: [] }
+  { width, height, elements: [], }
 }
 
 ///|
@@ -23,7 +23,7 @@ pub fn SvgDocument::add_element(
   self : SvgDocument,
   element : String,
 ) -> SvgDocument {
-  { ..self, elements: [..self.elements, element] }
+  { ..self, elements: [..self.elements, element], }
 }
 
 ///|

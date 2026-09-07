@@ -11,7 +11,7 @@ pub struct LSystem {
 /// Create an L-system from an `axiom` and a list of single-symbol production
 /// `rules`. Symbols without a rule are left unchanged when expanding.
 pub fn LSystem::new(axiom : String, rules : Array[(Char, String)]) -> LSystem {
-  { axiom, rules: Map::from_array(rules) }
+  { axiom, rules: Map::from_array(rules), }
 }
 
 ///|

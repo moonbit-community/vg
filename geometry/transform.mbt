@@ -3,19 +3,19 @@
 ///|
 /// Identity transformation
 pub fn identity() -> Transform {
-  { m11: 1.0, m12: 0.0, m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: 0.0, m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0, }
 }
 
 ///|
 /// Translation transformation
 pub fn make_translate(dx : Double, dy : Double) -> Transform {
-  { m11: 1.0, m12: 0.0, m21: 0.0, m22: 1.0, m31: dx, m32: dy }
+  { m11: 1.0, m12: 0.0, m21: 0.0, m22: 1.0, m31: dx, m32: dy, }
 }
 
 ///|
 /// Scale transformation
 pub fn make_scale(sx : Double, sy : Double) -> Transform {
-  { m11: sx, m12: 0.0, m21: 0.0, m22: sy, m31: 0.0, m32: 0.0 }
+  { m11: sx, m12: 0.0, m21: 0.0, m22: sy, m31: 0.0, m32: 0.0, }
 }
 
 ///|
@@ -29,19 +29,19 @@ pub fn scale_uniform(s : Double) -> Transform {
 pub fn make_rotate(angle : Double) -> Transform {
   let cos_a = @math.cos(angle)
   let sin_a = @math.sin(angle)
-  { m11: cos_a, m12: -sin_a, m21: sin_a, m22: cos_a, m31: 0.0, m32: 0.0 }
+  { m11: cos_a, m12: -sin_a, m21: sin_a, m22: cos_a, m31: 0.0, m32: 0.0, }
 }
 
 ///|
 /// Skew X transformation
 pub fn skew_x(angle : Double) -> Transform {
-  { m11: 1.0, m12: @math.tan(angle), m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: @math.tan(angle), m21: 0.0, m22: 1.0, m31: 0.0, m32: 0.0, }
 }
 
 ///|
 /// Skew Y transformation
 pub fn skew_y(angle : Double) -> Transform {
-  { m11: 1.0, m12: 0.0, m21: @math.tan(angle), m22: 1.0, m31: 0.0, m32: 0.0 }
+  { m11: 1.0, m12: 0.0, m21: @math.tan(angle), m22: 1.0, m31: 0.0, m32: 0.0, }
 }
 
 ///|

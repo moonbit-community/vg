@@ -185,7 +185,7 @@ pub fn Path::bounds(self : Path) -> Box? {
     }
   }
   if has_points {
-    Some({ min_x, min_y, max_x, max_y })
+    Some({ min_x, min_y, max_x, max_y, })
   } else {
     None
   }

@@ -3,31 +3,31 @@
 ///|
 /// Create a point
 pub fn Point::Point(x : Double, y : Double) -> Point {
-  { x, y }
+  { x, y, }
 }
 
 ///|
 /// Origin point (0, 0)
 pub fn Point::origin() -> Point {
-  { x: 0.0, y: 0.0 }
+  { x: 0.0, y: 0.0, }
 }
 
 ///|
 /// Add two points
 pub fn Point::add(self : Point, other : Point) -> Point {
-  { x: self.x + other.x, y: self.y + other.y }
+  { x: self.x + other.x, y: self.y + other.y, }
 }
 
 ///|
 /// Subtract two points
 pub fn Point::sub(self : Point, other : Point) -> Point {
-  { x: self.x - other.x, y: self.y - other.y }
+  { x: self.x - other.x, y: self.y - other.y, }
 }
 
 ///|
 /// Scale a point by a scalar
 pub fn Point::scale(self : Point, factor : Double) -> Point {
-  { x: self.x * factor, y: self.y * factor }
+  { x: self.x * factor, y: self.y * factor, }
 }
 
 ///|
@@ -57,14 +57,14 @@ pub fn Point::normalize(self : Point) -> Point {
   if len == 0.0 {
     Point::origin()
   } else {
-    { x: self.x / len, y: self.y / len }
+    { x: self.x / len, y: self.y / len, }
   }
 }
 
 ///|
 /// Linear interpolation between two points
 pub fn Point::lerp(self : Point, other : Point, t : Double) -> Point {
-  { x: self.x + (other.x - self.x) * t, y: self.y + (other.y - self.y) * t }
+  { x: self.x + (other.x - self.x) * t, y: self.y + (other.y - self.y) * t, }
 }
 
 ///|
@@ -72,5 +72,5 @@ pub fn Point::lerp(self : Point, other : Point, t : Double) -> Point {
 pub fn Point::rotate(self : Point, angle : Double) -> Point {
   let cos_a = @math.cos(angle)
   let sin_a = @math.sin(angle)
-  { x: self.x * cos_a - self.y * sin_a, y: self.x * sin_a + self.y * cos_a }
+  { x: self.x * cos_a - self.y * sin_a, y: self.x * sin_a + self.y * cos_a, }
 }
