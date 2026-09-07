@@ -19,6 +19,9 @@ pub(all) enum Area {
   Aeo
   Outline(Double)
 } derive(Eq, @debug.Debug)
+pub fn Area::equal(Self, Self) -> Bool
+pub fn Area::not_equal(Self, Self) -> Bool
+pub fn Area::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Blender {
   Over
@@ -29,6 +32,9 @@ pub(all) enum Blender {
   Atop
   Xor
 } derive(Eq, @debug.Debug)
+pub fn Blender::equal(Self, Self) -> Bool
+pub fn Blender::not_equal(Self, Self) -> Bool
+pub fn Blender::to_repr(Self) -> @debug.Repr
 
 pub(all) enum DrawCmd {
   FillPath(@geometry.Path, Paint, Area)
@@ -40,6 +46,9 @@ pub(all) enum DrawCmd {
   PopOpacity
   DrawText(String, Double, Double, Double, @color.Color)
 } derive(Eq, @debug.Debug)
+pub fn DrawCmd::equal(Self, Self) -> Bool
+pub fn DrawCmd::not_equal(Self, Self) -> Bool
+pub fn DrawCmd::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Image {
   Primitive(Primitive)
@@ -85,6 +94,9 @@ pub(all) enum Paint {
   Linear(Array[Stop], @geometry.Point, @geometry.Point)
   Radial(Array[Stop], @geometry.Point, Double)
 } derive(Eq, @debug.Debug)
+pub fn Paint::equal(Self, Self) -> Bool
+pub fn Paint::not_equal(Self, Self) -> Bool
+pub fn Paint::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Primitive {
   Const(@color.Color)
@@ -97,6 +109,9 @@ pub(all) struct Stop {
   offset : Double
   color : @color.Color
 } derive(Eq, @debug.Debug)
+pub fn Stop::equal(Self, Self) -> Bool
+pub fn Stop::not_equal(Self, Self) -> Bool
+pub fn Stop::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 pub using @geometry {type Box}
@@ -112,4 +127,3 @@ pub using @geometry {type Point}
 pub using @geometry {type Transform}
 
 // Traits
-

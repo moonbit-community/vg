@@ -39,6 +39,9 @@ pub struct Box {
   max_x : Double
   max_y : Double
 } derive(Eq, @debug.Debug)
+pub fn Box::equal(Self, Self) -> Bool
+pub fn Box::not_equal(Self, Self) -> Bool
+pub fn Box::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Path(Array[PathSegment]) derive(Eq, @debug.Debug)
 pub fn Path::bounds(Self) -> Box?
@@ -48,12 +51,15 @@ pub fn Path::curve_to(Self, Point, Point, Point) -> Self
 pub fn Path::earc_to(Self, Double, Double, Double, Bool, Bool, Point) -> Self
 pub fn Path::ellipse(Point, Double, Double) -> Self
 pub fn Path::empty() -> Self
+pub fn Path::equal(Self, Self) -> Bool
 pub fn Path::line_to(Self, Point) -> Self
 pub fn Path::move_to(Self, Point) -> Self
+pub fn Path::not_equal(Self, Self) -> Bool
 pub fn Path::qcurve_to(Self, Point, Point) -> Self
 pub fn Path::rect(Double, Double, Double, Double) -> Self
 pub fn Path::smooth_ccurve_to(Self, Point, Point) -> Self
 pub fn Path::smooth_qcurve_to(Self, Point) -> Self
+pub fn Path::to_repr(Self) -> @debug.Repr
 pub fn Path::transform(Self, Transform) -> Self
 
 pub(all) enum PathSegment {
@@ -64,6 +70,9 @@ pub(all) enum PathSegment {
   EArcTo(Double, Double, Double, Bool, Bool, Point)
   Close
 } derive(Eq, @debug.Debug)
+pub fn PathSegment::equal(Self, Self) -> Bool
+pub fn PathSegment::not_equal(Self, Self) -> Bool
+pub fn PathSegment::to_repr(Self) -> @debug.Repr
 
 pub struct Point {
   x : Double
@@ -73,13 +82,16 @@ pub fn Point::Point(Double, Double) -> Self
 pub fn Point::add(Self, Self) -> Self
 pub fn Point::distance(Self, Self) -> Double
 pub fn Point::dot(Self, Self) -> Double
+pub fn Point::equal(Self, Self) -> Bool
 pub fn Point::length(Self) -> Double
 pub fn Point::lerp(Self, Self, Double) -> Self
 pub fn Point::normalize(Self) -> Self
+pub fn Point::not_equal(Self, Self) -> Bool
 pub fn Point::origin() -> Self
 pub fn Point::rotate(Self, Double) -> Self
 pub fn Point::scale(Self, Double) -> Self
 pub fn Point::sub(Self, Self) -> Self
+pub fn Point::to_repr(Self) -> @debug.Repr
 
 pub struct Transform {
   m11 : Double
@@ -89,8 +101,10 @@ pub struct Transform {
   m31 : Double
   m32 : Double
 } derive(Eq, @debug.Debug)
+pub fn Transform::equal(Self, Self) -> Bool
+pub fn Transform::not_equal(Self, Self) -> Bool
+pub fn Transform::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

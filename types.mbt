@@ -67,3 +67,23 @@ pub(all) enum Image {
   // text anchored at the origin; draw-only (eval is transparent for it)
   Text(String, Double, Color) // content, size, colour
 }
+
+// Explicit method promotions for the derived traits (see geometry/types.mbt).
+
+///|
+pub extend Stop with Eq::{not_equal, equal}
+
+///|
+pub extend Stop with Debug::{to_repr}
+
+///|
+pub extend Area with Eq::{not_equal, equal}
+
+///|
+pub extend Area with Debug::{to_repr}
+
+///|
+pub extend Blender with Eq::{not_equal, equal}
+
+///|
+pub extend Blender with Debug::{to_repr}

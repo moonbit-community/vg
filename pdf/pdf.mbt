@@ -10,6 +10,9 @@ pub struct PdfDocument {
 } derive(Debug)
 
 ///|
+pub extend PdfDocument with Debug::{to_repr}
+
+///|
 /// Create a new PDF document
 pub fn PdfDocument::PdfDocument(width : Double, height : Double) -> PdfDocument {
   { width, height, objects: [], object_count: 0 }
@@ -33,7 +36,7 @@ fn path_to_pdf_commands(
   path : @geometry.Path,
   height : Double,
 ) -> Array[String] {
-  let commands = Array::new()
+  let commands = Array()
   for segment in path.0 {
     match segment {
       MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")

@@ -9,6 +9,9 @@ pub struct SvgDocument {
 } derive(Debug)
 
 ///|
+pub extend SvgDocument with Debug::{to_repr}
+
+///|
 /// Create a new SVG document
 pub fn new_svg(width : Double, height : Double) -> SvgDocument {
   { width, height, elements: [] }
