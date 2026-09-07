@@ -23,4 +23,3 @@ pub fn LSystem::new(String, Array[(Char, String)]) -> Self
 // Type aliases
 
 // Traits
-

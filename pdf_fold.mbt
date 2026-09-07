@@ -10,7 +10,7 @@
 /// Render the image to a single-page PDF document of the given size.
 pub fn Image::to_pdf(self : Image, width : Double, height : Double) -> String {
   let cmds = self.to_draw_list(width, height)
-  let sb = StringBuilder::new()
+  let sb = StringBuilder()
   for cmd in cmds {
     pdf_cmd(cmd, width, height, sb)
   }

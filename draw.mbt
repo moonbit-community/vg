@@ -14,6 +14,12 @@ pub(all) enum Paint {
 } derive(Eq, Debug)
 
 ///|
+pub extend Paint with Eq::{not_equal, equal}
+
+///|
+pub extend Paint with Debug::{to_repr}
+
+///|
 /// One drawing instruction in canvas space.
 pub(all) enum DrawCmd {
   FillPath(Path, Paint, Area)
@@ -25,6 +31,12 @@ pub(all) enum DrawCmd {
   PopOpacity
   DrawText(String, Double, Double, Double, Color) // content, x, y, size, colour
 } derive(Eq, Debug)
+
+///|
+pub extend DrawCmd with Eq::{not_equal, equal}
+
+///|
+pub extend DrawCmd with Debug::{to_repr}
 
 ///|
 /// Fold the image into a backend-neutral draw list for a `width` x `height`

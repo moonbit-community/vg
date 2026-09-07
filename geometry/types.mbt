@@ -45,3 +45,38 @@ pub struct Transform {
   m31 : Double // Translate X
   m32 : Double // Translate Y
 } derive(Eq, Debug)
+
+// Explicit method promotions for the derived traits. Without these `extend`
+// declarations the compiler implicitly promotes the `impl` methods to regular
+// methods, which is deprecated; declaring them keeps `p.equal(q)` /
+// `p.to_repr()` working for downstream users.
+
+///|
+pub extend Point with Eq::{not_equal, equal}
+
+///|
+pub extend Point with Debug::{to_repr}
+
+///|
+pub extend Box with Eq::{not_equal, equal}
+
+///|
+pub extend Box with Debug::{to_repr}
+
+///|
+pub extend PathSegment with Eq::{not_equal, equal}
+
+///|
+pub extend PathSegment with Debug::{to_repr}
+
+///|
+pub extend Path with Eq::{not_equal, equal}
+
+///|
+pub extend Path with Debug::{to_repr}
+
+///|
+pub extend Transform with Eq::{not_equal, equal}
+
+///|
+pub extend Transform with Debug::{to_repr}

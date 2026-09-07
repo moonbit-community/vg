@@ -25,9 +25,9 @@ pub fn PdfDocument::render_line(Self, @geometry.Point, @geometry.Point, @color.C
 pub fn PdfDocument::render_path(Self, @geometry.Path, @color.Color) -> Self
 pub fn PdfDocument::render_rectangle(Self, Double, Double, Double, Double, @color.Color) -> Self
 pub fn PdfDocument::render_text(Self, String, @geometry.Point, Double, @color.Color) -> Self
+pub fn PdfDocument::to_repr(Self) -> @debug.Repr
 pub fn PdfDocument::to_string(Self) -> String
 
 // Type aliases
 
 // Traits
-

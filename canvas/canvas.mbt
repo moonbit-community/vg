@@ -9,6 +9,9 @@ pub struct CanvasDocument {
 } derive(Debug)
 
 ///|
+pub extend CanvasDocument with Debug::{to_repr}
+
+///|
 /// Create a new Canvas document
 pub fn new_canvas(width : Double, height : Double) -> CanvasDocument {
   { width, height, commands: [] }
@@ -30,7 +33,7 @@ fn color_to_canvas(c : @color.Color) -> String {
 ///|
 /// Convert a path to Canvas commands
 fn path_to_canvas_commands(path : @geometry.Path) -> Array[String] {
-  let commands = Array::new()
+  let commands = Array()
   commands.push("ctx.beginPath();")
   for segment in path.0 {
     match segment {

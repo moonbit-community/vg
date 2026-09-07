@@ -10,8 +10,8 @@ pub fn Image::to_svg(self : Image, width : Double, height : Double) -> String {
 
 ///|
 fn svg_of(cmds : Array[DrawCmd], width : Double, height : Double) -> String {
-  let defs = StringBuilder::new()
-  let body = StringBuilder::new()
+  let defs = StringBuilder()
+  let body = StringBuilder()
   let id = [0] // shared counter for gradient/clip ids
   for cmd in cmds {
     match cmd {
