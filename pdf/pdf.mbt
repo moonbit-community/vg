@@ -15,7 +15,7 @@ pub extend PdfDocument with Debug::{to_repr}
 ///|
 /// Create a new PDF document
 pub fn PdfDocument::PdfDocument(width : Double, height : Double) -> PdfDocument {
-  { width, height, objects: [], object_count: 0 }
+  { width, height, objects: [], object_count: 0, }
 }
 
 ///|

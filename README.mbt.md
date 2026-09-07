@@ -204,7 +204,10 @@ as turtle commands into one stroked `@vg.Image`.
 | ![Koch snowflake](./turtle/__snapshot__/koch_snowflake.svg) | ![Plant](./turtle/__snapshot__/plant.svg) |
 
 ```mbt nocheck
+///|
 let plant = @turtle.LSystem::new("X", [('X', "F+[[X]-X]-F[-FX]+X"), ('F', "FF")])
+
+///|
 let img = @turtle.render(plant.expand(5), angle=0.4363, step=3.5)
 ```
 

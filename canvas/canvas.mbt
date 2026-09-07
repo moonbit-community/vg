@@ -14,7 +14,7 @@ pub extend CanvasDocument with Debug::{to_repr}
 ///|
 /// Create a new Canvas document
 pub fn new_canvas(width : Double, height : Double) -> CanvasDocument {
-  { width, height, commands: [] }
+  { width, height, commands: [], }
 }
 
 ///|
@@ -78,7 +78,7 @@ pub fn CanvasDocument::add_command(
   self : CanvasDocument,
   command : String,
 ) -> CanvasDocument {
-  { ..self, commands: [..self.commands, command] }
+  { ..self, commands: [..self.commands, command], }
 }
 
 ///|

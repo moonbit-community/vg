@@ -3,25 +3,25 @@
 ///|
 /// Create a color from RGBA components
 pub fn rgba(r : Double, g : Double, b : Double, a : Double) -> Color {
-  { r, g, b, a }
+  { r, g, b, a, }
 }
 
 ///|
 /// Create a color from RGB components (alpha = 1.0)
 pub fn rgb(r : Double, g : Double, b : Double) -> Color {
-  { r, g, b, a: 1.0 }
+  { r, g, b, a: 1.0, }
 }
 
 ///|
 /// Create a grayscale color
 pub fn gray(value : Double) -> Color {
-  { r: value, g: value, b: value, a: 1.0 }
+  { r: value, g: value, b: value, a: 1.0, }
 }
 
 ///|
 /// Transparent color
 pub fn transparent() -> Color {
-  { r: 0.0, g: 0.0, b: 0.0, a: 0.0 }
+  { r: 0.0, g: 0.0, b: 0.0, a: 0.0, }
 }
 
 // Predefined colors
@@ -101,7 +101,7 @@ pub fn blend(c1 : Color, c2 : Color) -> Color {
 ///|
 /// Multiply color by a scalar
 pub fn scale(c : Color, factor : Double) -> Color {
-  { r: c.r * factor, g: c.g * factor, b: c.b * factor, a: c.a }
+  { r: c.r * factor, g: c.g * factor, b: c.b * factor, a: c.a, }
 }
 
 ///|
