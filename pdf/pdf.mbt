@@ -36,7 +36,7 @@ fn path_to_pdf_commands(
   path : @geometry.Path,
   height : Double,
 ) -> Array[String] {
-  let commands = Array()
+  let commands = []
   for segment in path.0 {
     match segment {
       MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")
