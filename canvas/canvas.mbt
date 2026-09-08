@@ -33,7 +33,7 @@ fn color_to_canvas(c : @color.Color) -> String {
 ///|
 /// Convert a path to Canvas commands
 fn path_to_canvas_commands(path : @geometry.Path) -> Array[String] {
-  let commands = Array()
+  let commands = []
   commands.push("ctx.beginPath();")
   for segment in path.0 {
     match segment {
