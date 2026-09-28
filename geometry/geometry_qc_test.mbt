@@ -965,15 +965,19 @@ test "regression: a singular transform of a quarter-turned arc stays on it" {
     .move_to(Point(0.0, -1.0))
     .earc_to(1.0, 1.0e-17, 90.0, false, true, Point(0.0, 1.0))
   let folded = arc.transform(@geometry.make_scale(1.0e17, 0.0))
+  let mut reach = 0.0
   for seg in folded.0 {
     match seg {
       MoveTo(p) | LineTo(p) => {
         assert_true(p.x >= -1.0e-9 && p.x <= 1.0 + 1.0e-9, msg="x \{p.x}")
         assert_eq(p.y, 0.0)
+        reach = if p.x > reach { p.x } else { reach }
       }
       _ => fail("expected line segments")
     }
   }
+  // the fold reaches the far end of the diameter's projection
+  assert_true((reach - 1.0).abs() < 1.0e-9, msg="reach \{reach}")
 }
 
 ///|
