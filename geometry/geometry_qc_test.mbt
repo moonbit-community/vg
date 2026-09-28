@@ -949,10 +949,29 @@ test "regression: a tilted flat arc keeps its tilt through a round trip" {
     guard back.0[1] is EArcTo(ra, rb, rot, false, true, _) else {
       fail("expected an arc")
     }
-    assert_true((ra - 2.0).abs() < 1.0e-9, msg="rx \{ra} on axis \{axis}")
-    assert_true((rb - 1.0).abs() < 1.0e-9, msg="ry \{rb} on axis \{axis}")
-    assert_true((rot - 45.0).abs() < 1.0e-9, msg="rotation \{rot}")
+    // at 45 degrees (2, 1) and (1, 2) at -45 are the same ellipse; which one
+    // comes out depends on the last bit of the platform's libm
+    let (major, minor, tilt) = canonical_ellipse(ra, rb, rot)
+    let msg = "radii (\{ra}, \{rb}) at \{rot} on axis \{axis}"
+    assert_true((major - 2.0).abs() < 1.0e-9, msg~)
+    assert_true((minor - 1.0).abs() < 1.0e-9, msg~)
+    assert_true((tilt - 45.0).abs() < 1.0e-9, msg~)
   }
+}
+
+///|
+/// An ellipse as (major radius, minor radius, major axis angle in [0, 180)).
+fn canonical_ellipse(
+  rx : Double,
+  ry : Double,
+  rot : Double,
+) -> (Double, Double, Double) {
+  let (major, minor, rot) = if rx >= ry {
+    (rx, ry, rot)
+  } else {
+    (ry, rx, rot + 90.0)
+  }
+  (major, minor, (rot % 180.0 + 180.0) % 180.0)
 }
 
 ///|
