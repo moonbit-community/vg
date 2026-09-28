@@ -9,7 +9,15 @@ import {
 
 import {
   "moonbitlang/core/test",
+  "moonbitlang/core/quickcheck",
+  "moonbitlang/core/quickcheck/splitmix",
 } for "test"
+
+import {
+  "moonbitlang/core/quickcheck",
+  "moonbitlang/core/string",
+  "moonbitlang/core/double",
+} for "wbtest"
 
 options(
   "is-main": false,

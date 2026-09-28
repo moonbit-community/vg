@@ -35,7 +35,9 @@ fn pdf_cmd(
         match area {
           // stroke the outline with width w (round caps/joins)
           Outline(w) => {
-            sb.write_string("q\n\{c.r} \{c.g} \{c.b} RG\n\{w} w\n1 J\n1 j\n")
+            sb.write_string(
+              "q\n\{pdf_num(c.r)} \{pdf_num(c.g)} \{pdf_num(c.b)} RG\n\{pdf_num(w)} w\n1 J\n1 j\n",
+            )
             sb.write_string(pdf_path(path, height))
             sb.write_string("S\nQ\n")
           }
@@ -51,14 +53,16 @@ fn pdf_cmd(
       // an infinite colour field fills the whole page
       if paint_color(paint).a > 0.0 {
         sb.write_string(
-          "q\n\{pdf_fill_color(paint)}\n0 0 \{width} \{height} re\nf\nQ\n",
+          "q\n\{pdf_fill_color(paint)}\n0 0 \{pdf_num(width)} \{pdf_num(height)} re\nf\nQ\n",
         )
       }
     RasterCell(x, y, w, h, c) =>
       if c.a > 0.0 {
         // re takes the lower-left corner in PDF's y-up space
         let yb = height - (y + h)
-        sb.write_string("q\n\{pdf_color(c)}\n\{x} \{yb} \{w} \{h} re\nf\nQ\n")
+        sb.write_string(
+          "q\n\{pdf_color(c)}\n\{pdf_num(x)} \{pdf_num(yb)} \{pdf_num(w)} \{pdf_num(h)} re\nf\nQ\n",
+        )
       }
     // clip the following commands to the path's area (W / W*), then `n`
     PushClip(path, area) => {
@@ -79,7 +83,7 @@ fn pdf_cmd(
       let tx = x - content.length().to_double() * size * 0.5 / 2.0
       let ty = height - y - size * 0.35
       sb.write_string(
-        "q\nBT\n/F1 \{size} Tf\n\{color.r} \{color.g} \{color.b} rg\n\{tx} \{ty} Td\n(\{pdf_text_escape(content)}) Tj\nET\nQ\n",
+        "q\nBT\n/F1 \{pdf_num(size)} Tf\n\{pdf_num(color.r)} \{pdf_num(color.g)} \{pdf_num(color.b)} rg\n\{pdf_num(tx)} \{pdf_num(ty)} Td\n(\{pdf_text_escape(content)}) Tj\nET\nQ\n",
       )
     }
   }
@@ -113,7 +117,7 @@ fn pdf_fill_op(area : Area) -> String {
 
 ///|
 fn pdf_color(c : Color) -> String {
-  "\{c.r} \{c.g} \{c.b} rg"
+  "\{pdf_num(c.r)} \{pdf_num(c.g)} \{pdf_num(c.b)} rg"
 }
 
 ///|
@@ -146,30 +150,30 @@ fn pdf_path(path : Path, height : Double) -> String {
   for seg in path.0 {
     match seg {
       MoveTo(p) => {
-        parts.push("\{p.x} \{height - p.y} m")
+        parts.push("\{pdf_num(p.x)} \{pdf_num(height - p.y)} m")
         cur = p
         start = p
       }
       LineTo(p) => {
-        parts.push("\{p.x} \{height - p.y} l")
+        parts.push("\{pdf_num(p.x)} \{pdf_num(height - p.y)} l")
         cur = p
       }
       CurveTo(c1, c2, e) => {
         parts.push(
-          "\{c1.x} \{height - c1.y} \{c2.x} \{height - c2.y} \{e.x} \{height - e.y} c",
+          "\{pdf_num(c1.x)} \{pdf_num(height - c1.y)} \{pdf_num(c2.x)} \{pdf_num(height - c2.y)} \{pdf_num(e.x)} \{pdf_num(height - e.y)} c",
         )
         cur = e
       }
       // quadratic -> cubic by repeating the control point (approximation)
       QCurveTo(c, e) => {
         parts.push(
-          "\{c.x} \{height - c.y} \{c.x} \{height - c.y} \{e.x} \{height - e.y} c",
+          "\{pdf_num(c.x)} \{pdf_num(height - c.y)} \{pdf_num(c.x)} \{pdf_num(height - c.y)} \{pdf_num(e.x)} \{pdf_num(height - e.y)} c",
         )
         cur = e
       }
       EArcTo(rx, ry, rot, la, sw, e) => {
         for pt in flatten_arc(cur, rx, ry, rot, la, sw, e) {
-          parts.push("\{pt.x} \{height - pt.y} l")
+          parts.push("\{pdf_num(pt.x)} \{pdf_num(height - pt.y)} l")
         }
         cur = e
       }
@@ -180,4 +184,59 @@ fn pdf_path(path : Path, height : Double) -> String {
     }
   }
   parts.join("\n") + "\n"
+}
+
+///|
+/// Format a number for a PDF content stream. PDF has no exponent notation, so
+/// values that `Double::to_string` prints as e.g. `2.842170943040401e-14` (a
+/// rounding residue) are written as plain decimals; magnitudes below 1e-9 are
+/// written as `0`.
+fn pdf_num(x : Double) -> String {
+  let s = x.to_string()
+  guard s.contains("e") else { s }
+  if x.abs() < 1.0e-9 {
+    return "0"
+  }
+  // split "[-]d[.ddd]e[+|-]k" into its digits, integer length and exponent
+  let chars = s.to_array()
+  let digits = StringBuilder()
+  let mut ndigits = 0
+  let mut int_len = 0
+  let mut seen_point = false
+  let mut i = if chars[0] == '-' { 1 } else { 0 }
+  while chars[i] != 'e' {
+    if chars[i] == '.' {
+      seen_point = true
+    } else {
+      digits.write_char(chars[i])
+      ndigits += 1
+      if !seen_point {
+        int_len += 1
+      }
+    }
+    i += 1
+  }
+  i += 1
+  let exp_neg = chars[i] == '-'
+  if chars[i] == '-' || chars[i] == '+' {
+    i += 1
+  }
+  let mut exp = 0
+  while i < chars.length() {
+    exp = exp * 10 + (chars[i].to_int() - '0'.to_int())
+    i += 1
+  }
+  let point = int_len + (if exp_neg { -exp } else { exp })
+  let d = digits.to_string()
+  let sign = if x < 0.0 { "-" } else { "" }
+  if point <= 0 {
+    sign + "0." + "0".repeat(-point) + d
+  } else if point >= ndigits {
+    sign + d + "0".repeat(point - ndigits)
+  } else {
+    sign +
+    d.view(end_offset=point).to_owned() +
+    "." +
+    d.view(start_offset=point).to_owned()
+  }
 }

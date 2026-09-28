@@ -199,7 +199,7 @@ pub fn SvgDocument::render_linear_gradient(
   color2 : @color.Color,
 ) -> SvgDocument {
   let gradient =
-    $|<defs><linearGradient id="\{id}" x1="\{start.x}%" y1="\{start.y}%" x2="\{end.x}%" y2="\{end.y}%"><stop offset="0%" stop-color="\{color_to_svg(color1)}"/><stop offset="100%" stop-color="\{color_to_svg(color2)}"/></linearGradient></defs>"
+    $|<defs><linearGradient id="\{xml_escape(id)}" x1="\{start.x}%" y1="\{start.y}%" x2="\{end.x}%" y2="\{end.y}%"><stop offset="0%" stop-color="\{color_to_svg(color1)}"/><stop offset="100%" stop-color="\{color_to_svg(color2)}"/></linearGradient></defs>
   self.add_element(gradient)
 }
 

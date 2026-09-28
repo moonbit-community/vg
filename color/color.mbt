@@ -105,8 +105,10 @@ pub fn scale(c : Color, factor : Double) -> Color {
 }
 
 ///|
-/// Convert color to hex string
+/// Convert color to hex string. Out-of-range components are clamped to
+/// [0.0, 1.0] first (alpha is ignored).
 pub fn to_hex(c : Color) -> String {
+  let c = clamp(c)
   let r = (c.r * 255.0).to_int()
   let g = (c.g * 255.0).to_int()
   let b = (c.b * 255.0).to_int()
