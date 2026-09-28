@@ -4,9 +4,9 @@
   <text x="100" y="50" font-size="14" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#FFFFFF">Linear Gradient</text>
   <text x="250" y="50" font-size="14" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#FFFFFF">Radial Gradient</text>
   <text x="400" y="50" font-size="14" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="#FFFFFF">Conic Gradient</text>
-  <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF0000"/><stop offset="100%" stop-color="#0000FF"/></linearGradient></defs>"
-  <defs><linearGradient id="grad2" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#FFFF00"/><stop offset="100%" stop-color="#7F007F"/></linearGradient></defs>"
-  <defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00FFFF"/><stop offset="100%" stop-color="#FF00FF"/></linearGradient></defs>"
+  <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF0000"/><stop offset="100%" stop-color="#0000FF"/></linearGradient></defs>
+  <defs><linearGradient id="grad2" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#FFFF00"/><stop offset="100%" stop-color="#7F007F"/></linearGradient></defs>
+  <defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00FFFF"/><stop offset="100%" stop-color="#FF00FF"/></linearGradient></defs>
   <circle cx="100" cy="150" r="60" fill="#FF0000"/>
   <circle cx="100" cy="150" r="40" fill="#7F007F"/>
   <circle cx="100" cy="150" r="20" fill="#0000FF"/>
