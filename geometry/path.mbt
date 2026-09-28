@@ -235,11 +235,56 @@ pub fn Path::transform(self : Path, t : Transform) -> Path {
           CurveTo(cp1, cp2, end) =>
             CurveTo(apply(t, cp1), apply(t, cp2), apply(t, end))
           QCurveTo(cp, end) => QCurveTo(apply(t, cp), apply(t, end))
-          EArcTo(rx, ry, rotation, large_arc, sweep, end) =>
+          EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+            let (rx, ry, rotation) = transform_arc_ellipse(t, rx, ry, rotation)
+            // a reflection reverses the direction of travel along the arc
+            let sweep = if determinant(t) < 0.0 { !sweep } else { sweep }
             EArcTo(rx, ry, rotation, large_arc, sweep, apply(t, end))
+          }
           Close => Close
         }
       }
     ],
   )
+}
+
+///|
+/// The radii and x-axis rotation (degrees) of the ellipse with radii `rx`,
+/// `ry` and rotation `rotation` after the linear part of `t`.
+///
+/// The ellipse is the image of the unit circle under M = L * R(phi) *
+/// diag(rx, ry); its new semi-axes are the singular values of M and its new
+/// rotation is the angle of M's left singular vectors (closed-form 2x2 SVD).
+fn transform_arc_ellipse(
+  t : Transform,
+  rx : Double,
+  ry : Double,
+  rotation : Double,
+) -> (Double, Double, Double) {
+  // a zero radius makes the arc a straight line, and a pure translation
+  // leaves the ellipse unchanged: keep the original parameters exactly
+  guard rx != 0.0 &&
+    ry != 0.0 &&
+    !(t.m11 == 1.0 && t.m12 == 0.0 && t.m21 == 0.0 && t.m22 == 1.0) else {
+    (rx, ry, rotation)
+  }
+  let pi = 3.141592653589793
+  let phi = rotation * pi / 180.0
+  let c = @math.cos(phi)
+  let s = @math.sin(phi)
+  let rx = rx.abs()
+  let ry = ry.abs()
+  let a = (t.m11 * c + t.m12 * s) * rx
+  let b = (t.m12 * c - t.m11 * s) * ry
+  let cc = (t.m21 * c + t.m22 * s) * rx
+  let d = (t.m22 * c - t.m21 * s) * ry
+  let e = (a + d) / 2.0
+  let f = (a - d) / 2.0
+  let g = (cc + b) / 2.0
+  let h = (cc - b) / 2.0
+  let q = (e * e + h * h).sqrt()
+  let r = (f * f + g * g).sqrt()
+  let a1 = @math.atan2(g, f)
+  let a2 = @math.atan2(h, e)
+  ((q + r).abs(), (q - r).abs(), (a2 + a1) / 2.0 * 180.0 / pi)
 }
