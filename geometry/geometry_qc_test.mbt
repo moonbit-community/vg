@@ -738,13 +738,20 @@ test "regression: Path::transform scales, rotates and reflects arc radii" {
   assert_eq(ry, 5.0)
   assert_false(sweep)
   assert_eq(end, Point(-20.0, 0.0))
-  // a quarter turn turns the major axis vertical
+  // a quarter turn turns the major axis vertical: radii (10, 5) at 90
+  // degrees, or equivalently (5, 10) at 0 degrees
   guard arc.transform(@geometry.make_rotate(3.141592653589793 / 2.0)).0[1]
     is EArcTo(rx, ry, rot, _, _, _) else {
     fail("expected an arc")
   }
-  assert_true((rx - 10.0).abs() < 1.0e-9 && (ry - 5.0).abs() < 1.0e-9)
-  assert_true(((rot % 180.0 + 180.0) % 180.0 - 90.0).abs() < 1.0e-9)
+  let rot = (rot % 180.0 + 180.0) % 180.0
+  let upright = (rx - 10.0).abs() < 1.0e-9 &&
+    (ry - 5.0).abs() < 1.0e-9 &&
+    (rot - 90.0).abs() < 1.0e-9
+  let swapped = (rx - 5.0).abs() < 1.0e-9 &&
+    (ry - 10.0).abs() < 1.0e-9 &&
+    (rot.abs() < 1.0e-9 || (rot - 180.0).abs() < 1.0e-9)
+  assert_true(upright || swapped, msg="radii (\{rx}, \{ry}) at \{rot}")
 }
 
 ///|
@@ -921,6 +928,52 @@ test "regression: squashing an arc along x keeps it axis-aligned" {
     .transform(@geometry.make_scale(1.0e17, 1.0))
   guard tall.0[1] is EArcTo(ra, rb, _, _, _, _) else { fail("expected an arc") }
   assert_true((ra - 1.0).abs() < 1.0e-12 && (rb - 1.0).abs() < 1.0e-12)
+}
+
+///|
+test "regression: a tilted flat arc keeps its tilt through a round trip" {
+  // an arc of the ellipse with radii (2, 1) at 45 degrees, squashed by 1e-17
+  // along one axis and stretched back: the two atan2 angles of the SVD
+  // cancelled the tiny tilt of the flat ellipse, recovering radii
+  // (1.58, 1.26) at 0 degrees
+  for axis in [0, 1] {
+    let arc = @geometry.Path::empty()
+      .move_to(Point(0.0, -1.0))
+      .earc_to(2.0, 1.0, 45.0, false, true, Point(0.0, 1.0))
+    let (squash, stretch) = if axis == 0 {
+      (@geometry.make_scale(1.0e-17, 1.0), @geometry.make_scale(1.0e17, 1.0))
+    } else {
+      (@geometry.make_scale(1.0, 1.0e-17), @geometry.make_scale(1.0, 1.0e17))
+    }
+    let back = arc.transform(squash).transform(stretch)
+    guard back.0[1] is EArcTo(ra, rb, rot, false, true, _) else {
+      fail("expected an arc")
+    }
+    assert_true((ra - 2.0).abs() < 1.0e-9, msg="rx \{ra} on axis \{axis}")
+    assert_true((rb - 1.0).abs() < 1.0e-9, msg="ry \{rb} on axis \{axis}")
+    assert_true((rot - 45.0).abs() < 1.0e-9, msg="rotation \{rot}")
+  }
+}
+
+///|
+test "regression: a singular transform of a quarter-turned arc stays on it" {
+  // radii (1, 1e-17) at 90 degrees is the unit semicircle's vertical
+  // diameter; projected by make_scale(1e17, 0) it spans x in [0, 1]. The
+  // rounded cos(90 deg) = 6.1e-17 made the radii look too small for the
+  // endpoints, and the enlarged ellipse reached x = 38.5
+  let arc = @geometry.Path::empty()
+    .move_to(Point(0.0, -1.0))
+    .earc_to(1.0, 1.0e-17, 90.0, false, true, Point(0.0, 1.0))
+  let folded = arc.transform(@geometry.make_scale(1.0e17, 0.0))
+  for seg in folded.0 {
+    match seg {
+      MoveTo(p) | LineTo(p) => {
+        assert_true(p.x >= -1.0e-9 && p.x <= 1.0 + 1.0e-9, msg="x \{p.x}")
+        assert_eq(p.y, 0.0)
+      }
+      _ => fail("expected line segments")
+    }
+  }
 }
 
 ///|

@@ -343,12 +343,23 @@ fn transform_arc_ellipse(
   let h = (cc - b) / 2.0
   let q = (e * e + h * h).sqrt()
   let r = (f * f + g * g).sqrt()
-  let a1 = @math.atan2(g, f)
-  let a2 = @math.atan2(h, e)
   let major = q + r
   // det M = det L * det R(phi) * rx * ry, with det R(phi) = 1
   let minor = (determinant(t) * rx * ry).abs() / major
-  (major, minor, (a2 + a1) / 2.0 * 180.0 / pi)
+  // The major axis is the principal eigenvector of M M^T = [[p, k], [k, u]],
+  // at angle atan2(2k, p - u) / 2. This keeps a tiny tilt of a very flat
+  // ellipse, which the difference of two atan2 angles cancels away. When the
+  // major axis is nearer y it becomes ry, so the rotation stays within 45
+  // degrees of 0, where a small tilt is representable in degrees (next to
+  // 90 it would round away).
+  let p = a * a + b * b
+  let k = a * cc + b * d
+  let u = cc * cc + d * d
+  if p >= u {
+    (major, minor, @math.atan2(2.0 * k, p - u) / 2.0 * 180.0 / pi)
+  } else {
+    (minor, major, @math.atan2(-2.0 * k, u - p) / 2.0 * 180.0 / pi)
+  }
 }
 
 ///|
@@ -388,9 +399,7 @@ fn arc_center(
   let mut ry = ry0.abs()
   guard rx > 0.0 && ry > 0.0 && p0 != p1 else { None }
   let pi = 3.141592653589793
-  let phi = phi_deg * pi / 180.0
-  let cphi = @math.cos(phi)
-  let sphi = @math.sin(phi)
+  let (cphi, sphi) = rotation_cos_sin(phi_deg)
   let dx = (p0.x - p1.x) / 2.0
   let dy = (p0.y - p1.y) / 2.0
   let x1 = cphi * dx + sphi * dy
