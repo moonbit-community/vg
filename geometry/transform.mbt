@@ -45,15 +45,19 @@ pub fn skew_y(angle : Double) -> Transform {
 }
 
 ///|
-/// Compose two transformations (multiply matrices)
+/// Compose two transformations: the result applies `t1` first, then `t2`, i.e.
+/// `apply(compose_transforms(t1, t2), p) == apply(t2, apply(t1, p))`.
+///
+/// With the convention of `apply` (x' = m11 x + m12 y + m31,
+/// y' = m21 x + m22 y + m32) this is the matrix product `t2 * t1`.
 pub fn compose_transforms(t1 : Transform, t2 : Transform) -> Transform {
   {
-    m11: t1.m11 * t2.m11 + t1.m12 * t2.m21,
-    m12: t1.m11 * t2.m12 + t1.m12 * t2.m22,
-    m21: t1.m21 * t2.m11 + t1.m22 * t2.m21,
-    m22: t1.m21 * t2.m12 + t1.m22 * t2.m22,
-    m31: t1.m31 * t2.m11 + t1.m32 * t2.m21 + t2.m31,
-    m32: t1.m31 * t2.m12 + t1.m32 * t2.m22 + t2.m32,
+    m11: t2.m11 * t1.m11 + t2.m12 * t1.m21,
+    m12: t2.m11 * t1.m12 + t2.m12 * t1.m22,
+    m21: t2.m21 * t1.m11 + t2.m22 * t1.m21,
+    m22: t2.m21 * t1.m12 + t2.m22 * t1.m22,
+    m31: t2.m11 * t1.m31 + t2.m12 * t1.m32 + t2.m31,
+    m32: t2.m21 * t1.m31 + t2.m22 * t1.m32 + t2.m32,
   }
 }
 

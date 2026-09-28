@@ -290,7 +290,7 @@ test "transform composition and inversion" {
       #|    ("after_translate", { x: 11, y: 6 }),
       #|    ("after_scale", { x: 22, y: 18 }),
       #|    ("after_rotate", { x: 2.8284458884589423, y: 28.284269371084342 }),
-      #|    ("composed_result", { x: 24.748741563359225, y: 0.7071231994355944 }),
+      #|    ("composed_result", { x: 2.8284458884589423, y: 28.284269371084342 }),
       #|  ],
       #|  ("has_inverse", true, { x: 1, y: 1 }),
       #|)
