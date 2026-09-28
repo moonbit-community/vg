@@ -1,6 +1,63 @@
 // White-box property tests (moonbitlang/core/quickcheck) for private helpers
-// of the renderers: the path flattener used by `eval` and the PDF / canvas
-// backends.
+// of the renderers: the PDF number formatter and the path flattener used by
+// `eval` and the PDF / canvas backends.
+
+///|
+/// A finite Double spanning tiny residues, ordinary values and huge
+/// magnitudes (all of which `Double::to_string` may print with an exponent).
+priv struct Num(Double) derive(Debug)
+
+///|
+impl @quickcheck.Arbitrary for Num with fn arbitrary(_, rs) {
+  let sign = if rs.next_uint(limit=2) == 0 { 1.0 } else { -1.0 }
+  let mag = match rs.next_uint(limit=4) {
+    0 => rs.next_double() * 100.0
+    1 => rs.next_double() * 1.0e-6
+    2 => {
+      // 10^k for k in [-12, 25], times a random mantissa
+      let k = rs.next_uint(limit=38).reinterpret_as_int() - 12
+      let mut p = 1.0
+      if k >= 0 {
+        for _ in 0..<k {
+          p = p * 10.0
+        }
+      } else {
+        for _ in 0..<-k {
+          p = p / 10.0
+        }
+      }
+      (1.0 + rs.next_double() * 9.0) * p
+    }
+    _ => 0.0
+  }
+  Num(sign * mag)
+}
+
+///|
+impl @quickcheck.Shrink for Num with fn shrink(self) {
+  @quickcheck.Shrink::shrink(self.0).map(x => Num(x))
+}
+
+///|
+test "qc: pdf_num prints plain decimals that read back as the same number" {
+  @quickcheck.check(
+    (x : Num) => {
+      let s = pdf_num(x.0)
+      let plain = s.to_array().iter().all(c => c is ('0'..='9' | '.' | '-'))
+      let back = @string.parse_double(s) catch { _ => @double.not_a_number }
+      plain &&
+      (
+      // values below 1e-9 are flushed to zero
+        (x.0.abs() < 1.0e-9 && back == 0.0) ||
+        (back - x.0).abs() <= 1.0e-12 * x.0.abs()
+      )
+    },
+    observe=x => {
+      [@quickcheck.classify(x.0.to_string().contains("e"), "exponent form")]
+    },
+    seed=61,
+  )
+}
 
 ///|
 /// A well-conditioned transform built from a scale, a rotation, an optional
