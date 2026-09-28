@@ -80,8 +80,9 @@ pub fn invert(t : Transform) -> Transform? {
       m12: -t.m12 * inv_det,
       m21: -t.m21 * inv_det,
       m22: t.m11 * inv_det,
-      m31: (t.m21 * t.m32 - t.m22 * t.m31) * inv_det,
-      m32: (t.m12 * t.m31 - t.m11 * t.m32) * inv_det,
+      // translation of the inverse is -(L^-1 * (m31, m32))
+      m31: (t.m12 * t.m32 - t.m22 * t.m31) * inv_det,
+      m32: (t.m21 * t.m31 - t.m11 * t.m32) * inv_det,
     })
   }
 }
