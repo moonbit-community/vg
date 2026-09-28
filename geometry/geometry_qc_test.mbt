@@ -521,6 +521,8 @@ test "qc: Path::transform maps every point through apply and keeps structure" {
       let dst = path_points(out)
       src == dst && path.transform(@geometry.identity()) == path
     },
+    // singular transforms replace arcs by line segments (see below)
+    filter=input => @geometry.determinant(input.1.tr()) != 0.0,
     seed=13,
   )
 }
@@ -743,4 +745,174 @@ test "regression: Path::transform scales, rotates and reflects arc radii" {
   }
   assert_true((rx - 10.0).abs() < 1.0e-9 && (ry - 5.0).abs() < 1.0e-9)
   assert_true(((rot % 180.0 + 180.0) % 180.0 - 90.0).abs() < 1.0e-9)
+}
+
+///|
+/// Squash factor for the second axis: 1 (no squash), a tiny factor down to
+/// 1e-17 (ill-conditioned), or 0 (singular).
+priv struct Squash(Double) derive(Debug)
+
+///|
+impl @quickcheck.Arbitrary for Squash with fn arbitrary(_, rs) {
+  match rs.next_uint(limit=4) {
+    0 => Squash(1.0)
+    1 => Squash(0.0)
+    _ => {
+      let k = 1 + rs.next_uint(limit=17).reinterpret_as_int()
+      let mut v = 1.0
+      for _ in 0..<k {
+        v = v / 10.0
+      }
+      Squash(v)
+    }
+  }
+}
+
+///|
+impl @quickcheck.Shrink for Squash with fn shrink(_) {
+  Iter::empty()
+}
+
+///|
+/// An elliptical arc: radii, x-axis rotation (degrees), flags, end point.
+priv struct ArcW(Double, Double, Double, Bool, Bool, Double, Double) derive (
+  Debug,
+)
+
+///|
+impl @quickcheck.Arbitrary for ArcW with fn arbitrary(_, rs) {
+  let rx = 0.5 + rs.next_double() * 50.0
+  let ry = 0.5 + rs.next_double() * 50.0
+  let rot = rs.next_double() * 360.0
+  let la = rs.next_uint(limit=2) == 0
+  let sw = rs.next_uint(limit=2) == 0
+  let x = gen_double(rs)
+  ArcW(rx, ry, rot, la, sw, x, gen_double(rs))
+}
+
+///|
+impl @quickcheck.Shrink for ArcW with fn shrink(_) {
+  Iter::empty()
+}
+
+///|
+test "qc: transformed arc radii are the singular values of the mapped ellipse" {
+  // Reference model: the ellipse (rx, ry, rot) maps to the image of the unit
+  // circle under M = L R(rot) diag(rx, ry). Its semi-axis product is
+  // |det L| rx ry (well-posed even for very flat ellipses), its major
+  // semi-axis is max |M u| over unit u (found by dense sampling), and the
+  // major axis points along the maximising M u.
+  @quickcheck.check(
+    (input : (ArcW, T, Squash)) => {
+      let (arc, ta, sq) = input
+      let ArcW(rx, ry, rot, la, sw, x, y) = arc
+      let t = @geometry.compose_transforms(
+        @geometry.make_scale(1.0, sq.0),
+        ta.tr(),
+      )
+      let det = @geometry.determinant(t)
+      let path = @geometry.Path::empty()
+        .move_to(Point(0.0, 0.0))
+        .earc_to(rx, ry, rot, la, sw, Point(x, y))
+      guard path.transform(t).0 is [_, EArcTo(ra, rb, rot2, la2, sw2, _)] else {
+        false
+      }
+      let (major, minor) = if ra >= rb { (ra, rb) } else { (rb, ra) }
+      let phi = rot * 3.141592653589793 / 180.0
+      let (c, s) = (@math.cos(phi), @math.sin(phi))
+      let a = (t.m11 * c + t.m12 * s) * rx
+      let b = (t.m12 * c - t.m11 * s) * ry
+      let cc = (t.m21 * c + t.m22 * s) * rx
+      let d = (t.m22 * c - t.m21 * s) * ry
+      let mut best = 0.0
+      let mut best_dir = (1.0, 0.0)
+      let n = 3600
+      for i in 0..<n {
+        let th = i.to_double() * 3.141592653589793 / n.to_double()
+        let vx = a * @math.cos(th) + b * @math.sin(th)
+        let vy = cc * @math.cos(th) + d * @math.sin(th)
+        let len = (vx * vx + vy * vy).sqrt()
+        if len > best {
+          best = len
+          best_dir = (vx / len, vy / len)
+        }
+      }
+      let area = det.abs() * rx * ry
+      let area_ok = (major * minor - area).abs() <= 1.0e-9 * area
+      let major_ok = (major - best).abs() <= 1.0e-5 * best
+      // axis direction of the emitted ellipse (the major one)
+      let rot2r = rot2 * 3.141592653589793 / 180.0
+      let (ex, ey) = if ra >= rb {
+        (@math.cos(rot2r), @math.sin(rot2r))
+      } else {
+        (-@math.sin(rot2r), @math.cos(rot2r))
+      }
+      let dir_ok = major < 1.1 * minor ||
+        (ex * best_dir.1 - ey * best_dir.0).abs() <= 1.0e-2
+      let flags_ok = la2 == la && sw2 == (if det < 0.0 { !sw } else { sw })
+      area_ok && major_ok && dir_ok && flags_ok
+    },
+    filter=input => {
+      let t = @geometry.compose_transforms(
+        @geometry.make_scale(1.0, input.2.0),
+        input.1.tr(),
+      )
+      let det = @geometry.determinant(t)
+      det != 0.0 &&
+      // keep the pure-translation fast path out: it is exact by construction
+      !(t.m11 == 1.0 && t.m12 == 0.0 && t.m21 == 0.0 && t.m22 == 1.0)
+    },
+    observe=input => {
+      [
+        @quickcheck.classify(
+          input.2.0 > 0.0 && input.2.0 < 1.0e-6,
+          "ill-conditioned (squash < 1e-6)",
+        ),
+      ]
+    },
+    seed=19,
+  )
+}
+
+///|
+test "regression: squashing an arc by 1e-17 keeps a non-zero minor radius" {
+  // unit semicircle (0,-1) -> (1,0) -> (0,1), squashed by 1e-17 then
+  // stretched back by 1e17: previously the minor radius cancelled to 0 and
+  // the circle could not be recovered
+  let arc = @geometry.Path::empty()
+    .move_to(Point(0.0, -1.0))
+    .earc_to(1.0, 1.0, 0.0, false, true, Point(0.0, 1.0))
+  let flat = arc.transform(@geometry.make_scale(1.0, 1.0e-17))
+  guard flat.0[1] is EArcTo(ra, rb, _, _, _, _) else { fail("expected an arc") }
+  assert_true((ra - 1.0).abs() < 1.0e-12)
+  assert_true((rb - 1.0e-17).abs() < 1.0e-28)
+  let back = flat.transform(@geometry.make_scale(1.0, 1.0e17))
+  guard back.0[1] is EArcTo(ra, rb, _, false, true, end) else {
+    fail("expected an arc")
+  }
+  assert_true((ra - 1.0).abs() < 1.0e-12 && (rb - 1.0).abs() < 1.0e-12)
+  assert_true((end.y - 1.0).abs() < 1.0e-12)
+}
+
+///|
+test "regression: a singular transform folds an arc into line segments" {
+  // the same semicircle projected onto the x axis travels (0,0) -> (1,0) ->
+  // (0,0); previously it became a zero-radius arc between coincident points
+  let arc = @geometry.Path::empty()
+    .move_to(Point(0.0, -1.0))
+    .earc_to(1.0, 1.0, 0.0, false, true, Point(0.0, 1.0))
+  let folded = arc.transform(@geometry.make_scale(1.0, 0.0))
+  guard folded.0 is [MoveTo(p0), LineTo(p1), LineTo(p2)] else {
+    fail("expected line segments, got \{folded.0.length()} segments")
+  }
+  assert_true(p0.x.abs() < 1.0e-12 && p0.y == 0.0)
+  assert_true((p1.x - 1.0).abs() < 1.0e-12 && p1.y == 0.0)
+  assert_true(p2.x.abs() < 1.0e-12 && p2.y == 0.0)
+  // collapsing everything onto a point leaves only that point
+  let dot = arc.transform(@geometry.make_scale(0.0, 0.0))
+  guard dot.0 is [MoveTo(q0), LineTo(q1)] else {
+    fail("expected a degenerate line")
+  }
+  assert_eq(q0, Point(0.0, 0.0))
+  assert_eq(q1, Point(0.0, 0.0))
 }

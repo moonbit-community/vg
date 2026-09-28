@@ -60,8 +60,10 @@ test "qc: pdf_num prints plain decimals that read back as the same number" {
 }
 
 ///|
-/// A well-conditioned transform built from a scale, a rotation, an optional
-/// reflection and a translation (for the arc test below).
+/// A transform built from a scale, a skew, a rotation, an optional reflection
+/// and a translation (for the arc test below). The second scale factor is
+/// usually moderate, but sometimes tiny (ill-conditioned, down to 1e-8) or
+/// exactly 0 (singular: the plane is folded onto a line).
 priv struct Aff(Double, Double, Double, Bool, Double, Double, Double) derive (
   Debug,
 )
@@ -69,7 +71,22 @@ priv struct Aff(Double, Double, Double, Bool, Double, Double, Double) derive (
 ///|
 impl @quickcheck.Arbitrary for Aff with fn arbitrary(_, rs) {
   let sx = 0.25 + rs.next_double() * 3.0
-  let sy = 0.25 + rs.next_double() * 3.0
+  let sy = match rs.next_uint(limit=6) {
+    0 => {
+      // 1e-3 .. 1e-8: flatter ellipses are not representable in SVG's
+      // endpoint form (rounding of the end point exceeds the minor radius);
+      // down to 1e-17 the radii are checked by the geometry package's
+      // "transformed arc radii are the singular values" property
+      let k = 3 + rs.next_uint(limit=6).reinterpret_as_int()
+      let mut v = 1.0
+      for _ in 0..<k {
+        v = v / 10.0
+      }
+      v
+    }
+    1 => 0.0
+    _ => 0.25 + rs.next_double() * 3.0
+  }
   let rot = (rs.next_double() - 0.5) * 7.0
   let flip = rs.next_uint(limit=3) == 0
   let skew = (rs.next_double() - 0.5) * 1.0
@@ -173,6 +190,8 @@ test "qc: Path::transform maps elliptical arcs onto the transformed arc" {
       let (arc, aff) = input
       [
         @quickcheck.classify(aff.3, "reflection"),
+        @quickcheck.classify(aff.1 == 0.0, "singular"),
+        @quickcheck.classify(aff.1 > 0.0 && aff.1 < 1.0e-2, "ill-conditioned"),
         @quickcheck.classify(arc.5, "large arc"),
         @quickcheck.classify(arc.2 != arc.3, "elliptical"),
       ]
