@@ -895,6 +895,35 @@ test "regression: squashing an arc by 1e-17 keeps a non-zero minor radius" {
 }
 
 ///|
+test "regression: squashing an arc along x keeps it axis-aligned" {
+  // the x-axis counterpart: the squashed ellipse is tall, which the SVD
+  // reported as radii (1, 1e-17) at 90 degrees; cos(90 deg) rounds to
+  // 6.1e-17, which stretching back by 1e17 turned into radii (6.28, 0.16)
+  let arc = @geometry.Path::empty()
+    .move_to(Point(0.0, -1.0))
+    .earc_to(1.0, 1.0, 0.0, false, true, Point(0.0, 1.0))
+  let flat = arc.transform(@geometry.make_scale(1.0e-17, 1.0))
+  guard flat.0[1] is EArcTo(ra, rb, rot, _, _, _) else {
+    fail("expected an arc")
+  }
+  assert_true((ra - 1.0e-17).abs() < 1.0e-28 && (rb - 1.0).abs() < 1.0e-12)
+  assert_eq(rot, 0.0)
+  let back = flat.transform(@geometry.make_scale(1.0e17, 1.0))
+  guard back.0[1] is EArcTo(ra, rb, _, false, true, end) else {
+    fail("expected an arc")
+  }
+  assert_true((ra - 1.0).abs() < 1.0e-12 && (rb - 1.0).abs() < 1.0e-12)
+  assert_true(end.x.abs() < 1.0e-12 && (end.y - 1.0).abs() < 1.0e-12)
+  // a 90 degree rotation stated in the arc itself is exact too
+  let tall = @geometry.Path::empty()
+    .move_to(Point(0.0, -1.0))
+    .earc_to(1.0, 1.0e-17, 90.0, false, true, Point(0.0, 1.0))
+    .transform(@geometry.make_scale(1.0e17, 1.0))
+  guard tall.0[1] is EArcTo(ra, rb, _, _, _, _) else { fail("expected an arc") }
+  assert_true((ra - 1.0).abs() < 1.0e-12 && (rb - 1.0).abs() < 1.0e-12)
+}
+
+///|
 test "regression: a singular transform folds an arc into line segments" {
   // the same semicircle projected onto the x axis travels (0,0) -> (1,0) ->
   // (0,0); previously it became a zero-radius arc between coincident points

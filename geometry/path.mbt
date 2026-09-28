@@ -321,15 +321,22 @@ fn transform_arc_ellipse(
   rotation : Double,
 ) -> (Double, Double, Double) {
   let pi = 3.141592653589793
-  let phi = rotation * pi / 180.0
-  let c = @math.cos(phi)
-  let s = @math.sin(phi)
+  let (c, s) = rotation_cos_sin(rotation)
   let rx = rx.abs()
   let ry = ry.abs()
   let a = (t.m11 * c + t.m12 * s) * rx
   let b = (t.m12 * c - t.m11 * s) * ry
   let cc = (t.m21 * c + t.m22 * s) * rx
   let d = (t.m22 * c - t.m21 * s) * ry
+  // an axis-aligned image keeps its axes exactly: the SVD below would pick
+  // a 90 degree rotation for a tall ellipse, whose rounded cosine a later
+  // large scale would amplify
+  if b == 0.0 && cc == 0.0 {
+    return (a.abs(), d.abs(), 0.0)
+  }
+  if a == 0.0 && d == 0.0 {
+    return (b.abs(), cc.abs(), 0.0)
+  }
   let e = (a + d) / 2.0
   let f = (a - d) / 2.0
   let g = (cc + b) / 2.0
@@ -342,6 +349,25 @@ fn transform_arc_ellipse(
   // det M = det L * det R(phi) * rx * ry, with det R(phi) = 1
   let minor = (determinant(t) * rx * ry).abs() / major
   (major, minor, (a2 + a1) / 2.0 * 180.0 / pi)
+}
+
+///|
+/// Cosine and sine of `deg` degrees, exact at multiples of 90 degrees
+/// (`@math.cos(pi / 2)` is 6.1e-17, not 0).
+fn rotation_cos_sin(deg : Double) -> (Double, Double) {
+  let q = deg / 90.0
+  if q == q.floor() && q.abs() < 1.0e15 {
+    let k = q.to_int64() % 4L
+    let k = if k < 0L { k + 4L } else { k }
+    match k {
+      0L => return (1.0, 0.0)
+      1L => return (0.0, 1.0)
+      2L => return (-1.0, 0.0)
+      _ => return (0.0, -1.0)
+    }
+  }
+  let phi = deg * 3.141592653589793 / 180.0
+  (@math.cos(phi), @math.sin(phi))
 }
 
 ///|
