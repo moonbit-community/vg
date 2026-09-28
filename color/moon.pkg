@@ -1,3 +1,7 @@
+import {
+  "moonbitlang/core/quickcheck",
+} for "test"
+
 options(
   "is-main": false,
 )
