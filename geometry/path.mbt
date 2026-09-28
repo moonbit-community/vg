@@ -147,13 +147,21 @@ pub fn Path::ellipse(center : Point, rx : Double, ry : Double) -> Path {
 ///|
 /// Get the bounding box of a path (approximate)
 pub fn Path::bounds(self : Path) -> Box? {
-  let mut min_x = 1000000.0
-  let mut min_y = 1000000.0
-  let mut max_x = -1000000.0
-  let mut max_y = -1000000.0
+  // the box starts at the first point (no sentinel extremes, which would
+  // clamp paths lying entirely beyond them)
+  let mut min_x = 0.0
+  let mut min_y = 0.0
+  let mut max_x = 0.0
+  let mut max_y = 0.0
   let mut has_points = false
   fn update_bounds(p : Point) {
-    has_points = true
+    if !has_points {
+      has_points = true
+      min_x = p.x
+      max_x = p.x
+      min_y = p.y
+      max_y = p.y
+    }
     if p.x < min_x {
       min_x = p.x
     }
