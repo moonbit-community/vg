@@ -225,7 +225,7 @@ fn close(a : Double, b : Double, scale : Double) -> Bool {
 fn pclose(
   p : @geometry.Point,
   q : @geometry.Point,
-  scale? : Double = 0.0,
+  scale~ : Double = 0.0,
 ) -> Bool {
   close(p.x, q.x, scale) && close(p.y, q.y, scale)
 }

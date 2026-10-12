@@ -112,7 +112,7 @@ pub fn to_hex(c : Color) -> String {
   let r = (c.r * 255.0).to_int()
   let g = (c.g * 255.0).to_int()
   let b = (c.b * 255.0).to_int()
-  fn int_to_hex(n : Int) -> String {
+  fn int_to_hex(n : Int32) -> String {
     let hex_chars = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
       'F',

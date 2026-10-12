@@ -16,7 +16,7 @@ pub fn LSystem::new(axiom : String, rules : Array[(Char, String)]) -> LSystem {
 
 ///|
 /// Expand the axiom by applying the production rules `iterations` times.
-pub fn LSystem::expand(self : LSystem, iterations : Int) -> String {
+pub fn LSystem::expand(self : LSystem, iterations : Int32) -> String {
   let mut s = self.axiom
   for _ in 0..<iterations {
     s = [

@@ -163,7 +163,7 @@ branch is a real vector stroke, every leaf a small circle.
 ```mbt check
 ///|
 test "demo: fractal tree" (it : @test.Test) {
-  fn branch(depth : Int, len : Double, width : Double) -> @vg.Image {
+  fn branch(depth : Int32, len : Double, width : Double) -> @vg.Image {
     if depth <= 0 {
       @vg.Image::circle(@color.rgb(0.2, 0.7, 0.3), width * 1.6) // a leaf
     } else {
@@ -675,7 +675,7 @@ test "sierpinski triangle" (it : @test.Test) {
     y2 : Double,
     x3 : Double,
     y3 : Double,
-    depth : Int,
+    depth : Int32,
   ) -> @svg.SvgDocument {
     if depth == 0 {
       doc.render_polygon(
@@ -767,7 +767,7 @@ test "starfield" (it : @test.Test) {
   )
 
   // Simple pseudo-random number generator
-  fn pseudo_random(seed : Int) -> Double {
+  fn pseudo_random(seed : Int32) -> Double {
     let x = seed * 1103515245 + 12345
     (x / 65536 % 32768).to_double() / 32768.0
   }

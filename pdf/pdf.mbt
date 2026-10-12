@@ -6,7 +6,7 @@ pub struct PdfDocument {
   width : Double
   height : Double
   objects : Array[String]
-  object_count : Int
+  object_count : Int32
 } derive(Debug)
 
 ///|

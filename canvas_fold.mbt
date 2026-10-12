@@ -25,7 +25,7 @@ fn canvas_cmd(
   width : Double,
   height : Double,
   js : Array[String],
-  id : Array[Int],
+  id : Array[Int32],
 ) -> Unit {
   match cmd {
     FillPath(path, paint, area) => {
@@ -109,7 +109,7 @@ fn canvas_set_paint(
   paint : Paint,
   prop : String,
   js : Array[String],
-  id : Array[Int],
+  id : Array[Int32],
 ) -> Unit {
   match paint {
     Solid(c) => js.push("ctx.\{prop} = '\{canvas_color(c)}';")
