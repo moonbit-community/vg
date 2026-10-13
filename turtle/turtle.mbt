@@ -15,11 +15,11 @@
 pub fn render(
   commands : String,
   angle~ : Double,
-  step? : Double = 10.0,
-  start? : @geometry.Point = Point(0.0, 0.0),
-  heading? : Double = -1.5707963267948966, // -pi/2: pointing up
-  color? : @color.Color = @color.black(),
-  thickness? : Double = 1.0,
+  step~ : Double = 10.0,
+  start~ : @geometry.Point = Point(0.0, 0.0),
+  heading~ : Double = -1.5707963267948966, // -pi/2: pointing up
+  color~ : @color.Color = @color.black(),
+  thickness~ : Double = 1.0,
 ) -> @vg.Image {
   let mut x = start.x
   let mut y = start.y

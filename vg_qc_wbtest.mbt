@@ -43,7 +43,7 @@ test "qc: pdf_num prints plain decimals that read back as the same number" {
   @quickcheck.check(
     (x : Num) => {
       let s = pdf_num(x.0)
-      let plain = s.to_array().iter().all(c => c is ('0'..='9' | '.' | '-'))
+      let plain = s.to_array().iter().all(c => c is ('0'..<='9' | '.' | '-'))
       let back = @string.parse_double(s) catch { _ => @double.not_a_number }
       plain &&
       (

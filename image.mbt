@@ -20,13 +20,13 @@ pub fn Image::empty() -> Image {
 ///|
 /// Clip `self` to the inside of `path` (default non-zero winding). Outside the
 /// path the result is transparent.
-pub fn Image::cut(self : Image, path : Path, area? : Area = Anz) -> Image {
+pub fn Image::cut(self : Image, path : Path, area~ : Area = Anz) -> Image {
   Cut(area, path, self)
 }
 
 ///|
 #deprecated("Use `image.cut(path)` instead")
-pub fn cut(path : Path, img : Image, area? : Area = Anz) -> Image {
+pub fn cut(path : Path, img : Image, area~ : Area = Anz) -> Image {
   img.cut(path, area~)
 }
 
@@ -43,7 +43,7 @@ pub fn Image::over(self : Image, bottom : Image) -> Image {
 pub fn Image::blend(
   self : Image,
   bottom : Image,
-  op? : Blender = Over,
+  op~ : Blender = Over,
   alpha? : Double,
 ) -> Image {
   Blend(op, alpha, self, bottom)
@@ -194,7 +194,7 @@ pub fn Image::render_image_to_svg(
   self : Image,
   width : Double,
   height : Double,
-  samples : Int,
+  samples : Int32,
 ) -> String {
   let mut doc = @svg.new_svg(width, height)
   let step_x = width / samples.to_double()

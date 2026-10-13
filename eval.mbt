@@ -296,7 +296,7 @@ fn is_left(a : Point, b : Point, p : Point) -> Double {
 
 ///|
 /// Winding number of a closed polyline around `pt` (non-zero rule).
-fn winding(poly : Array[Point], pt : Point) -> Int {
+fn winding(poly : Array[Point], pt : Point) -> Int32 {
   let n = poly.length()
   guard n >= 2 else { 0 }
   let mut w = 0

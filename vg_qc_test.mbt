@@ -80,7 +80,7 @@ fn gen_text(rs : @quickcheck.RandomState) -> String {
         )
       1 =>
         sb.write_char(
-          Int::unsafe_to_char(
+          Int32::unsafe_to_char(
             0x20 + rs.next_uint(limit=95).reinterpret_as_int(),
           ),
         )
@@ -270,7 +270,7 @@ fn ImgD::image(self : ImgD) -> @vg.Image {
 }
 
 ///|
-fn gen_img(rs : @quickcheck.RandomState, depth : Int, raster : Bool) -> ImgD {
+fn gen_img(rs : @quickcheck.RandomState, depth : Int32, raster : Bool) -> ImgD {
   let leaf = depth <= 0 || rs.next_uint(limit=3) == 0
   if leaf {
     match rs.next_uint(limit=if raster { 10 } else { 9 }) {
@@ -446,7 +446,7 @@ fn Pt::pt(self : Pt) -> @geometry.Point {
 // ----- helpers -----
 
 ///|
-fn imin(a : Int, b : Int) -> Int {
+fn imin(a : Int32, b : Int32) -> Int32 {
   if a < b {
     a
   } else {
@@ -456,7 +456,7 @@ fn imin(a : Int, b : Int) -> Int {
 
 ///|
 fn is_name_char(c : Char) -> Bool {
-  c is ('a'..='z' | 'A'..='Z' | '0'..='9' | '-' | ':')
+  c is ('a'..<='z' | 'A'..<='Z' | '0'..<='9' | '-' | ':')
 }
 
 ///|
@@ -470,7 +470,7 @@ fn pclose(p : @geometry.Point, q : @geometry.Point, scale : Double) -> Bool {
 }
 
 ///|
-fn has_prefix_at(s : String, i : Int, pre : String) -> Bool {
+fn has_prefix_at(s : String, i : Int32, pre : String) -> Bool {
   let cs = s.to_array()
   let ps = pre.to_array()
   guard i + ps.length() <= cs.length() else { false }
@@ -494,7 +494,7 @@ fn xml_problem(doc : String) -> String? {
   let mut i = 0
   let stack : Array[String] = []
   let mut roots = 0
-  fn valid_entity(at : Int) -> Bool {
+  fn valid_entity(at : Int32) -> Bool {
     for e in ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"] {
       if has_prefix_at(doc, at, e) {
         return true
@@ -645,7 +645,7 @@ fn has_exponent_number(s : String) -> Bool {
 
 ///|
 fn draw_list_balanced(cmds : Array[@vg.DrawCmd]) -> Bool {
-  let stack : Array[Int] = []
+  let stack : Array[Int32] = []
   for cmd in cmds {
     match cmd {
       PushClip(_, _) => stack.push(0)
@@ -981,8 +981,8 @@ test "qc: Image::to_js has balanced save/restore and finite numbers" {
 ///|
 /// Build an `SvgDocument` from a list of operation codes, drawing the
 /// operations' arguments from a generator seeded with `seed`.
-fn build_svg_doc(ops : Array[UInt], seed : UInt64) -> String {
-  let rs = @splitmix.new(seed~)
+fn build_svg_doc(ops : Array[UInt32], seed : UInt64) -> String {
+  let rs = @splitmix.RandomState(seed~)
   let mut doc = @svg.new_svg(gen_pos(rs), gen_pos(rs))
   for op in ops {
     doc = match op % 8 {
@@ -1031,7 +1031,7 @@ fn build_svg_doc(ops : Array[UInt], seed : UInt64) -> String {
 ///|
 test "qc: SvgDocument output is well-formed for arbitrary text and ids" {
   @quickcheck.check(
-    (input : (Array[UInt], UInt64)) => {
+    (input : (Array[UInt32], UInt64)) => {
       let s = build_svg_doc(input.0, input.1)
       xml_problem(s) is None && !non_finite_literal(s)
     },

@@ -147,18 +147,18 @@ fn cnear(a : @color.Color, b : @color.Color) -> Bool {
 }
 
 ///|
-fn hex_digit(c : Char) -> Int {
+fn hex_digit(c : Char) -> Int32 {
   match c {
-    '0'..='9' => c.to_int() - '0'.to_int()
-    'A'..='F' => c.to_int() - 'A'.to_int() + 10
-    'a'..='f' => c.to_int() - 'a'.to_int() + 10
+    '0'..<='9' => c.to_int() - '0'.to_int()
+    'A'..<='F' => c.to_int() - 'A'.to_int() + 10
+    'a'..<='f' => c.to_int() - 'a'.to_int() + 10
     _ => -1000
   }
 }
 
 ///|
 /// Parse "#RRGGBB" into byte values, or None if malformed.
-fn parse_hex(s : String) -> (Int, Int, Int)? {
+fn parse_hex(s : String) -> (Int32, Int32, Int32)? {
   let cs = s.to_array()
   guard cs.length() == 7 && cs[0] == '#' else { None }
   let d = Array::makei(6, i => hex_digit(cs[i + 1]))

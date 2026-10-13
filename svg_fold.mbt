@@ -77,7 +77,7 @@ fn svg_rule(area : Area) -> String {
 
 ///|
 /// SVG paint for a baked `Paint`; registers a gradient in `defs` if needed.
-fn paint_svg(paint : Paint, defs : StringBuilder, id : Array[Int]) -> String {
+fn paint_svg(paint : Paint, defs : StringBuilder, id : Array[Int32]) -> String {
   match paint {
     Solid(c) => svg_color(c)
     Linear(stops, p0, p1) => {
