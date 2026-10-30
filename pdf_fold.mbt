@@ -234,9 +234,6 @@ fn pdf_num(x : Double) -> String {
   } else if point >= ndigits {
     sign + d + "0".repeat(point - ndigits)
   } else {
-    sign +
-    d.view(end_offset=point).to_owned() +
-    "." +
-    d.view(start_offset=point).to_owned()
+    sign + d[:point].to_owned() + "." + d[point:].to_owned()
   }
 }

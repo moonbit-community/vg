@@ -16,7 +16,7 @@ pub struct PdfDocument {
   width : Double
   height : Double
   objects : Array[String]
-  object_count : Int
+  object_count : Int32
 } derive(@debug.Debug)
 pub fn PdfDocument::PdfDocument(Double, Double) -> Self
 pub fn PdfDocument::add_raw(Self, String) -> Self

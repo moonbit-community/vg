@@ -76,7 +76,7 @@ pub fn Image::over(Self, Self) -> Self
 pub fn Image::polygon(@color.Color, Array[@geometry.Point]) -> Self
 pub fn Image::radial_gradient(@color.Color, @color.Color, @geometry.Point, Double) -> Self
 pub fn Image::rectangle(@color.Color, Double, Double) -> Self
-pub fn Image::render_image_to_svg(Self, Double, Double, Int) -> String
+pub fn Image::render_image_to_svg(Self, Double, Double, Int32) -> String
 pub fn Image::rotate(Self, Double) -> Self
 pub fn Image::scale(Self, Double, Double) -> Self
 pub fn Image::text(String, Double, @color.Color) -> Self
