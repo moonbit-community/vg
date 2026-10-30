@@ -11,11 +11,11 @@ test "empty path creation" {
 ///|
 test "path building with move_to and line_to" {
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::new(0.0, 0.0))
-    .line_to(@vg.Point::new(10.0, 0.0))
-    .line_to(@vg.Point::new(10.0, 10.0))
+    .move_to(Point(0.0, 0.0))
+    .line_to(Point(10.0, 0.0))
+    .line_to(Point(10.0, 10.0))
     .close_path()
-  @debug.debug_inspect(
+  debug_inspect(
     path,
     content=(
       #|Path(
@@ -33,13 +33,9 @@ test "path building with move_to and line_to" {
 ///|
 test "curve_to segment" {
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::new(0.0, 0.0))
-    .curve_to(
-      @vg.Point::new(5.0, 0.0),
-      @vg.Point::new(10.0, 5.0),
-      @vg.Point::new(10.0, 10.0),
-    )
-  @debug.debug_inspect(
+    .move_to(Point(0.0, 0.0))
+    .curve_to(Point(5.0, 0.0), Point(10.0, 5.0), Point(10.0, 10.0))
+  debug_inspect(
     path,
     content=(
       #|Path(
@@ -73,7 +69,7 @@ test "rectangle path" {
 
 ///|
 test "circle path approximation" {
-  let path = @vg.Path::circle(@vg.Point::new(5.0, 5.0), 3.0)
+  let path = @vg.Path::circle(Point(5.0, 5.0), 3.0)
 
   // Circle approximation uses 4 cubic bezier curves + MoveTo + Close
   if path.0.length() != 6 {
@@ -103,7 +99,7 @@ test "circle path approximation" {
 
 ///|
 test "ellipse path" {
-  let path = @vg.Path::ellipse(@vg.Point::new(0.0, 0.0), 5.0, 3.0)
+  let path = @vg.Path::ellipse(Point(0.0, 0.0), 5.0, 3.0)
   if path.0.length() != 6 {
     fail("Ellipse path should have 6 segments")
   }
@@ -137,9 +133,9 @@ test "path transformation" {
 ///|
 test "path bounds calculation" {
   let path = @vg.Path::empty()
-    .move_to(@vg.Point::new(-5.0, -3.0))
-    .line_to(@vg.Point::new(10.0, 7.0))
-    .line_to(@vg.Point::new(2.0, -8.0))
+    .move_to(Point(-5.0, -3.0))
+    .line_to(Point(10.0, 7.0))
+    .line_to(Point(2.0, -8.0))
   match path.bounds() {
     Some(bounds) =>
       if bounds.min_x != -5.0 ||
@@ -155,36 +151,32 @@ test "path bounds calculation" {
 ///|
 test "empty path bounds" {
   let path = @vg.Path::empty()
-  @debug.debug_inspect(path.bounds(), content="None")
+  debug_inspect(path.bounds(), content="None")
 }
 
 ///|
 test "path with only close segment" {
   let path = @vg.Path::empty().close_path()
-  @debug.debug_inspect((path, path.bounds()), content="(Path([Close]), None)")
+  debug_inspect((path, path.bounds()), content="(Path([Close]), None)")
 }
 
 ///|
 test "comprehensive path shapes" {
   let shapes = [
     ("rectangle", @vg.Path::rect(0.0, 0.0, 10.0, 5.0)),
-    ("circle", @vg.Path::circle(@vg.Point::new(5.0, 5.0), 3.0)),
-    ("ellipse", @vg.Path::ellipse(@vg.Point::new(0.0, 0.0), 5.0, 3.0)),
+    ("circle", @vg.Path::circle(Point(5.0, 5.0), 3.0)),
+    ("ellipse", @vg.Path::ellipse(Point(0.0, 0.0), 5.0, 3.0)),
     (
       "complex_path",
       @vg.Path::empty()
-      .move_to(@vg.Point::new(0.0, 0.0))
-      .line_to(@vg.Point::new(10.0, 0.0))
-      .curve_to(
-        @vg.Point::new(15.0, 0.0),
-        @vg.Point::new(15.0, 5.0),
-        @vg.Point::new(10.0, 5.0),
-      )
-      .line_to(@vg.Point::new(0.0, 5.0))
+      .move_to(Point(0.0, 0.0))
+      .line_to(Point(10.0, 0.0))
+      .curve_to(Point(15.0, 0.0), Point(15.0, 5.0), Point(10.0, 5.0))
+      .line_to(Point(0.0, 5.0))
       .close_path(),
     ),
   ]
-  @debug.debug_inspect(
+  debug_inspect(
     shapes,
     content=(
       #|[
@@ -280,12 +272,10 @@ test "path bounds calculation with curves" {
   let paths_with_bounds = [
     (
       "simple_line",
+      @vg.Path::empty().move_to(Point(-5.0, -3.0)).line_to(Point(10.0, 7.0)),
       @vg.Path::empty()
-      .move_to(@vg.Point::new(-5.0, -3.0))
-      .line_to(@vg.Point::new(10.0, 7.0)),
-      @vg.Path::empty()
-      .move_to(@vg.Point::new(-5.0, -3.0))
-      .line_to(@vg.Point::new(10.0, 7.0))
+      .move_to(Point(-5.0, -3.0))
+      .line_to(Point(10.0, 7.0))
       .bounds(),
     ),
     (
@@ -295,11 +285,11 @@ test "path bounds calculation with curves" {
     ),
     (
       "circle_bounds",
-      @vg.Path::circle(@vg.Point::new(0.0, 0.0), 5.0),
-      @vg.Path::circle(@vg.Point::new(0.0, 0.0), 5.0).bounds(),
+      @vg.Path::circle(Point(0.0, 0.0), 5.0),
+      @vg.Path::circle(Point(0.0, 0.0), 5.0).bounds(),
     ),
   ]
-  @debug.debug_inspect(
+  debug_inspect(
     paths_with_bounds,
     content=(
       #|[

@@ -1,7 +1,10 @@
 import {
-  "moonbitlang/core/debug",
   "moonbitlang/core/math",
 }
+
+import {
+  "moonbitlang/core/quickcheck",
+} for "test"
 
 options(
   "is-main": false,

@@ -3,102 +3,87 @@
 // Re-export geometry types
 
 ///|
-pub type Point = @geometry.Point
-
-///|
-pub type Box = @geometry.Box
-
-///|
-pub type Path = @geometry.Path
-
-///|
-pub type PathSegment = @geometry.PathSegment
-
-///|
-pub type Transform = @geometry.Transform
+pub using @geometry {
+  type Point,
+  type Box,
+  type Path,
+  type PathSegment,
+  type Transform,
+}
 
 // Re-export color type
 
 ///|
-pub type Color = @color.Color
+pub using @color {type Color}
 
 ///|
-/// An image is a function from points to colors
-pub(all) struct Image((Point) -> Color)
-
-///|
-/// Primitive shapes (reserved for future rendering backends)
-pub enum Primitive {
-  Circle(Point, Double) // center, radius
-  Rectangle(Point, Point) // top-left, bottom-right
-  Path(Path)
-  Text(String, Point, Double) // text, position, size
+/// A gradient colour stop: `offset` in [0, 1] paired with a `color`.
+pub(all) struct Stop {
+  offset : Double
+  color : Color
 } derive(Eq, Debug)
 
 ///|
-/// Create a circle primitive
-pub fn primitive_circle(center : Point, radius : Double) -> Primitive {
-  Primitive::Circle(center, radius)
-}
-
-///|
-/// Create a rectangle primitive
-pub fn primitive_rectangle(top_left : Point, bottom_right : Point) -> Primitive {
-  Primitive::Rectangle(top_left, bottom_right)
-}
-
-///|
-/// Create a path primitive
-pub fn primitive_path(path : Path) -> Primitive {
-  Primitive::Path(path)
-}
-
-///|
-/// Create a text primitive
-pub fn primitive_text(
-  text : String,
-  position : Point,
-  size : Double,
-) -> Primitive {
-  Primitive::Text(text, position, size)
-}
-
-///|
-/// Image operations for declarative composition (reserved for future optimization)
-pub enum ImageOp {
+/// A *primitive* is an infinite colour field. Concrete shapes are obtained by
+/// cutting a primitive with a path (see `Cut`). Mirrors `Vg`'s `primitive`.
+pub(all) enum Primitive {
   Const(Color)
-  Primitive(Primitive, Color)
-  Transform(Transform, Image)
-  Compose(Image, Image)
-  Cut(Image, Image) // Cut first image with second as mask
+  Axial(Array[Stop], Point, Point) // stops, p0, p1 (linear gradient axis)
+  Radial(Array[Stop], Point, Point, Double) // stops, focus, centre, radius
+  Raster((Point) -> Color) // a procedural / sampled colour field
 }
 
 ///|
-/// Create a constant color image operation
-pub fn imageop_const(color : Color) -> ImageOp {
-  ImageOp::Const(color)
-}
+/// How a path delimits an area when cutting an image: a non-zero or even-odd
+/// fill of its interior, or a stroke of its outline with the given width.
+pub(all) enum Area {
+  Anz // non-zero winding fill
+  Aeo // even-odd fill
+  Outline(Double) // stroke the path with this width
+} derive(Eq, Debug)
 
 ///|
-/// Create a primitive image operation
-pub fn imageop_primitive(primitive : Primitive, color : Color) -> ImageOp {
-  ImageOp::Primitive(primitive, color)
-}
+/// Compositing operator for `Blend`.
+pub(all) enum Blender {
+  Over
+  Plus
+  Copy
+  In
+  Out
+  Atop
+  Xor
+} derive(Eq, Debug)
 
 ///|
-/// Create a transform image operation
-pub fn imageop_transform(transform : Transform, image : Image) -> ImageOp {
-  ImageOp::Transform(transform, image)
+/// An image is a declarative value. Its *denotation* is a function from points
+/// of the plane to colours (see `Image::eval`), but it is *represented* as a
+/// tree so that backends can render it as native, compact vector graphics.
+/// Mirrors `Vg.image`.
+pub(all) enum Image {
+  Primitive(Primitive)
+  Cut(Area, Path, Image)
+  Blend(Blender, Double?, Image, Image) // operator, alpha, top, bottom
+  Tr(Transform, Image)
+  // text anchored at the origin; draw-only (eval is transparent for it)
+  Text(String, Double, Color) // content, size, colour
 }
 
-///|
-/// Create a compose image operation
-pub fn imageop_compose(image1 : Image, image2 : Image) -> ImageOp {
-  ImageOp::Compose(image1, image2)
-}
+// Explicit method promotions for the derived traits (see geometry/types.mbt).
 
 ///|
-/// Create a cut image operation
-pub fn imageop_cut(image : Image, mask : Image) -> ImageOp {
-  ImageOp::Cut(image, mask)
-}
+pub extend Stop with Eq::{not_equal, equal}
+
+///|
+pub extend Stop with Debug::{to_repr}
+
+///|
+pub extend Area with Eq::{not_equal, equal}
+
+///|
+pub extend Area with Debug::{to_repr}
+
+///|
+pub extend Blender with Eq::{not_equal, equal}
+
+///|
+pub extend Blender with Debug::{to_repr}

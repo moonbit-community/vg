@@ -11,11 +11,11 @@ test "empty path creation" {
 ///|
 test "path building with move_to and line_to" {
   let path = @geometry.Path::empty()
-    .move_to(@geometry.Point::new(0.0, 0.0))
-    .line_to(@geometry.Point::new(10.0, 0.0))
-    .line_to(@geometry.Point::new(10.0, 10.0))
+    .move_to(Point(0.0, 0.0))
+    .line_to(Point(10.0, 0.0))
+    .line_to(Point(10.0, 10.0))
     .close_path()
-  @debug.debug_inspect(
+  debug_inspect(
     path,
     content=(
       #|Path(
@@ -33,13 +33,9 @@ test "path building with move_to and line_to" {
 ///|
 test "curve_to segment" {
   let path = @geometry.Path::empty()
-    .move_to(@geometry.Point::new(0.0, 0.0))
-    .curve_to(
-      @geometry.Point::new(5.0, 0.0),
-      @geometry.Point::new(10.0, 5.0),
-      @geometry.Point::new(10.0, 10.0),
-    )
-  @debug.debug_inspect(
+    .move_to(Point(0.0, 0.0))
+    .curve_to(Point(5.0, 0.0), Point(10.0, 5.0), Point(10.0, 10.0))
+  debug_inspect(
     path,
     content=(
       #|Path(
@@ -73,7 +69,7 @@ test "rectangle path" {
 
 ///|
 test "circle path approximation" {
-  let path = @geometry.Path::circle(@geometry.Point::new(5.0, 5.0), 3.0)
+  let path = @geometry.Path::circle(Point(5.0, 5.0), 3.0)
 
   // Circle approximation uses 4 cubic bezier curves + MoveTo + Close
   if path.0.length() != 6 {
@@ -103,7 +99,7 @@ test "circle path approximation" {
 
 ///|
 test "ellipse path" {
-  let path = @geometry.Path::ellipse(@geometry.Point::new(0.0, 0.0), 5.0, 3.0)
+  let path = @geometry.Path::ellipse(Point(0.0, 0.0), 5.0, 3.0)
   if path.0.length() != 6 {
     fail("Ellipse path should have 6 segments")
   }
@@ -120,9 +116,9 @@ test "ellipse path" {
 ///|
 test "path bounds calculation" {
   let path = @geometry.Path::empty()
-    .move_to(@geometry.Point::new(-5.0, -3.0))
-    .line_to(@geometry.Point::new(10.0, 7.0))
-    .line_to(@geometry.Point::new(2.0, -8.0))
+    .move_to(Point(-5.0, -3.0))
+    .line_to(Point(10.0, 7.0))
+    .line_to(Point(2.0, -8.0))
   match path.bounds() {
     Some(bounds) =>
       if bounds.min_x != -5.0 ||
@@ -138,39 +134,32 @@ test "path bounds calculation" {
 ///|
 test "empty path bounds" {
   let path = @geometry.Path::empty()
-  @debug.debug_inspect(path.bounds(), content="None")
+  debug_inspect(path.bounds(), content="None")
 }
 
 ///|
 test "path with only close segment" {
   let path = @geometry.Path::empty().close_path()
-  @debug.debug_inspect((path, path.bounds()), content="(Path([Close]), None)")
+  debug_inspect((path, path.bounds()), content="(Path([Close]), None)")
 }
 
 ///|
 test "comprehensive path shapes" {
   let shapes = [
     ("rectangle", @geometry.Path::rect(0.0, 0.0, 10.0, 5.0)),
-    ("circle", @geometry.Path::circle(@geometry.Point::new(5.0, 5.0), 3.0)),
-    (
-      "ellipse",
-      @geometry.Path::ellipse(@geometry.Point::new(0.0, 0.0), 5.0, 3.0),
-    ),
+    ("circle", @geometry.Path::circle(Point(5.0, 5.0), 3.0)),
+    ("ellipse", @geometry.Path::ellipse(Point(0.0, 0.0), 5.0, 3.0)),
     (
       "complex_path",
       @geometry.Path::empty()
-      .move_to(@geometry.Point::new(0.0, 0.0))
-      .line_to(@geometry.Point::new(10.0, 0.0))
-      .curve_to(
-        @geometry.Point::new(15.0, 0.0),
-        @geometry.Point::new(15.0, 5.0),
-        @geometry.Point::new(10.0, 5.0),
-      )
-      .line_to(@geometry.Point::new(0.0, 5.0))
+      .move_to(Point(0.0, 0.0))
+      .line_to(Point(10.0, 0.0))
+      .curve_to(Point(15.0, 0.0), Point(15.0, 5.0), Point(10.0, 5.0))
+      .line_to(Point(0.0, 5.0))
       .close_path(),
     ),
   ]
-  @debug.debug_inspect(
+  debug_inspect(
     shapes,
     content=(
       #|[
@@ -267,11 +256,11 @@ test "path bounds calculation with curves" {
     (
       "simple_line",
       @geometry.Path::empty()
-      .move_to(@geometry.Point::new(-5.0, -3.0))
-      .line_to(@geometry.Point::new(10.0, 7.0)),
+      .move_to(Point(-5.0, -3.0))
+      .line_to(Point(10.0, 7.0)),
       @geometry.Path::empty()
-      .move_to(@geometry.Point::new(-5.0, -3.0))
-      .line_to(@geometry.Point::new(10.0, 7.0))
+      .move_to(Point(-5.0, -3.0))
+      .line_to(Point(10.0, 7.0))
       .bounds(),
     ),
     (
@@ -281,11 +270,11 @@ test "path bounds calculation with curves" {
     ),
     (
       "circle_bounds",
-      @geometry.Path::circle(@geometry.Point::new(0.0, 0.0), 5.0),
-      @geometry.Path::circle(@geometry.Point::new(0.0, 0.0), 5.0).bounds(),
+      @geometry.Path::circle(Point(0.0, 0.0), 5.0),
+      @geometry.Path::circle(Point(0.0, 0.0), 5.0).bounds(),
     ),
   ]
-  @debug.debug_inspect(
+  debug_inspect(
     paths_with_bounds,
     content=(
       #|[

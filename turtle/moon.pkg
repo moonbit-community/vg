@@ -1,0 +1,10 @@
+import {
+  "bobzhang/vg",
+  "bobzhang/vg/geometry",
+  "bobzhang/vg/color",
+  "moonbitlang/core/math",
+}
+
+import {
+  "moonbitlang/core/test",
+} for "test"

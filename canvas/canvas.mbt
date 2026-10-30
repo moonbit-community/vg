@@ -9,9 +9,12 @@ pub struct CanvasDocument {
 } derive(Debug)
 
 ///|
+pub extend CanvasDocument with Debug::{to_repr}
+
+///|
 /// Create a new Canvas document
 pub fn new_canvas(width : Double, height : Double) -> CanvasDocument {
-  { width, height, commands: [] }
+  { width, height, commands: [], }
 }
 
 ///|
@@ -30,21 +33,21 @@ fn color_to_canvas(c : @color.Color) -> String {
 ///|
 /// Convert a path to Canvas commands
 fn path_to_canvas_commands(path : @geometry.Path) -> Array[String] {
-  let commands = Array::new()
+  let commands = []
   commands.push("ctx.beginPath();")
   for segment in path.0 {
     match segment {
-      @geometry.MoveTo(p) => commands.push("ctx.moveTo(\{p.x}, \{p.y});")
-      @geometry.LineTo(p) => commands.push("ctx.lineTo(\{p.x}, \{p.y});")
-      @geometry.CurveTo(cp1, cp2, end) =>
+      MoveTo(p) => commands.push("ctx.moveTo(\{p.x}, \{p.y});")
+      LineTo(p) => commands.push("ctx.lineTo(\{p.x}, \{p.y});")
+      CurveTo(cp1, cp2, end) =>
         commands.push(
           "ctx.bezierCurveTo(\{cp1.x}, \{cp1.y}, \{cp2.x}, \{cp2.y}, \{end.x}, \{end.y});",
         )
-      @geometry.QCurveTo(cp, end) =>
+      QCurveTo(cp, end) =>
         commands.push(
           "ctx.quadraticCurveTo(\{cp.x}, \{cp.y}, \{end.x}, \{end.y});",
         )
-      @geometry.EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+      EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
         // Canvas doesn't have native elliptical arcs, approximate with arc and transformations
         commands.push(
           "// Elliptical arc: rx=" +
@@ -61,7 +64,7 @@ fn path_to_canvas_commands(path : @geometry.Path) -> Array[String] {
         )
         commands.push("ctx.restore();")
       }
-      @geometry.Close => commands.push("ctx.closePath();")
+      Close => commands.push("ctx.closePath();")
     }
   }
   commands
@@ -75,12 +78,7 @@ pub fn CanvasDocument::add_command(
   self : CanvasDocument,
   command : String,
 ) -> CanvasDocument {
-  let new_commands = Array::new()
-  for cmd in self.commands {
-    new_commands.push(cmd)
-  }
-  new_commands.push(command)
-  { width: self.width, height: self.height, commands: new_commands }
+  { ..self, commands: [..self.commands, command], }
 }
 
 ///|

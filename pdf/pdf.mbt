@@ -6,13 +6,16 @@ pub struct PdfDocument {
   width : Double
   height : Double
   objects : Array[String]
-  object_count : Int
+  object_count : Int32
 } derive(Debug)
 
 ///|
+pub extend PdfDocument with Debug::{to_repr}
+
+///|
 /// Create a new PDF document
-pub fn PdfDocument::new(width : Double, height : Double) -> PdfDocument {
-  { width, height, objects: [], object_count: 0 }
+pub fn PdfDocument::PdfDocument(width : Double, height : Double) -> PdfDocument {
+  { width, height, objects: [], object_count: 0, }
 }
 
 ///|
@@ -33,16 +36,16 @@ fn path_to_pdf_commands(
   path : @geometry.Path,
   height : Double,
 ) -> Array[String] {
-  let commands = Array::new()
+  let commands = []
   for segment in path.0 {
     match segment {
-      @geometry.MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")
-      @geometry.LineTo(p) => commands.push("\{point_to_pdf(p, height)} l")
-      @geometry.CurveTo(cp1, cp2, end) =>
+      MoveTo(p) => commands.push("\{point_to_pdf(p, height)} m")
+      LineTo(p) => commands.push("\{point_to_pdf(p, height)} l")
+      CurveTo(cp1, cp2, end) =>
         commands.push(
           "\{point_to_pdf(cp1, height)} \{point_to_pdf(cp2, height)} \{point_to_pdf(end, height)} c",
         )
-      @geometry.QCurveTo(cp, end) => {
+      QCurveTo(cp, end) => {
         // Convert quadratic to cubic Bézier for PDF
         // PDF doesn't support quadratic curves natively
         commands.push("% Quadratic curve converted to cubic")
@@ -50,12 +53,12 @@ fn path_to_pdf_commands(
           "\{point_to_pdf(cp, height)} \{point_to_pdf(cp, height)} \{point_to_pdf(end, height)} c",
         )
       }
-      @geometry.EArcTo(_, _, _, _, _, end) => {
+      EArcTo(_, _, _, _, _, end) => {
         // Simplified arc for PDF - just line to end point
         commands.push("% Elliptical arc simplified")
         commands.push("\{point_to_pdf(end, height)} l")
       }
-      @geometry.Close => commands.push("h") // Close path
+      Close => commands.push("h") // Close path
     }
   }
   commands
@@ -64,17 +67,20 @@ fn path_to_pdf_commands(
 // ===== OBJECT-ORIENTED API METHODS =====
 
 ///|
+/// Append a raw content-stream fragment (used by the vector fold).
+pub fn PdfDocument::add_raw(
+  self : PdfDocument,
+  content : String,
+) -> PdfDocument {
+  self.add_object(content)
+}
+
+///|
 /// Add an object to the PDF document (OO-style)
 fn PdfDocument::add_object(self : PdfDocument, obj : String) -> PdfDocument {
-  let new_objects = Array::new()
-  for o in self.objects {
-    new_objects.push(o)
-  }
-  new_objects.push(obj)
   {
-    width: self.width,
-    height: self.height,
-    objects: new_objects,
+    ..self,
+    objects: [..self.objects, obj],
     object_count: self.object_count + 1,
   }
 }
@@ -91,44 +97,26 @@ pub fn PdfDocument::render_circle(
   let offset = radius * kappa
   let content = "q\n" + // Save graphics state
     "\{color_to_pdf(color)}\n" +
-    "\{point_to_pdf(@geometry.Point::new(center.x, center.y - radius), self.height)} m\n" + // Move to top
+    "\{point_to_pdf(Point(center.x, center.y - radius), self.height)} m\n" + // Move to top
     // Four cubic curves to approximate circle
-    "\{point_to_pdf(@geometry.Point::new(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(@geometry.Point::new(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(@geometry.Point::new(center.x + radius, center.y), self.height)} c\n" +
-    point_to_pdf(
-      @geometry.Point::new(center.x + radius, center.y + offset),
-      self.height,
-    ) +
+    "\{point_to_pdf(Point(center.x + offset, center.y - radius), self.height)} \{point_to_pdf(Point(center.x + radius, center.y - offset), self.height)} \{point_to_pdf(Point(center.x + radius, center.y), self.height)} c\n" +
+    point_to_pdf(Point(center.x + radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::new(center.x + offset, center.y + radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x + offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(@geometry.Point::new(center.x, center.y + radius), self.height) +
+    point_to_pdf(Point(center.x, center.y + radius), self.height) +
     " c\n" +
-    point_to_pdf(
-      @geometry.Point::new(center.x - offset, center.y + radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - offset, center.y + radius), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::new(center.x - radius, center.y + offset),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - radius, center.y + offset), self.height) +
     " " +
-    point_to_pdf(@geometry.Point::new(center.x - radius, center.y), self.height) +
+    point_to_pdf(Point(center.x - radius, center.y), self.height) +
     " c\n" +
-    point_to_pdf(
-      @geometry.Point::new(center.x - radius, center.y - offset),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - radius, center.y - offset), self.height) +
     " " +
-    point_to_pdf(
-      @geometry.Point::new(center.x - offset, center.y - radius),
-      self.height,
-    ) +
+    point_to_pdf(Point(center.x - offset, center.y - radius), self.height) +
     " " +
-    point_to_pdf(@geometry.Point::new(center.x, center.y - radius), self.height) +
+    point_to_pdf(Point(center.x, center.y - radius), self.height) +
     " c\n" +
     "f\n" + // Fill
     "Q" // Restore graphics state

@@ -3,25 +3,25 @@
 ///|
 /// Create a color from RGBA components
 pub fn rgba(r : Double, g : Double, b : Double, a : Double) -> Color {
-  { r, g, b, a }
+  { r, g, b, a, }
 }
 
 ///|
 /// Create a color from RGB components (alpha = 1.0)
 pub fn rgb(r : Double, g : Double, b : Double) -> Color {
-  { r, g, b, a: 1.0 }
+  { r, g, b, a: 1.0, }
 }
 
 ///|
 /// Create a grayscale color
 pub fn gray(value : Double) -> Color {
-  { r: value, g: value, b: value, a: 1.0 }
+  { r: value, g: value, b: value, a: 1.0, }
 }
 
 ///|
 /// Transparent color
 pub fn transparent() -> Color {
-  { r: 0.0, g: 0.0, b: 0.0, a: 0.0 }
+  { r: 0.0, g: 0.0, b: 0.0, a: 0.0, }
 }
 
 // Predefined colors
@@ -101,16 +101,18 @@ pub fn blend(c1 : Color, c2 : Color) -> Color {
 ///|
 /// Multiply color by a scalar
 pub fn scale(c : Color, factor : Double) -> Color {
-  { r: c.r * factor, g: c.g * factor, b: c.b * factor, a: c.a }
+  { r: c.r * factor, g: c.g * factor, b: c.b * factor, a: c.a, }
 }
 
 ///|
-/// Convert color to hex string
+/// Convert color to hex string. Out-of-range components are clamped to
+/// [0.0, 1.0] first (alpha is ignored).
 pub fn to_hex(c : Color) -> String {
+  let c = clamp(c)
   let r = (c.r * 255.0).to_int()
   let g = (c.g * 255.0).to_int()
   let b = (c.b * 255.0).to_int()
-  fn int_to_hex(n : Int) -> String {
+  fn int_to_hex(n : Int32) -> String {
     let hex_chars = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
       'F',

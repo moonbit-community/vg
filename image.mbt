@@ -1,247 +1,163 @@
-// Core image combinators and operations
+// Image combinators: build the declarative AST.
+//
+// Convenience shape constructors are sugar for cutting a path out of a constant
+// colour field, mirroring Vg's "primitives are colour fields, paths cut them".
+
+// ----- smart constructors (the faithful core) -----
 
 ///|
-/// Create a constant color image
+/// A constant colour filling the whole plane.
 pub fn Image::const_color(color : Color) -> Image {
-  fn(_p : Point) -> Color { color }
+  Primitive(Const(color))
 }
 
 ///|
-/// Create an empty (transparent) image
+/// The empty (fully transparent) image.
 pub fn Image::empty() -> Image {
-  Image::const_color(@color.transparent())
+  Primitive(Const(@color.transparent()))
 }
 
 ///|
-/// Create a circle image
+/// Clip `self` to the inside of `path` (default non-zero winding). Outside the
+/// path the result is transparent.
+pub fn Image::cut(self : Image, path : Path, area~ : Area = Anz) -> Image {
+  Cut(area, path, self)
+}
+
+///|
+#deprecated("Use `image.cut(path)` instead")
+pub fn cut(path : Path, img : Image, area~ : Area = Anz) -> Image {
+  img.cut(path, area~)
+}
+
+///|
+/// `self` composited over `bottom`.
+pub fn Image::over(self : Image, bottom : Image) -> Image {
+  Blend(Over, None, self, bottom)
+}
+
+///|
+/// Blend `self` (the top layer) with `bottom` using an explicit operator and an
+/// optional top alpha.
+#as_free_fn(blend, deprecated="Use `top.blend(bottom)` instead")
+pub fn Image::blend(
+  self : Image,
+  bottom : Image,
+  op~ : Blender = Over,
+  alpha? : Double,
+) -> Image {
+  Blend(op, alpha, self, bottom)
+}
+
+// ----- transforms -----
+
+///|
+pub fn Image::transform(self : Image, t : Transform) -> Image {
+  Tr(t, self)
+}
+
+///|
+pub fn Image::translate_img(self : Image, dx : Double, dy : Double) -> Image {
+  Tr(@geometry.make_translate(dx, dy), self)
+}
+
+///|
+pub fn Image::scale(self : Image, sx : Double, sy : Double) -> Image {
+  Tr(@geometry.make_scale(sx, sy), self)
+}
+
+///|
+pub fn Image::rotate(self : Image, angle : Double) -> Image {
+  Tr(@geometry.make_rotate(angle), self)
+}
+
+// ----- compositing -----
+
+///|
+/// Compose `other` over `self` (the receiver is the base layer), so
+/// `base.compose(overlay)` paints the overlay on top.
+pub fn Image::compose(self : Image, other : Image) -> Image {
+  Blend(Over, None, other, self)
+}
+
+///|
+/// Scale an image's opacity by `opacity`.
+pub fn Image::with_opacity(self : Image, opacity : Double) -> Image {
+  Blend(Over, Some(opacity), self, Image::empty())
+}
+
+// ----- convenience shapes (cut a path from a const colour field) -----
+
+///|
 pub fn Image::circle(color : Color, radius : Double) -> Image {
-  p => {
-    let dist = p.length()
-    if dist <= radius {
-      color
-    } else {
-      @color.transparent()
-    }
-  }
+  Cut(Anz, Path::circle(Point(0.0, 0.0), radius), Primitive(Const(color)))
 }
 
 ///|
-/// Create a rectangle image
 pub fn Image::rectangle(
   color : Color,
   width : Double,
   height : Double,
 ) -> Image {
-  p => {
-    if p.x >= -width / 2.0 &&
-      p.x <= width / 2.0 &&
-      p.y >= -height / 2.0 &&
-      p.y <= height / 2.0 {
-      color
-    } else {
-      @color.transparent()
-    }
-  }
+  Cut(
+    Anz,
+    Path::rect(-width / 2.0, -height / 2.0, width, height),
+    Primitive(Const(color)),
+  )
 }
 
 ///|
-/// Create a line image (with thickness)
+pub fn Image::ellipse(color : Color, rx : Double, ry : Double) -> Image {
+  Cut(Anz, Path::ellipse(Point(0.0, 0.0), rx, ry), Primitive(Const(color)))
+}
+
+///|
+pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
+  Cut(Anz, polygon_path(points), Primitive(Const(color)))
+}
+
+///|
+/// A straight line segment stroked with the given thickness (round caps). A
+/// zero-length segment renders as a dot.
 pub fn Image::line(
   color : Color,
   start : Point,
   end : Point,
   thickness : Double,
 ) -> Image {
-  fn(p : Point) -> Color {
-    // Distance from point to line segment
-    let line_vec = end.sub(start)
-    let point_vec = p.sub(start)
-    let line_len_sq = line_vec.dot(line_vec)
-    if line_len_sq == 0.0 {
-      // Degenerate line (point)
-      if p.distance(start) <= thickness / 2.0 {
-        color
-      } else {
-        @color.transparent()
-      }
-    } else {
-      let t = point_vec.dot(line_vec) / line_len_sq
-      let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
-      let closest = start.add(line_vec.scale(t_clamped))
-      let dist = p.distance(closest)
-      if dist <= thickness / 2.0 {
-        color
-      } else {
-        @color.transparent()
-      }
-    }
+  let path = Path::empty().move_to(start).line_to(end)
+  Cut(Outline(thickness), path, Primitive(Const(color)))
+}
+
+///|
+fn polygon_path(points : Array[Point]) -> Path {
+  guard points.length() > 0 else { Path::empty() }
+  let mut p = Path::empty().move_to(points[0])
+  for i in 1..<points.length() {
+    p = p.line_to(points[i])
   }
+  p.close_path()
 }
 
-///|
-/// Transform an image
-pub fn Image::transform(img : Image, t : Transform) -> Image {
-  p => {
-    match @geometry.invert(t) {
-      Some(inv_t) => img(@geometry.apply(inv_t, p))
-      None => @color.transparent()
-    }
-  }
-}
+// ----- gradients (infinite colour-field primitives) -----
 
 ///|
-/// Translate an image
-pub fn Image::translate_img(img : Image, dx : Double, dy : Double) -> Image {
-  img.transform(@geometry.make_translate(dx, dy))
-}
-
-///|
-/// Scale an image
-pub fn Image::scale(self : Image, sx : Double, sy : Double) -> Image {
-  self.transform(@geometry.make_scale(sx, sy))
-}
-
-///|
-/// Rotate an image
-pub fn Image::rotate(self : Image, angle : Double) -> Image {
-  self.transform(@geometry.make_rotate(angle))
-}
-
-///|
-/// Compose two images using alpha blending
-pub fn Image::compose(self : Image, other : Image) -> Image {
-  fn(p : Point) -> Color {
-    let c1 = self(p)
-    let c2 = other(p)
-    // If both colors are non-transparent, blend them
-    if c1.a > 0.0 && c2.a > 0.0 {
-      // Use additive blending for overlapping opaque areas
-      @color.rgba(
-        (c1.r + c2.r) / 2.0,
-        (c1.g + c2.g) / 2.0,
-        (c1.b + c2.b) / 2.0,
-        (c1.a + c2.a) / 2.0,
-      )
-    } else {
-      @color.blend(c1, c2)
-    }
-  }
-}
-
-///|
-/// Cut an image using another as a mask
-pub fn Image::cut(self : Image, mask : Image) -> Image {
-  fn(p : Point) -> Color {
-    let c = self(p)
-    let m = mask(p)
-    @color.rgba(c.r, c.g, c.b, c.a * m.a)
-  }
-}
-
-///|
-/// Create a gradient between two colors
 pub fn Image::linear_gradient(
   color1 : Color,
   color2 : Color,
   start : Point,
   end : Point,
 ) -> Image {
-  fn(p : Point) -> Color {
-    let grad_vec = end.sub(start)
-    let point_vec = p.sub(start)
-    let grad_len_sq = grad_vec.dot(grad_vec)
-    if grad_len_sq == 0.0 {
-      color1
-    } else {
-      let t = point_vec.dot(grad_vec) / grad_len_sq
-      let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
-
-      // Linear interpolation between colors
-      @color.rgba(
-        color1.r + (color2.r - color1.r) * t_clamped,
-        color1.g + (color2.g - color1.g) * t_clamped,
-        color1.b + (color2.b - color1.b) * t_clamped,
-        color1.a + (color2.a - color1.a) * t_clamped,
-      )
-    }
-  }
+  Primitive(
+    Axial(
+      [{ offset: 0.0, color: color1, }, { offset: 1.0, color: color2, }],
+      start,
+      end,
+    ),
+  )
 }
 
 ///|
-/// Create a radial gradient
-pub fn Image::radial_gradient(
-  color1 : Color,
-  color2 : Color,
-  center : Point,
-  radius : Double,
-) -> Image {
-  fn(p : Point) -> Color {
-    let dist = p.distance(center)
-    let t = if radius == 0.0 { 1.0 } else { dist / radius }
-    let t_clamped = if t < 0.0 { 0.0 } else if t > 1.0 { 1.0 } else { t }
-    @color.rgba(
-      color1.r + (color2.r - color1.r) * t_clamped,
-      color1.g + (color2.g - color1.g) * t_clamped,
-      color1.b + (color2.b - color1.b) * t_clamped,
-      color1.a + (color2.a - color1.a) * t_clamped,
-    )
-  }
-}
-
-///|
-/// Create an ellipse image
-pub fn Image::ellipse(color : Color, rx : Double, ry : Double) -> Image {
-  fn(p : Point) -> Color {
-    let normalized_x = p.x / rx
-    let normalized_y = p.y / ry
-    let dist_sq = normalized_x * normalized_x + normalized_y * normalized_y
-    if dist_sq <= 1.0 {
-      color
-    } else {
-      @color.transparent()
-    }
-  }
-}
-
-///|
-/// Create a polygon image from a list of points
-pub fn Image::polygon(color : Color, points : Array[Point]) -> Image {
-  fn(p : Point) -> Color {
-    // Point-in-polygon test using ray casting algorithm
-    if points.length() < 3 {
-      @color.transparent()
-    } else {
-      let mut inside = false
-      let mut j = points.length() - 1
-      for i = 0; i < points.length(); i = i + 1 {
-        let pi = points[i]
-        let pj = points[j]
-        if (pi.y > p.y) != (pj.y > p.y) &&
-          p.x < (pj.x - pi.x) * (p.y - pi.y) / (pj.y - pi.y) + pi.x {
-          inside = !inside
-        }
-        j = i
-      }
-      if inside {
-        color
-      } else {
-        @color.transparent()
-      }
-    }
-  }
-}
-
-///|
-/// Apply opacity to an image
-pub fn Image::with_opacity(self : Image, opacity : Double) -> Image {
-  fn(p : Point) -> Color {
-    let c = self(p)
-    @color.rgba(c.r, c.g, c.b, c.a * opacity)
-  }
-}
-
-///|
-/// Create an axial gradient (alternative name for linear gradient)
 pub fn Image::axial_gradient(
   color1 : Color,
   color2 : Color,
@@ -252,79 +168,67 @@ pub fn Image::axial_gradient(
 }
 
 ///|
-/// Create a conic gradient (angular gradient around a center point)
-pub fn Image::conic_gradient(
+pub fn Image::radial_gradient(
   color1 : Color,
   color2 : Color,
   center : Point,
-  start_angle : Double,
+  radius : Double,
 ) -> Image {
-  fn(p : Point) -> Color {
-    let vec = p.sub(center)
-    // Simple angle calculation without atan2
-    let angle = if vec.x == 0.0 {
-      if vec.y >= 0.0 {
-        3.14159265359 / 2.0
-      } else {
-        -3.14159265359 / 2.0
-      }
-    } else {
-      let basic_angle = @math.atan(vec.y / vec.x)
-      if vec.x < 0.0 {
-        basic_angle + 3.14159265359
-      } else {
-        basic_angle
-      }
-    }
-    let normalized_angle = (angle - start_angle + 2.0 * 3.14159265359) %
-      (2.0 * 3.14159265359)
-    let t = normalized_angle / (2.0 * 3.14159265359)
-    @color.rgba(
-      color1.r + (color2.r - color1.r) * t,
-      color1.g + (color2.g - color1.g) * t,
-      color1.b + (color2.b - color1.b) * t,
-      color1.a + (color2.a - color1.a) * t,
-    )
-  }
+  Primitive(
+    Radial(
+      [{ offset: 0.0, color: color1, }, { offset: 1.0, color: color2, }],
+      center,
+      center,
+      radius,
+    ),
+  )
 }
 
+// ----- raster sampling (fallback; superseded by vector folds for backends) -----
+
 ///|
-/// Create a repeated/tiled image
-pub fn Image::tile(
+/// Sample the image on a grid and emit one SVG rect per opaque cell. This is the
+/// raster fallback (`eval`-based); vector backends render the AST directly and
+/// produce far smaller output.
+pub fn Image::render_image_to_svg(
   self : Image,
-  tile_width : Double,
-  tile_height : Double,
-) -> Image {
-  fn(p : Point) -> Color {
-    let tiled_x = p.x % tile_width
-    let tiled_y = p.y % tile_height
-    let normalized_x = if tiled_x < 0.0 {
-      tiled_x + tile_width
-    } else {
-      tiled_x
+  width : Double,
+  height : Double,
+  samples : Int32,
+) -> String {
+  let mut doc = @svg.new_svg(width, height)
+  let step_x = width / samples.to_double()
+  let step_y = height / samples.to_double()
+  for i in 0..<samples {
+    for j in 0..<samples {
+      let x = i.to_double() * step_x
+      let y = j.to_double() * step_y
+      let p = Point(x - width / 2.0, y - height / 2.0)
+      let color = self.eval(p)
+      if color.a > 0.0 {
+        doc = doc.render_rectangle(x, y, step_x, step_y, color)
+      }
     }
-    let normalized_y = if tiled_y < 0.0 {
-      tiled_y + tile_height
-    } else {
-      tiled_y
-    }
-    self(
-      Point::new(
-        normalized_x - tile_width / 2.0,
-        normalized_y - tile_height / 2.0,
-      ),
-    )
   }
+  doc.to_string()
+}
+
+// ----- procedural images (a Raster colour field sampled by eval) -----
+
+///|
+/// An image from an arbitrary point -> colour function.
+pub fn Image::of_fn(f : (Point) -> Color) -> Image {
+  Primitive(Raster(f))
 }
 
 ///|
-/// Create a checkerboard pattern
+/// A checkerboard of two colours with the given cell `size`.
 pub fn Image::checkerboard(
   color1 : Color,
   color2 : Color,
   size : Double,
 ) -> Image {
-  fn(p : Point) -> Color {
+  Image::of_fn(fn(p) {
     let x_cell = (p.x / size).floor().to_int()
     let y_cell = (p.y / size).floor().to_int()
     if (x_cell + y_cell) % 2 == 0 {
@@ -332,29 +236,47 @@ pub fn Image::checkerboard(
     } else {
       color2
     }
-  }
+  })
 }
 
 ///|
-/// Sample an image at regular intervals and render to SVG (OO-style)
-pub fn Image::render_image_to_svg(
+/// Tile `self` into `tile_width` x `tile_height` cells.
+pub fn Image::tile(
   self : Image,
-  width : Double,
-  height : Double,
-  samples : Int,
-) -> String {
-  let mut doc = @svg.new_svg(width, height)
-  let step = width / samples.to_double()
-  for i in 0..<samples {
-    for j in 0..<samples {
-      let x = i.to_double() * step
-      let y = j.to_double() * step
-      let p = Point::new(x - width / 2.0, y - height / 2.0) // Center coordinate system
-      let color = self(p)
-      if color.a > 0.0 { // Only render non-transparent pixels
-        doc = doc.render_rectangle(x, y, step, step, color)
-      }
-    }
-  }
-  doc.to_string()
+  tile_width : Double,
+  tile_height : Double,
+) -> Image {
+  Image::of_fn(fn(p) {
+    let tx = p.x % tile_width
+    let ty = p.y % tile_height
+    let nx = if tx < 0.0 { tx + tile_width } else { tx }
+    let ny = if ty < 0.0 { ty + tile_height } else { ty }
+    self.eval(Point(nx - tile_width / 2.0, ny - tile_height / 2.0))
+  })
+}
+
+///|
+/// An angular (conic) gradient around `center`, starting at `start_angle`.
+pub fn Image::conic_gradient(
+  color1 : Color,
+  color2 : Color,
+  center : Point,
+  start_angle : Double,
+) -> Image {
+  Image::of_fn(fn(p) {
+    let two_pi = 2.0 * 3.14159265358979
+    let angle = @math.atan2(p.y - center.y, p.x - center.x)
+    let normalized = ((angle - start_angle) % two_pi + two_pi) % two_pi
+    @color.lerp_color(color1, color2, normalized / two_pi)
+  })
+}
+
+// ----- text (draw-only) -----
+
+///|
+/// A text label anchored at the origin (centre-aligned). Position it with
+/// transforms. Text is draw-only: `eval` is transparent for it, but the
+/// SVG/PDF/canvas backends render it.
+pub fn Image::text(content : String, size : Double, color : Color) -> Image {
+  Text(content, size, color)
 }

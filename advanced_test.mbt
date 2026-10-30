@@ -3,11 +3,11 @@
 ///|
 test "quadratic bezier curves" (it : @test.Test) {
   let qcurve_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(10.0, 50.0))
-    .qcurve_to(@vg.Point::new(50.0, 10.0), @vg.Point::new(90.0, 50.0)) // Arch shape
-    .qcurve_to(@vg.Point::new(50.0, 90.0), @vg.Point::new(10.0, 50.0)) // Return with opposite arch
+    .move_to(Point(10.0, 50.0))
+    .qcurve_to(Point(50.0, 10.0), Point(90.0, 50.0)) // Arch shape
+    .qcurve_to(Point(50.0, 90.0), Point(10.0, 50.0)) // Return with opposite arch
     .close_path()
-  @debug.debug_inspect(
+  debug_inspect(
     qcurve_path,
     content=(
       #|Path(
@@ -31,11 +31,11 @@ test "quadratic bezier curves" (it : @test.Test) {
 ///|
 test "elliptical arcs" (it : @test.Test) {
   let arc_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(20.0, 50.0))
-    .earc_to(30.0, 20.0, 0.0, false, true, @vg.Point::new(80.0, 50.0)) // Elliptical arc
-    .earc_to(30.0, 20.0, 0.0, false, true, @vg.Point::new(20.0, 50.0)) // Return arc
+    .move_to(Point(20.0, 50.0))
+    .earc_to(30.0, 20.0, 0.0, false, true, Point(80.0, 50.0)) // Elliptical arc
+    .earc_to(30.0, 20.0, 0.0, false, true, Point(20.0, 50.0)) // Return arc
     .close_path()
-  @debug.debug_inspect(
+  debug_inspect(
     arc_path,
     content=(
       #|Path(
@@ -59,15 +59,11 @@ test "elliptical arcs" (it : @test.Test) {
 ///|
 test "smooth curve stitching" (it : @test.Test) {
   let smooth_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(10.0, 50.0))
-    .curve_to(
-      @vg.Point::new(30.0, 10.0),
-      @vg.Point::new(50.0, 10.0),
-      @vg.Point::new(70.0, 50.0),
-    )
-    .smooth_ccurve_to(@vg.Point::new(110.0, 90.0), @vg.Point::new(130.0, 50.0)) // Smooth continuation
-    .smooth_ccurve_to(@vg.Point::new(150.0, 10.0), @vg.Point::new(170.0, 50.0)) // Another smooth curve
-  @debug.debug_inspect(
+    .move_to(Point(10.0, 50.0))
+    .curve_to(Point(30.0, 10.0), Point(50.0, 10.0), Point(70.0, 50.0))
+    .smooth_ccurve_to(Point(110.0, 90.0), Point(130.0, 50.0)) // Smooth continuation
+    .smooth_ccurve_to(Point(150.0, 10.0), Point(170.0, 50.0)) // Another smooth curve
+  debug_inspect(
     smooth_path,
     content=(
       #|Path(
@@ -93,8 +89,8 @@ test "axial gradients" (it : @test.Test) {
   let axial_img = @vg.Image::axial_gradient(
     @color.red(),
     @color.yellow(),
-    @vg.Point::new(-50.0, 0.0),
-    @vg.Point::new(50.0, 0.0),
+    Point(-50.0, 0.0),
+    Point(50.0, 0.0),
   )
   let axial_svg = axial_img.render_image_to_svg(100.0, 60.0, 25)
   it.write(axial_svg)
@@ -106,7 +102,7 @@ test "conic gradients" (it : @test.Test) {
   let conic_img = @vg.Image::conic_gradient(
     @color.red(),
     @color.blue(),
-    @vg.Point::new(0.0, 0.0),
+    Point(0.0, 0.0),
     0.0,
   )
   let conic_svg = conic_img.render_image_to_svg(100.0, 100.0, 30)
@@ -126,7 +122,7 @@ test "advanced blend modes" {
     ("hard_light_blend", @color.hard_light_blend(red, blue)),
     ("soft_light_blend", @color.soft_light_blend(red, blue)),
   ]
-  @debug.debug_inspect(
+  debug_inspect(
     blend_results,
     content=(
       #|[
@@ -167,58 +163,38 @@ test "advanced path showcase" (it : @test.Test) {
     .render_rectangle(0.0, 0.0, 400.0, 300.0, @color.gray(0.98))
     .render_text(
       "Advanced Path Features",
-      @vg.Point::new(200.0, 30.0),
+      Point(200.0, 30.0),
       18.0,
       @color.black(),
     )
 
   // Quadratic curve example
   let q_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(50.0, 80.0))
-    .qcurve_to(@vg.Point::new(100.0, 50.0), @vg.Point::new(150.0, 80.0))
-    .qcurve_to(@vg.Point::new(100.0, 110.0), @vg.Point::new(50.0, 80.0))
+    .move_to(Point(50.0, 80.0))
+    .qcurve_to(Point(100.0, 50.0), Point(150.0, 80.0))
+    .qcurve_to(Point(100.0, 110.0), Point(50.0, 80.0))
     .close_path()
 
   // Elliptical arc example
   let arc_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(200.0, 80.0))
-    .earc_to(40.0, 25.0, 0.0, false, true, @vg.Point::new(280.0, 80.0))
-    .earc_to(40.0, 25.0, 0.0, false, true, @vg.Point::new(200.0, 80.0))
+    .move_to(Point(200.0, 80.0))
+    .earc_to(40.0, 25.0, 0.0, false, true, Point(280.0, 80.0))
+    .earc_to(40.0, 25.0, 0.0, false, true, Point(200.0, 80.0))
     .close_path()
 
   // Smooth curves example
   let smooth_path = @vg.Path::empty()
-    .move_to(@vg.Point::new(50.0, 150.0))
-    .curve_to(
-      @vg.Point::new(75.0, 120.0),
-      @vg.Point::new(100.0, 120.0),
-      @vg.Point::new(125.0, 150.0),
-    )
-    .smooth_ccurve_to(
-      @vg.Point::new(175.0, 180.0),
-      @vg.Point::new(200.0, 150.0),
-    )
-    .smooth_ccurve_to(
-      @vg.Point::new(225.0, 120.0),
-      @vg.Point::new(250.0, 150.0),
-    )
+    .move_to(Point(50.0, 150.0))
+    .curve_to(Point(75.0, 120.0), Point(100.0, 120.0), Point(125.0, 150.0))
+    .smooth_ccurve_to(Point(175.0, 180.0), Point(200.0, 150.0))
+    .smooth_ccurve_to(Point(225.0, 120.0), Point(250.0, 150.0))
   let final_doc = doc
     .render_path(q_path, @color.blue())
     .render_path(arc_path, @color.green())
     .render_path(smooth_path, @color.red())
-    .render_text("Quadratic", @vg.Point::new(100.0, 130.0), 12.0, @color.blue())
-    .render_text(
-      "Elliptical Arc",
-      @vg.Point::new(240.0, 130.0),
-      12.0,
-      @color.green(),
-    )
-    .render_text(
-      "Smooth Curves",
-      @vg.Point::new(150.0, 200.0),
-      12.0,
-      @color.red(),
-    )
+    .render_text("Quadratic", Point(100.0, 130.0), 12.0, @color.blue())
+    .render_text("Elliptical Arc", Point(240.0, 130.0), 12.0, @color.green())
+    .render_text("Smooth Curves", Point(150.0, 200.0), 12.0, @color.red())
   let svg_string = final_doc.to_string()
   it.write(svg_string)
   it.snapshot(filename="advanced_paths.svg")

@@ -9,9 +9,12 @@ pub struct SvgDocument {
 } derive(Debug)
 
 ///|
+pub extend SvgDocument with Debug::{to_repr}
+
+///|
 /// Create a new SVG document
 pub fn new_svg(width : Double, height : Double) -> SvgDocument {
-  { width, height, elements: [] }
+  { width, height, elements: [], }
 }
 
 ///|
@@ -20,7 +23,7 @@ pub fn SvgDocument::add_element(
   self : SvgDocument,
   element : String,
 ) -> SvgDocument {
-  { ..self, elements: [..self.elements, element] }
+  { ..self, elements: [..self.elements, element], }
 }
 
 ///|
@@ -45,26 +48,23 @@ fn point_to_svg(p : @geometry.Point) -> String {
 ///|
 /// Convert a path to SVG path data
 fn path_to_svg_data(path : @geometry.Path) -> String {
-  let mut data = ""
-  for segment in path.0 {
-    match segment {
-      @geometry.MoveTo(p) => data = data + "M \{point_to_svg(p)} "
-      @geometry.LineTo(p) => data = data + "L \{point_to_svg(p)} "
-      @geometry.CurveTo(cp1, cp2, end) =>
-        data = data +
+  [
+    for segment in path.0 => {
+      match segment {
+        MoveTo(p) => "M \{point_to_svg(p)} "
+        LineTo(p) => "L \{point_to_svg(p)} "
+        CurveTo(cp1, cp2, end) =>
           "C \{point_to_svg(cp1)} \{point_to_svg(cp2)} \{point_to_svg(end)} "
-      @geometry.QCurveTo(cp, end) =>
-        data = data + "Q \{point_to_svg(cp)} \{point_to_svg(end)} "
-      @geometry.EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
-        let large_flag = if large_arc { "1" } else { "0" }
-        let sweep_flag = if sweep { "1" } else { "0" }
-        data = data +
+        QCurveTo(cp, end) => "Q \{point_to_svg(cp)} \{point_to_svg(end)} "
+        EArcTo(rx, ry, rotation, large_arc, sweep, end) => {
+          let large_flag = if large_arc { "1" } else { "0" }
+          let sweep_flag = if sweep { "1" } else { "0" }
           "A \{rx} \{ry} \{rotation} \{large_flag} \{sweep_flag} \{point_to_svg(end)} "
+        }
+        Close => "Z "
       }
-      @geometry.Close => data = data + "Z "
     }
-  }
-  data
+  ].join("")
 }
 
 ///|
@@ -134,8 +134,27 @@ pub fn SvgDocument::render_text(
   color : @color.Color,
 ) -> SvgDocument {
   let element =
-    $|<text x="\{pos.x}" y="\{pos.y}" font-size="\{size}" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="\{color_to_svg(color)}">\{text}</text>
+    $|<text x="\{pos.x}" y="\{pos.y}" font-size="\{size}" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central" fill="\{color_to_svg(color)}">\{xml_escape(text)}</text>
   self.add_element(element)
+}
+
+///|
+/// Escape text for inclusion in XML/SVG content or attribute values.
+fn xml_escape(s : String) -> String {
+  let parts : Array[String] = []
+  for ch in s {
+    parts.push(
+      match ch {
+        '&' => "&amp;"
+        '<' => "&lt;"
+        '>' => "&gt;"
+        '"' => "&quot;"
+        '\'' => "&apos;"
+        _ => ch.to_string()
+      },
+    )
+  }
+  parts.join("")
 }
 
 ///|
@@ -162,14 +181,7 @@ pub fn SvgDocument::render_polygon(
   if points.length() < 3 {
     self // Can't render polygon with less than 3 points
   } else {
-    let mut points_str = ""
-    for i = 0; i < points.length(); i = i + 1 {
-      let p = points[i]
-      points_str = points_str + "\{p.x},\{p.y}"
-      if i < points.length() - 1 {
-        points_str = points_str + " "
-      }
-    }
+    let points_str = [ for p in points => "\{p.x},\{p.y}" ].join(" ")
     let element =
       $|<polygon points="\{points_str}" fill="\{color_to_svg(color)}"/>
     self.add_element(element)
@@ -187,7 +199,7 @@ pub fn SvgDocument::render_linear_gradient(
   color2 : @color.Color,
 ) -> SvgDocument {
   let gradient =
-    $|<defs><linearGradient id="\{id}" x1="\{start.x}%" y1="\{start.y}%" x2="\{end.x}%" y2="\{end.y}%"><stop offset="0%" stop-color="\{color_to_svg(color1)}"/><stop offset="100%" stop-color="\{color_to_svg(color2)}"/></linearGradient></defs>"
+    $|<defs><linearGradient id="\{xml_escape(id)}" x1="\{start.x}%" y1="\{start.y}%" x2="\{end.x}%" y2="\{end.y}%"><stop offset="0%" stop-color="\{color_to_svg(color1)}"/><stop offset="100%" stop-color="\{color_to_svg(color2)}"/></linearGradient></defs>
   self.add_element(gradient)
 }
 

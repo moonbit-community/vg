@@ -1,16 +1,23 @@
 import {
-  "moonbitlang/core/math",
   "bobzhang/vg/geometry",
   "bobzhang/vg/color",
   "bobzhang/vg/svg",
+  "bobzhang/vg/pdf",
+  "bobzhang/vg/canvas",
+  "moonbitlang/core/math",
 }
 
 import {
-  "moonbitlang/core/debug",
   "moonbitlang/core/test",
-  "bobzhang/vg/pdf",
-  "bobzhang/vg/canvas",
+  "moonbitlang/core/quickcheck",
+  "moonbitlang/core/quickcheck/splitmix",
 } for "test"
+
+import {
+  "moonbitlang/core/quickcheck",
+  "moonbitlang/core/string",
+  "moonbitlang/core/double",
+} for "wbtest"
 
 options(
   "is-main": false,
