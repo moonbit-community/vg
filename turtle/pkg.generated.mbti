@@ -17,7 +17,7 @@ pub struct LSystem {
   axiom : String
   rules : Map[Char, String]
 }
-pub fn LSystem::expand(Self, Int) -> String
+pub fn LSystem::expand(Self, Int32) -> String
 pub fn LSystem::new(String, Array[(Char, String)]) -> Self
 
 // Type aliases
